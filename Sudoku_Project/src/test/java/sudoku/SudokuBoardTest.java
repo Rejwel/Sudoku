@@ -16,38 +16,31 @@ class SudokuBoardTest {
     }
 
     @Test
-    void rowsBoardTest() {
+    void rowsColumnsSquaresBoardTest() {
         SudokuBoard sudokuBoard = new SudokuBoard();
+        sudokuBoard.solveGame();
         int[] row = new int[9];
 
         for(int i = 0; i < 9; i++)
         {
             for(int j = 0; j < 9; j++)
             {
-                row[j] = sudokuBoard.getPoint(i,j);
+                row[j] = sudokuBoard.get(i,j);
             }
             assertFalse(hasDuplicate(row));
         }
-    }
 
-    @Test
-    void colsBoardTest() {
-        SudokuBoard sudokuBoard = new SudokuBoard();
         int[] col = new int[9];
 
         for(int i = 0; i < 9; i++)
         {
             for(int j = 0; j < 9; j++)
             {
-                col[j] = sudokuBoard.getPoint(j,i);
+                col[j] = sudokuBoard.get(j,i);
             }
             assertFalse(hasDuplicate(col));
         }
-    }
 
-    @Test
-    void squaresBoardTest() {
-        SudokuBoard sudokuBoard = new SudokuBoard();
         int[] square = new int[9];
         int temp = 0;
 
@@ -59,7 +52,7 @@ class SudokuBoardTest {
                 {
                     for(int l = j; l < j + 3; l++)
                     {
-                        square[temp++] = sudokuBoard.getPoint(k,l);
+                        square[temp++] = sudokuBoard.get(k,l);
                     }
                 }
                 assertFalse(hasDuplicate(square));
@@ -68,11 +61,12 @@ class SudokuBoardTest {
         }
     }
 
+
     @Test
     void boardGeneratorTest() {
-        for(int i = 0; i < 999; i++)
-        {
+
             SudokuBoard sudokuBoard = new SudokuBoard();
+            sudokuBoard.solveGame();
             int[][] testBoard1 = new int[9][9];
             int[][] testBoard2 = new int[9][9];
 
@@ -80,21 +74,21 @@ class SudokuBoardTest {
             {
                 for(int k = 0; k < 9; k++)
                 {
-                    testBoard1[j][k] = sudokuBoard.getPoint(j,k);
+                    testBoard1[j][k] = sudokuBoard.get(j,k);
                 }
             }
 
-            sudokuBoard.fillBoard();
+            sudokuBoard.solveGame();
 
             for(int j = 0; j < 9; j++)
             {
                 for(int k = 0; k < 9; k++)
                 {
-                    testBoard2[j][k] = sudokuBoard.getPoint(j,k);
+                    testBoard2[j][k] = sudokuBoard.get(j,k);
 
                 }
             }
             assertFalse(Arrays.deepEquals(testBoard1, testBoard2));
         }
-    }
+
 }
