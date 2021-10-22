@@ -1,33 +1,31 @@
 package sudoku;
 
-import java.util.Arrays;
-import java.util.Random;
 
 public class SudokuBoard {
 
-    public SudokuBoard() {
 
+    public SudokuBoard() {
+        this.board = new int[9][9];
+        this.solver = new BacktrackingSudokuSolver();
     }
 
-    private int[][] board = new int[9][9];
+    public SudokuBoard(int[][] board) {
+        this.board = board;
+        this.solver = new BacktrackingSudokuSolver();
+    }
+
+    private int[][] board;
+    private SudokuSolver solver;
 
     public int get(int x, int y) {
         return board[x][y];
     }
-
-    public void solveGame() {
-        BacktrackingSudokuSolver solver = new BacktrackingSudokuSolver();
-        solver.solve(this);
-    }
-
-    private void cleanBoard() {
-        for (int[] row: board) {
-            Arrays.fill(row, 0);
-        }
-    }
-
     public void set(int x,int y, int value) {
         this.board[x][y] = value;
+    }
+
+    public void solveGame() {
+        solver.solve(this);
     }
 
     public void printBoard() {
