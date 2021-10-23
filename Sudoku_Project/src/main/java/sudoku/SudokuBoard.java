@@ -20,6 +20,7 @@ public class SudokuBoard {
     public int get(int x, int y) {
         return board[x][y];
     }
+
     public void set(int x,int y, int value) {
         this.board[x][y] = value;
     }

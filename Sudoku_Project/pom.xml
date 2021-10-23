@@ -15,20 +15,16 @@
             <name>Pawel Dera</name>
             <email>236517@edu.p.lodz.pl</email>
         </developer>
+        <developer>
+            <id>236542</id>
+            <name>Filip Grzelak</name>
+            <email>236542@edu.p.lodz.pl</email>
+        </developer>
     </developers>
 
     <reporting>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
-                <version>3.1.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>3.15.0</version>
-            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
@@ -62,6 +58,16 @@
                         </reports>
                     </reportSet>
                 </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>3.1.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.15.0</version>
             </plugin>
         </plugins>
     </reporting>
@@ -160,6 +166,7 @@
             <version>5.6.2</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
 
     <properties>
