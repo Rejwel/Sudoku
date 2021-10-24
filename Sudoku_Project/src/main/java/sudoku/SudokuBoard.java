@@ -9,19 +9,20 @@ public class SudokuBoard {
         this.solver = new BacktrackingSudokuSolver();
     }
 
-    public SudokuBoard(int[][] board) {
-        this.board = board;
-        this.solver = new BacktrackingSudokuSolver();
-    }
-
     private int[][] board;
     private SudokuSolver solver;
 
     public int get(int x, int y) {
+        if (x > 8 || x < 0 || y > 8 || y < 0) {
+            return -1;
+        }
         return board[x][y];
     }
 
     public void set(int x,int y, int value) {
+        if (x > 8 || x < 0 || y > 8 || y < 0 || value < 0 || value > 9) {
+            return;
+        }
         this.board[x][y] = value;
     }
 
@@ -29,12 +30,4 @@ public class SudokuBoard {
         solver.solve(this);
     }
 
-    public void printBoard() {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                System.out.print(get(i,j) + " ");
-            }
-            System.out.println();
-        }
-    }
 }

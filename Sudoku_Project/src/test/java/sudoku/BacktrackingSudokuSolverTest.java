@@ -1,14 +1,9 @@
 package sudoku;
 
 import org.junit.jupiter.api.Test;
-import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BacktrackingSudokuSolverTest {
-
-    private boolean hasDuplicate(final int[] values) {
-        return Arrays.stream(values).distinct().count() != values.length;
-    }
 
     @Test
     void solverRowsColumnsSquaresBoardTest() {
@@ -22,7 +17,7 @@ class BacktrackingSudokuSolverTest {
             {
                 row[j] = sudokuBoard.get(i,j);
             }
-            assertFalse(hasDuplicate(row));
+            assertFalse(StaticFunctions.hasDuplicate(row));
         }
 
         int[] col = new int[9];
@@ -33,7 +28,7 @@ class BacktrackingSudokuSolverTest {
             {
                 col[j] = sudokuBoard.get(j,i);
             }
-            assertFalse(hasDuplicate(col));
+            assertFalse(StaticFunctions.hasDuplicate(col));
         }
 
         int[] square = new int[9];
@@ -50,7 +45,7 @@ class BacktrackingSudokuSolverTest {
                         square[temp++] = sudokuBoard.get(k,l);
                     }
                 }
-                assertFalse(hasDuplicate(square));
+                assertFalse(StaticFunctions.hasDuplicate(square));
                 temp = 0;
             }
         }
@@ -61,29 +56,24 @@ class BacktrackingSudokuSolverTest {
 
         SudokuBoard sudokuBoard = new SudokuBoard();
         sudokuBoard.solveGame();
-        int[][] testBoard1 = new int[9][9];
-        int[][] testBoard2 = new int[9][9];
 
-        for(int j = 0; j < 9; j++)
-        {
-            for(int k = 0; k < 9; k++)
-            {
-                testBoard1[j][k] = sudokuBoard.get(j,k);
-            }
-        }
+        boolean isTheSameBoard = true;
 
+        int[][] firstBoard = StaticFunctions.copyBoard(sudokuBoard);
+        StaticFunctions.clearBoard(sudokuBoard);
         sudokuBoard.solveGame();
 
-        for(int j = 0; j < 9; j++)
-        {
-            for(int k = 0; k < 9; k++)
-            {
-                testBoard2[j][k] = sudokuBoard.get(j,k);
-
+        for(int i = 0; i < 9; i++) {
+            for(int j = 0; j < 9; j++) {
+                if(firstBoard[i][j] != sudokuBoard.get(i,j)) {
+                    isTheSameBoard = false;
+                    break;
+                }
             }
+            if(!isTheSameBoard) break;
         }
-        assertFalse(Arrays.deepEquals(testBoard1, testBoard2));
-    }
 
+        assertFalse(isTheSameBoard);
+    }
 
 }

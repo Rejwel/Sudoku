@@ -1,27 +1,19 @@
 package sudoku;
 
 import java.util.Arrays;
-import java.util.Random;
+import java.util.Collections;
+import java.util.List;
 
 public class BacktrackingSudokuSolver implements SudokuSolver {
 
     @Override
     public void solve(SudokuBoard board) {
-        clean(board);
-        generateBoard(board);
-    }
-
-    private void clean(SudokuBoard board) {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                board.set(i,j,0);
-            }
-        }
+        solveBoard(board);
     }
 
     // algorithm modified from https://www.geeksforgeeks.org/sudoku-backtracking-7/
 
-    private boolean generateBoard(SudokuBoard board) {
+    private boolean solveBoard(SudokuBoard board) {
         int row = -1;
         int col = -1;
         boolean full = true;
@@ -48,12 +40,16 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
         }
 
         // Else for each-row backtrack + random sudoku board generator
-        Random random = new Random();
-        for (int num = 1; num <= 9; num++) {
-            int randomGeneratedNum = random.nextInt(9) + 1;
-            if (isSafePosition(board, row, col, randomGeneratedNum)) {
-                board.set(row,col,randomGeneratedNum);
-                if (generateBoard(board)) {
+        Integer[] numbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        List<Integer> intList = Arrays.asList(numbers);
+        Collections.shuffle(intList);
+        intList.toArray(numbers);
+
+        for (int num = 0; num < 9; num++) {
+
+            if (isSafePosition(board, row, col, numbers[num])) {
+                board.set(row,col,numbers[num]);
+                if (solveBoard(board)) {
                     return true;
                 } else {
                     board.set(row,col,0);
