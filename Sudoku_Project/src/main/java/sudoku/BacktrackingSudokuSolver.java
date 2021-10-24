@@ -1,5 +1,6 @@
 package sudoku;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class BacktrackingSudokuSolver implements SudokuSolver {
@@ -8,16 +9,16 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
     public void solve(SudokuBoard board) {
         clean(board);
         generateBoard(board);
-
     }
 
-    public void clean(SudokuBoard board) {
+    private void clean(SudokuBoard board) {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 board.set(i,j,0);
             }
         }
     }
+
     // algorithm modified from https://www.geeksforgeeks.org/sudoku-backtracking-7/
 
     private boolean generateBoard(SudokuBoard board) {
