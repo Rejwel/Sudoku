@@ -25,7 +25,8 @@ class StaticFunctionsTest {
     @Test
     void clearBoardTest() {
 
-        SudokuBoard board = new SudokuBoard();
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
 
         int[][] clearArray = new int[9][9];
@@ -40,7 +41,8 @@ class StaticFunctionsTest {
     @Test
     void copyBoardTest() {
 
-        SudokuBoard board = new SudokuBoard();
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
 
         int[][] tempArray = new int[9][9];
         tempArray[0][0] = 1;
@@ -55,7 +57,8 @@ class StaticFunctionsTest {
 
     @Test
     void printBoardTest() {
-        SudokuBoard board = new SudokuBoard();
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
         StaticFunctions.printBoard(board);
     }
 }
