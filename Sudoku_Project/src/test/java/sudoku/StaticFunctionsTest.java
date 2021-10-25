@@ -14,11 +14,17 @@ class StaticFunctionsTest {
     @Test
     void hasDuplicateTest() {
 
-        int[] firstArray = { 1, 2, 3 };
-        int[] secondArray = { 1, 2, 2 };
+        Integer[] firstArray = { 1, 2, 3 };
+        Integer[] secondArray = { 1, 2, 2 };
+        Integer[] thirdArray = { 1, 2, 3, 0, 0, 0 , 4 };
+        Integer[] fourthArray = { 1, 2, 3, 3, 0, 0 , 4 };
+
 
         assertTrue(StaticFunctions.hasDuplicate(secondArray));
         assertFalse(StaticFunctions.hasDuplicate(firstArray));
+        assertFalse(StaticFunctions.hasDuplicate(thirdArray));
+        assertTrue(StaticFunctions.hasDuplicate(fourthArray));
+
 
     }
 
