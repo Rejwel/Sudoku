@@ -14,18 +14,25 @@ class StaticFunctionsTest {
     @Test
     void hasDuplicateTest() {
 
-        int[] firstArray = { 1, 2, 3 };
-        int[] secondArray = { 1, 2, 2 };
+        Integer[] firstArray = { 1, 2, 3 };
+        Integer[] secondArray = { 1, 2, 2 };
+        Integer[] thirdArray = { 1, 2, 3, 0, 0, 0 , 4 };
+        Integer[] fourthArray = { 1, 2, 3, 3, 0, 0 , 4 };
+
 
         assertTrue(StaticFunctions.hasDuplicate(secondArray));
         assertFalse(StaticFunctions.hasDuplicate(firstArray));
+        assertFalse(StaticFunctions.hasDuplicate(thirdArray));
+        assertTrue(StaticFunctions.hasDuplicate(fourthArray));
+
 
     }
 
     @Test
     void clearBoardTest() {
 
-        SudokuBoard board = new SudokuBoard();
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
 
         int[][] clearArray = new int[9][9];
@@ -40,7 +47,8 @@ class StaticFunctionsTest {
     @Test
     void copyBoardTest() {
 
-        SudokuBoard board = new SudokuBoard();
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
 
         int[][] tempArray = new int[9][9];
         tempArray[0][0] = 1;
@@ -55,7 +63,8 @@ class StaticFunctionsTest {
 
     @Test
     void printBoardTest() {
-        SudokuBoard board = new SudokuBoard();
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
         StaticFunctions.printBoard(board);
     }
 }

@@ -7,9 +7,10 @@ class BacktrackingSudokuSolverTest {
 
     @Test
     void solverRowsColumnsSquaresBoardTest() {
-        SudokuBoard sudokuBoard = new SudokuBoard();
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard sudokuBoard = new SudokuBoard(backtracking);
         sudokuBoard.solveGame();
-        int[] row = new int[9];
+        Integer[] row = new Integer[9];
 
         for(int i = 0; i < 9; i++)
         {
@@ -20,7 +21,7 @@ class BacktrackingSudokuSolverTest {
             assertFalse(StaticFunctions.hasDuplicate(row));
         }
 
-        int[] col = new int[9];
+        Integer[] col = new Integer[9];
 
         for(int i = 0; i < 9; i++)
         {
@@ -31,7 +32,7 @@ class BacktrackingSudokuSolverTest {
             assertFalse(StaticFunctions.hasDuplicate(col));
         }
 
-        int[] square = new int[9];
+        Integer[] square = new Integer[9];
         int temp = 0;
 
         for(int i = 0; i <= 6; i+=3)
@@ -54,7 +55,8 @@ class BacktrackingSudokuSolverTest {
     @Test
     void boardGeneratorTest() {
 
-        SudokuBoard sudokuBoard = new SudokuBoard();
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard sudokuBoard = new SudokuBoard(backtracking);
         sudokuBoard.solveGame();
 
         boolean isTheSameBoard = true;

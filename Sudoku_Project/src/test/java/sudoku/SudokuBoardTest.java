@@ -12,7 +12,8 @@ class SudokuBoardTest {
     @Test
     void solveGameTest() {
 
-        SudokuBoard board = new SudokuBoard();
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
 
         int[][] startingBoard = StaticFunctions.copyBoard(board);
@@ -30,7 +31,8 @@ class SudokuBoardTest {
     @Test
     void getPositionNegativeTest() {
 
-        SudokuBoard board = new SudokuBoard();
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
 
         assertEquals(-1, board.get(-1,1));
@@ -43,7 +45,8 @@ class SudokuBoardTest {
     @Test
     void getPositionTest() {
 
-        SudokuBoard board = new SudokuBoard();
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
 
         assertTrue(board.get(0,0) >= 1 && board.get(0,0) <= 9);
@@ -53,7 +56,8 @@ class SudokuBoardTest {
     @Test
     void setPositionNegativeTest() {
 
-        SudokuBoard board = new SudokuBoard();
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
 
         int testingNumber = board.get(0,0);
@@ -80,7 +84,8 @@ class SudokuBoardTest {
     @Test
     void setPositionTest() {
 
-        SudokuBoard board = new SudokuBoard();
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
 
         board.set(0,0, 1);
         assertEquals(board.get(0,0), 1);

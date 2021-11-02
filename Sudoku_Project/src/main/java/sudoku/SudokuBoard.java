@@ -4,9 +4,9 @@ package sudoku;
 public class SudokuBoard {
 
 
-    public SudokuBoard() {
+    public SudokuBoard(SudokuSolver solver) {
         this.board = new int[9][9];
-        this.solver = new BacktrackingSudokuSolver();
+        this.solver = solver;
     }
 
     private int[][] board;

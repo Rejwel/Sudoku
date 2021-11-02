@@ -1,6 +1,7 @@
 package sudoku;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 public final class StaticFunctions {
@@ -8,8 +9,17 @@ public final class StaticFunctions {
     private StaticFunctions() {
     }
 
-    public static boolean hasDuplicate(final int[] values) {
-        return Arrays.stream(values).distinct().count() != values.length;
+    public static boolean hasDuplicate(final Integer[] values) {
+        int zeros, zero;
+        zeros = zero = 0;
+        for(int i = 0; i < values.length ; i++){
+            if(values[i] == 0){
+                zeros++;
+                zero = 1;
+            }
+        }
+
+        return Arrays.stream(values).distinct().count() - zero != values.length - zeros;
     }
 
     public static void clearBoard(SudokuBoard board) {

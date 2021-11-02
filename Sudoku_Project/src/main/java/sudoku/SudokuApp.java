@@ -2,7 +2,8 @@ package sudoku;
 
 public class SudokuApp {
     public static void main(String[] args) {
-        SudokuBoard board = new SudokuBoard();
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
         StaticFunctions.printBoard(board);
     }
