@@ -8,12 +8,12 @@ public final class StaticFunctions {
     private StaticFunctions() {
     }
 
-    public static boolean hasDuplicate(final Integer[] values) {
+    public static <T extends Integer> boolean hasDuplicate(final Object[] values) {
         int zeros;
         int zero;
         zeros = zero = 0;
         for (int i = 0; i < values.length; i++) {
-            if (values[i] == 0) {
+            if (values[i].equals(0)) {
                 zeros++;
                 zero = 1;
             }
