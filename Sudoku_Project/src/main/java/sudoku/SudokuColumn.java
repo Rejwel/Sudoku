@@ -6,7 +6,6 @@ public class SudokuColumn implements SudokuArray {
 
     public SudokuColumn() {
         numbers = new SudokuField[9];
-        Arrays.fill(numbers, 0);
     }
 
     private SudokuField[] numbers;
@@ -17,7 +16,16 @@ public class SudokuColumn implements SudokuArray {
     }
 
     @Override
-    public void setNumberInArray(Integer pos, Integer value) {
-        this.numbers[pos].setValue(value);
+    public void setNumberInArray(Integer pos, SudokuField field) {
+        this.numbers[pos] = field;
+    }
+
+    @Override
+    public Integer[] getArray() {
+        Integer[] temp = new Integer[9];
+        for (int i = 0; i < 9; i++) {
+            temp[i] = numbers[i].getValue();
+        }
+        return temp;
     }
 }

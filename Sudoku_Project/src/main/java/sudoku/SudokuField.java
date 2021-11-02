@@ -6,16 +6,19 @@ import java.util.List;
 public class SudokuField {
 
     public SudokuField(SudokuArray row, SudokuArray col, SudokuArray box, Integer x, Integer y) {
+
         this.value = 0;
         this.positionInRow = x;
         this.positionInCol = y;
         this.positionInBox = countPositionInBox();
+
         this.row = row;
         this.col = col;
         this.box = box;
         elements.add(this.row);
         elements.add(this.col);
         elements.add(this.box);
+
     }
 
     private Integer value;
@@ -32,21 +35,21 @@ public class SudokuField {
         Integer savedValue = this.value;
 
         if (value >= 0 && value <= 9) {
-            row.setNumberInArray(positionInRow, value);
-            col.setNumberInArray(positionInCol, value);
-            box.setNumberInArray(positionInBox, value);
             this.value = value;
+            row.setNumberInArray(positionInRow, this);
+            col.setNumberInArray(positionInCol, this);
+            box.setNumberInArray(positionInBox, this);
         }
 
-        boolean check = true;
-        for (SudokuArray element : elements) {
-            check = element.verify();
-            if(!check) {
-                System.out.println("Wartosc nie pasuje!");
-                this.value = savedValue;
-                break;
-            }
-        }
+//        boolean check = true;
+//        for (SudokuArray element : elements) {
+//            check = element.verify();
+//            if(!check) {
+//                System.out.println("Wartosc nie pasuje!");
+//                this.value = savedValue;
+//                break;
+//            }
+//        }
     }
 
     public Integer getValue() {

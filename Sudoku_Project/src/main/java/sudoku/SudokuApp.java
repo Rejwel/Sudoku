@@ -8,9 +8,10 @@ public class SudokuApp {
         board.solveGame();
         StaticFunctions.printBoard(board);
 
-//        SudokuArray[] list2;
-//        SudokuArray list = board.getSudokuBox(0);
-//
-//        System.out.println(board.getSudokuBox(0));
+        SudokuArray list = board.getSudokuRow(0);
+
+        for (Integer x : list.getArray()) {
+            System.out.println(x);
+        }
     }
 }

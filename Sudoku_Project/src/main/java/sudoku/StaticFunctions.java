@@ -13,7 +13,7 @@ public final class StaticFunctions {
         int zero;
         zeros = zero = 0;
         for (int i = 0; i < values.length; i++) {
-            if (values[i].equals(0)) {
+            if (values[i] == null || values[i].equals(0)) {
                 zeros++;
                 zero = 1;
             }

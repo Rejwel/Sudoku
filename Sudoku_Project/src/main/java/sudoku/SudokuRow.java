@@ -1,13 +1,11 @@
 package sudoku;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class SudokuRow implements SudokuArray {
 
     public SudokuRow() {
         numbers = new SudokuField[9];
-        Arrays.fill(numbers, 0);
     }
 
     private SudokuField[] numbers;
@@ -18,7 +16,16 @@ public class SudokuRow implements SudokuArray {
     }
 
     @Override
-    public void setNumberInArray(Integer pos, Integer value) {
-        this.numbers[pos].setValue(value);
+    public void setNumberInArray(Integer pos, SudokuField field) {
+        this.numbers[pos] = field;
+    }
+
+    @Override
+    public Integer[] getArray() {
+        Integer[] temp = new Integer[9];
+        for (int i = 0; i < 9; i++) {
+            temp[i] = numbers[i].getValue();
+        }
+        return temp;
     }
 }

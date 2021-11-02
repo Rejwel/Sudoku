@@ -11,6 +11,12 @@ public class SudokuBoard {
         this.sudokuRows = new SudokuRow[9];
         this.sudokuBoxes = new SudokuBox[9];
 
+        for (int i = 0; i < 9; i++) {
+            sudokuColumns[i] = new SudokuColumn();
+            sudokuRows[i] = new SudokuRow();
+            sudokuBoxes[i] = new SudokuBox();
+        }
+
         int boxNumber;
         int startingRowBoxNumber;
         int startingColBoxNumber;
@@ -20,7 +26,7 @@ public class SudokuBoard {
                 startingRowBoxNumber = i - (i % 3);
                 startingColBoxNumber = j - (j % 3);
                 boxNumber = ((3 * startingRowBoxNumber + startingColBoxNumber) / 3);
-                board[i][j] = new SudokuField(sudokuRows[i], sudokuColumns[j], sudokuBoxes[boxNumber], i, j);
+                board[i][j] = new SudokuField(sudokuRows[i], sudokuColumns[j], sudokuBoxes[boxNumber], j, i);
             }
         }
     }
