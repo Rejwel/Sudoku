@@ -1,7 +1,6 @@
 package sudoku;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Random;
 
 public final class StaticFunctions {
@@ -10,10 +9,11 @@ public final class StaticFunctions {
     }
 
     public static boolean hasDuplicate(final Integer[] values) {
-        int zeros, zero;
+        int zeros;
+        int zero;
         zeros = zero = 0;
-        for(int i = 0; i < values.length ; i++){
-            if(values[i] == 0){
+        for (int i = 0; i < values.length; i++) {
+            if (values[i] == 0) {
                 zeros++;
                 zero = 1;
             }
