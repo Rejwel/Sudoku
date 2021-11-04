@@ -26,7 +26,7 @@ public class SudokuBoard {
                 startingRowBoxNumber = i - (i % 3);
                 startingColBoxNumber = j - (j % 3);
                 boxNumber = ((3 * startingRowBoxNumber + startingColBoxNumber) / 3);
-                board[i][j] = new SudokuField(sudokuRows[i], sudokuColumns[j], sudokuBoxes[boxNumber], j, i);
+                board[i][j] = new SudokuField(sudokuRows[i], sudokuColumns[j], sudokuBoxes[boxNumber], i, j);
             }
         }
     }
