@@ -5,13 +5,12 @@ import java.util.List;
 
 public class SudokuField {
 
-    public SudokuField(SudokuArray row, SudokuArray col, SudokuArray box, Integer x, Integer y) {
+    public SudokuField(SudokuElement row, SudokuElement col, SudokuElement box, Integer currentRow, Integer currentColumn) {
 
         this.value = 0;
-        this.positionInRow = x;
-        this.positionInCol = y;
+        this.positionInRow = currentColumn;
+        this.positionInCol = currentRow;
         this.positionInBox = countPositionInBox();
-
         this.row = row;
         this.col = col;
         this.box = box;
@@ -21,15 +20,15 @@ public class SudokuField {
 
     }
 
-    private Integer value;
-    private SudokuArray row;
-    private SudokuArray col;
-    private SudokuArray box;
+    private int value;
+    private SudokuElement row;
+    private SudokuElement col;
+    private SudokuElement box;
     private Integer positionInRow;
     private Integer positionInCol;
     private Integer positionInBox;
 
-    private List<SudokuArray> elements = new ArrayList<>(3);
+    private List<SudokuElement> elements = new ArrayList<>(3);
 
     public void setValue(Integer value) {
         Integer savedValue = this.value;
@@ -67,14 +66,17 @@ public class SudokuField {
                 zmiennaKolumna = j;
                 for (int k = 0; k < 9; k++) {
                     if (k % 3 == 0 && k > 0) {
-                        zmiennaWiersz++;
-                        zmiennaKolumna = j;
+                        //zmiennaWiersz++;
+                        zmiennaWiersz = j;
+                        //zmiennaKolumna = j;
+                        zmiennaKolumna++;
                     }
-                    zmiennaKolumna++;
                     if (zmiennaWiersz == positionInRow && zmiennaKolumna == positionInCol) {
                         counter = k;
                         return counter;
                     }
+                    zmiennaWiersz++;
+                    //zmiennaKolumna++;
                 }
             }
         }

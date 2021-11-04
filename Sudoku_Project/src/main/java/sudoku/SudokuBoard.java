@@ -26,16 +26,16 @@ public class SudokuBoard {
                 startingRowBoxNumber = i - (i % 3);
                 startingColBoxNumber = j - (j % 3);
                 boxNumber = ((3 * startingRowBoxNumber + startingColBoxNumber) / 3);
-                board[i][j] = new SudokuField(sudokuRows[i], sudokuColumns[j], sudokuBoxes[boxNumber], j, i);
+                board[i][j] = new SudokuField(sudokuRows[i], sudokuColumns[j], sudokuBoxes[boxNumber], i, j);
             }
         }
     }
 
     private SudokuField[][] board;
 
-    private SudokuArray[] sudokuColumns;
-    private SudokuArray[] sudokuRows;
-    private SudokuArray[] sudokuBoxes;
+    private SudokuElement[] sudokuColumns;
+    private SudokuElement[] sudokuRows;
+    private SudokuElement[] sudokuBoxes;
 
     private SudokuSolver solver;
 
@@ -53,15 +53,15 @@ public class SudokuBoard {
         this.board[x][y].setValue(value);
     }
 
-    public SudokuArray getSudokuColumn(Integer x) {
+    public SudokuElement getSudokuColumn(Integer x) {
         return sudokuColumns[x];
     }
 
-    public SudokuArray getSudokuRow(Integer y) {
+    public SudokuElement getSudokuRow(Integer y) {
         return sudokuRows[y];
     }
 
-    public SudokuArray getSudokuBox(Integer x) {
+    public SudokuElement getSudokuBox(Integer x) {
         return sudokuBoxes[x];
     }
 
