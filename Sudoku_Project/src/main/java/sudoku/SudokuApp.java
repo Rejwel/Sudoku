@@ -8,10 +8,11 @@ public class SudokuApp {
         board.solveGame();
         StaticFunctions.printBoard(board);
 
-        SudokuArray list = board.getSudokuRow(0);
-
+        SudokuElement list = board.getSudokuColumn(0);
+        System.out.println();
         for (Integer x : list.getArray()) {
-            System.out.println(x);
+            System.out.print(x + " ");
+
         }
     }
 }

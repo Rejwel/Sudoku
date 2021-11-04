@@ -5,13 +5,13 @@ import java.util.List;
 
 public class SudokuField {
 
-    public SudokuField(SudokuArray row, SudokuArray col, SudokuArray box, Integer x, Integer y) {
+    public SudokuField(SudokuElement row, SudokuElement col, SudokuElement box, Integer x, Integer y) {
 
         this.value = 0;
         this.positionInRow = x;
         this.positionInCol = y;
         this.positionInBox = countPositionInBox();
-
+        System.out.println("Pozycja: " + positionInBox + " wiersz: " + positionInRow + " kolumna: " + positionInCol);
         this.row = row;
         this.col = col;
         this.box = box;
@@ -22,14 +22,14 @@ public class SudokuField {
     }
 
     private Integer value;
-    private SudokuArray row;
-    private SudokuArray col;
-    private SudokuArray box;
+    private SudokuElement row;
+    private SudokuElement col;
+    private SudokuElement box;
     private Integer positionInRow;
     private Integer positionInCol;
     private Integer positionInBox;
 
-    private List<SudokuArray> elements = new ArrayList<>(3);
+    private List<SudokuElement> elements = new ArrayList<>(3);
 
     public void setValue(Integer value) {
         Integer savedValue = this.value;
@@ -70,11 +70,11 @@ public class SudokuField {
                         zmiennaWiersz++;
                         zmiennaKolumna = j;
                     }
-                    zmiennaKolumna++;
                     if (zmiennaWiersz == positionInRow && zmiennaKolumna == positionInCol) {
                         counter = k;
                         return counter;
                     }
+                    zmiennaKolumna++;
                 }
             }
         }
