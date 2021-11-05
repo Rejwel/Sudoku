@@ -14,9 +14,9 @@ public class SudokuField {
         this.row = row;
         this.col = col;
         this.box = box;
-        elements.add(row);
-        elements.add(col);
-        elements.add(box);
+        elements.add(this.row);
+        elements.add(this.col);
+        elements.add(this.box);
 
     }
 
@@ -32,29 +32,21 @@ public class SudokuField {
 
     public void setValue(Integer value) {
 
-        if (value >= 0 && value < 9) {
+        if (value >= 0 && value <= 9) {
             this.value = value;
             row.setNumberInArray(positionInRow, this);
             col.setNumberInArray(positionInCol, this);
             box.setNumberInArray(positionInBox, this);
         }
 
-        System.out.println("\n");
-        for (Integer x :
-                row.getArray()) {
-            System.out.println(x + " ");
-        }
-        System.out.println("\n");
-
-//        verifyValueCorrectness();
-
+        checkValueCorrectness();
     }
 
-    public boolean verifyValueCorrectness() {
+    private boolean checkValueCorrectness() {
         boolean isValid = true;
         for (SudokuObserver element : elements) {
             isValid = element.verify();
-            if(!isValid) {
+            if (!isValid) {
                 System.out.println("Wartosc nie pasuje!");
                 break;
             }
@@ -67,30 +59,15 @@ public class SudokuField {
     }
 
     private Integer countPositionInBox() {
-        int zmiennaWiersz;
-        int zmiennaKolumna;
-        int counter = 0;
 
-        for (int i = 0; i < 9; i += 3) {
-            for (int j = 0; j < 9; j += 3) {
-                zmiennaWiersz = i;
-                zmiennaKolumna = j;
-                for (int k = 0; k < 9; k++) {
-                    if (k % 3 == 0 && k > 0) {
-                        //zmiennaWiersz++;
-                        zmiennaWiersz = j;
-                        //zmiennaKolumna = j;
-                        zmiennaKolumna++;
-                    }
-                    if (zmiennaWiersz == positionInRow && zmiennaKolumna == positionInCol) {
-                        counter = k;
-                        return counter;
-                    }
-                    zmiennaWiersz++;
-                    //zmiennaKolumna++;
-                }
-            }
-        }
-        return 0;
+        int startingRowNumberPosition = this.positionInRow - (this.positionInRow % 3);
+        int startingColNumberPosition = this.positionInCol - (this.positionInCol % 3);
+
+        int calculatedRowNumberPosition = this.positionInRow - startingRowNumberPosition;
+        int calculatedColNumberPosition = this.positionInCol - startingColNumberPosition;
+
+        return (3 * calculatedColNumberPosition) + calculatedRowNumberPosition;
+
     }
+
 }

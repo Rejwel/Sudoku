@@ -7,5 +7,12 @@ public class SudokuApp {
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
         StaticFunctions.printBoard(board);
+
+        SudokuElement box = board.getSudokuBox(8);
+        for (SudokuField x :
+                box.getFields()) {
+            System.out.println(x.getValue() + " ");
+        }
+
     }
 }

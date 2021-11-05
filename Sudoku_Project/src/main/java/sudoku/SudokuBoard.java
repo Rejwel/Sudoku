@@ -53,19 +53,7 @@ public class SudokuBoard {
         this.board[x][y].setValue(value);
     }
 
-    public SudokuElement getSudokuColumn(Integer x) {
-        return sudokuColumns[x];
-    }
-
-    public SudokuElement getSudokuRow(Integer y) {
-        return sudokuRows[y];
-    }
-
-    public SudokuElement getSudokuBox(Integer x) {
-        return sudokuBoxes[x];
-    }
-
-    private boolean checkBoard() {
+    public boolean checkBoard() {
         boolean isValid = true;
 
         for(int i = 0; i < 1; i++) {
@@ -77,6 +65,18 @@ public class SudokuBoard {
         }
 
         return isValid;
+    }
+
+    public SudokuElement getSudokuColumn(Integer x) {
+        return sudokuColumns[x];
+    }
+
+    public SudokuElement getSudokuRow(Integer y) {
+        return sudokuRows[y];
+    }
+
+    public SudokuElement getSudokuBox(Integer x) {
+        return sudokuBoxes[x];
     }
 
     public void solveGame() {
