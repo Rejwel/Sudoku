@@ -14,9 +14,9 @@ public class SudokuField {
         this.row = row;
         this.col = col;
         this.box = box;
-        elements.add(this.row);
-        elements.add(this.col);
-        elements.add(this.box);
+        elements.add(row);
+        elements.add(col);
+        elements.add(box);
 
     }
 
@@ -28,27 +28,38 @@ public class SudokuField {
     private Integer positionInCol;
     private Integer positionInBox;
 
-    private List<SudokuElement> elements = new ArrayList<>(3);
+    private List<SudokuObserver> elements = new ArrayList<>(3);
 
     public void setValue(Integer value) {
-        Integer savedValue = this.value;
 
-        if (value >= 0 && value <= 9) {
+        if (value >= 0 && value < 9) {
             this.value = value;
             row.setNumberInArray(positionInRow, this);
             col.setNumberInArray(positionInCol, this);
             box.setNumberInArray(positionInBox, this);
         }
 
-//        boolean check = true;
-//        for (SudokuArray element : elements) {
-//            check = element.verify();
-//            if(!check) {
-//                System.out.println("Wartosc nie pasuje!");
-//                this.value = savedValue;
-//                break;
-//            }
-//        }
+        System.out.println("\n");
+        for (Integer x :
+                row.getArray()) {
+            System.out.println(x + " ");
+        }
+        System.out.println("\n");
+
+//        verifyValueCorrectness();
+
+    }
+
+    public boolean verifyValueCorrectness() {
+        boolean isValid = true;
+        for (SudokuObserver element : elements) {
+            isValid = element.verify();
+            if(!isValid) {
+                System.out.println("Wartosc nie pasuje!");
+                break;
+            }
+        }
+        return isValid;
     }
 
     public Integer getValue() {

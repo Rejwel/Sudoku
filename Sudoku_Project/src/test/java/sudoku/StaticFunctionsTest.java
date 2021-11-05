@@ -20,10 +20,10 @@ class StaticFunctionsTest {
         Integer[] fourthArray = { 1, 2, 3, 3, 0, 0 , 4 };
 
 
-        assertTrue(StaticFunctions.hasDuplicate(secondArray));
-        assertFalse(StaticFunctions.hasDuplicate(firstArray));
-        assertFalse(StaticFunctions.hasDuplicate(thirdArray));
-        assertTrue(StaticFunctions.hasDuplicate(fourthArray));
+        assertFalse(StaticFunctions.hasNoDuplicate(secondArray));
+        assertTrue(StaticFunctions.hasNoDuplicate(firstArray));
+        assertTrue(StaticFunctions.hasNoDuplicate(thirdArray));
+        assertFalse(StaticFunctions.hasNoDuplicate(fourthArray));
 
 
     }

@@ -18,7 +18,7 @@ class BacktrackingSudokuSolverTest {
             {
                 row[j] = sudokuBoard.get(i,j);
             }
-            assertFalse(StaticFunctions.hasDuplicate(row));
+            assertTrue(StaticFunctions.hasNoDuplicate(row));
         }
 
         Integer[] col = new Integer[9];
@@ -29,7 +29,7 @@ class BacktrackingSudokuSolverTest {
             {
                 col[j] = sudokuBoard.get(j,i);
             }
-            assertFalse(StaticFunctions.hasDuplicate(col));
+            assertTrue(StaticFunctions.hasNoDuplicate(col));
         }
 
         Integer[] square = new Integer[9];
@@ -46,7 +46,7 @@ class BacktrackingSudokuSolverTest {
                         square[temp++] = sudokuBoard.get(k,l);
                     }
                 }
-                assertFalse(StaticFunctions.hasDuplicate(square));
+                assertTrue(StaticFunctions.hasNoDuplicate(square));
                 temp = 0;
             }
         }

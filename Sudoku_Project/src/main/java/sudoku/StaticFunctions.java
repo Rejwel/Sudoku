@@ -8,18 +8,18 @@ public final class StaticFunctions {
     private StaticFunctions() {
     }
 
-    public static <T extends Integer> boolean hasDuplicate(final Object[] values) {
+    public static <T> boolean hasNoDuplicate(T[] values) {
         int zeros;
         int zero;
         zeros = zero = 0;
-        for (int i = 0; i < values.length; i++) {
-            if (values[i] == null || values[i].equals(0)) {
+        for (T value : values) {
+            if (value == null || value.equals(0)) {
                 zeros++;
                 zero = 1;
             }
         }
 
-        return Arrays.stream(values).distinct().count() - zero != values.length - zeros;
+        return Arrays.stream(values).distinct().count() - zero == values.length - zeros;
     }
 
     public static void clearBoard(SudokuBoard board) {

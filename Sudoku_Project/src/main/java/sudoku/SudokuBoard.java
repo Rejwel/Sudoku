@@ -65,6 +65,20 @@ public class SudokuBoard {
         return sudokuBoxes[x];
     }
 
+    private boolean checkBoard() {
+        boolean isValid = true;
+
+        for(int i = 0; i < 1; i++) {
+            isValid = sudokuColumns[i].verify();
+            isValid = sudokuRows[i].verify();
+            isValid = sudokuBoxes[i].verify();
+
+            if(!isValid) return false;
+        }
+
+        return isValid;
+    }
+
     public void solveGame() {
         solver.solve(this);
     }
