@@ -53,6 +53,20 @@ public class SudokuBoard {
         this.board[x][y].setValue(value);
     }
 
+    public boolean checkBoard() {
+        boolean isValid = true;
+
+        for(int i = 0; i < 1; i++) {
+            isValid = sudokuColumns[i].verify();
+            isValid = sudokuRows[i].verify();
+            isValid = sudokuBoxes[i].verify();
+
+            if(!isValid) return false;
+        }
+
+        return isValid;
+    }
+
     public SudokuElement getSudokuColumn(Integer x) {
         return sudokuColumns[x];
     }

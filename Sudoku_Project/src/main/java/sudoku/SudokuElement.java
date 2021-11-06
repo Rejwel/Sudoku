@@ -1,26 +1,23 @@
 package sudoku;
 
-public abstract class SudokuElement {
+public abstract class SudokuElement implements SudokuObserver {
 
     public SudokuElement() {
-        numbers = new SudokuField[9];
+        fields = new SudokuField[9];
     }
 
-    private SudokuField[] numbers;
+    public SudokuField[] getFields() {
+        return fields;
+    }
+
+    private SudokuField[] fields;
 
     public boolean verify() {
-        return StaticFunctions.hasDuplicate(numbers);
+        return !StaticFunctions.hasDuplicate(fields);
     }
 
     public void setNumberInArray(Integer pos, SudokuField field) {
-        this.numbers[pos] = field;
+        this.fields[pos] = field;
     }
 
-    public Integer[] getArray() {
-        Integer[] temp = new Integer[9];
-        for (int i = 0; i < 9; i++) {
-            temp[i] = numbers[i].getValue();
-        }
-        return temp;
-    }
 }

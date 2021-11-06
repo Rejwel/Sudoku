@@ -14,17 +14,31 @@ class StaticFunctionsTest {
     @Test
     void hasDuplicateTest() {
 
-        Integer[] firstArray = { 1, 2, 3 };
-        Integer[] secondArray = { 1, 2, 2 };
-        Integer[] thirdArray = { 1, 2, 3, 0, 0, 0 , 4 };
-        Integer[] fourthArray = { 1, 2, 3, 3, 0, 0 , 4 };
+        SudokuElement row = new SudokuRow();
+        SudokuElement col = new SudokuColumn();
+        SudokuElement box = new SudokuBox();
 
+        SudokuField f0 = new SudokuField(row,col,box,0,0);
+        SudokuField f1 = new SudokuField(row,col,box,0,0);
+        SudokuField f2 = new SudokuField(row,col,box,0,0);
+        SudokuField f3 = new SudokuField(row,col,box,0,0);
+        SudokuField f4 = new SudokuField(row,col,box,0,0);
 
-        assertTrue(StaticFunctions.hasDuplicate(secondArray));
+        f0.setValue(0);
+        f1.setValue(1);
+        f2.setValue(2);
+        f3.setValue(3);
+        f4.setValue(4);
+
+        SudokuField[] firstArray = { f1, f2, f3 };
+        SudokuField[] secondArray = { f1, f2, f2 };
+        SudokuField[] thirdArray = { f1, f2, f3, f0, f0, f0 , f4 };
+        SudokuField[] fourthArray = { f1, f2, f3, f3, f0, f0 , f4 };
+
         assertFalse(StaticFunctions.hasDuplicate(firstArray));
+        assertTrue(StaticFunctions.hasDuplicate(secondArray));
         assertFalse(StaticFunctions.hasDuplicate(thirdArray));
         assertTrue(StaticFunctions.hasDuplicate(fourthArray));
-
 
     }
 
