@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 class SudokuBoardTest {
@@ -137,66 +139,61 @@ class SudokuBoardTest {
     }
 
     @Test
-    void checkBoardPositive() {
+    void checkBoardPositive() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
-
         board.solveGame();
-        boolean checkBoard = true;
-        for (int i = 0; i < 9; i++) {
-            if (!checkBoard) {
-                break;
-            } else {
-                checkBoard = board.getSudokuBox(i).verify();
-            }
-            if (!checkBoard) {
-                break;
-            } else {
-                checkBoard = board.getSudokuColumn(i).verify();
-            }
-            if (!checkBoard) {
-                break;
-            } else {
-                checkBoard = board.getSudokuRow(i).verify();
-            }
-        }
-        assertTrue(board.checkBoard() == checkBoard);
+        Method checkBoardMethod = SudokuBoard.class.getDeclaredMethod("checkBoard");
+        checkBoardMethod.setAccessible(true);
 
+        assertTrue((Boolean) checkBoardMethod.invoke(board));
     }
 
     @Test
-    void checkBoardNegative() {
+    void checkBoardNegativeRowTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
-
         board.solveGame();
-        boolean checkBoard = true;
-        for (int i = 0; i < 9; i++) {
-            if (!checkBoard) {
-                break;
-            } else {
-                checkBoard = board.getSudokuBox(i).verify();
-            }
-            if (!checkBoard) {
-                break;
-            } else {
-                checkBoard = board.getSudokuColumn(i).verify();
-            }
-            if (!checkBoard) {
-                break;
-            } else {
-                checkBoard = board.getSudokuRow(i).verify();
-            }
-        }
-        board.set(0,0,2);
-        board.set(0,1,2);
+        Method checkBoardMethod = SudokuBoard.class.getDeclaredMethod("checkBoard");
+        checkBoardMethod.setAccessible(true);
 
-        assertFalse(board.checkBoard() == checkBoard);
-        assertEquals(board.checkBoard(),false);
+        assertTrue((Boolean) checkBoardMethod.invoke(board));
 
+        board.set(0,0,1);
+        board.set(0,1,1);
 
+        assertFalse((Boolean) checkBoardMethod.invoke(board));
     }
 
+    @Test
+    void checkBoardNegativeColTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
+        board.solveGame();
+        Method checkBoardMethod = SudokuBoard.class.getDeclaredMethod("checkBoard");
+        checkBoardMethod.setAccessible(true);
 
+        assertTrue((Boolean) checkBoardMethod.invoke(board));
 
+        board.set(0,0,1);
+        board.set(1,0,1);
+
+        assertFalse((Boolean) checkBoardMethod.invoke(board));
+    }
+
+    @Test
+    void checkBoardNegativeBoxTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
+        board.solveGame();
+        Method checkBoardMethod = SudokuBoard.class.getDeclaredMethod("checkBoard");
+        checkBoardMethod.setAccessible(true);
+
+        assertTrue((Boolean) checkBoardMethod.invoke(board));
+
+        board.set(0,0,1);
+        board.set(1,1,1);
+
+        assertFalse((Boolean) checkBoardMethod.invoke(board));
+    }
 }

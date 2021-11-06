@@ -25,7 +25,7 @@ public class SudokuBoard {
             for (int j = 0; j < 9; j++) {
                 startingRowBoxNumber = i - (i % 3);
                 startingColBoxNumber = j - (j % 3);
-                boxNumber = ((3 * startingRowBoxNumber + startingColBoxNumber) / 3);
+                boxNumber = (3 * startingRowBoxNumber + startingColBoxNumber) / 3;
                 board[i][j] = new SudokuField(sudokuRows[i],
                         sudokuColumns[j],
                         sudokuBoxes[boxNumber],
@@ -57,16 +57,13 @@ public class SudokuBoard {
         this.board[x][y].setValue(value);
     }
 
-    public boolean checkBoard() {
-        boolean isValidRow = true;
-        boolean isValidCol = true;
-        boolean isValidBox = true;
-
+    private boolean checkBoard() {
+        boolean isValid = true;
         for (int i = 0; i < 9; i++) {
-            isValidCol = sudokuColumns[i].verify();
-            isValidRow = sudokuRows[i].verify();
-            isValidBox = sudokuBoxes[i].verify();
-            if (!isValidCol || !isValidBox || !isValidRow) {
+            isValid = sudokuColumns[i].verify();
+            isValid = sudokuRows[i].verify();
+            isValid = sudokuBoxes[i].verify();
+            if (!isValid) {
                 return false;
             }
         }

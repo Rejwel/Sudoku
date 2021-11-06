@@ -70,7 +70,7 @@ public class SudokuField {
         int calculatedRowNumberPosition = this.positionInRow - startingRowNumberPosition;
         int calculatedColNumberPosition = this.positionInCol - startingColNumberPosition;
 
-        return (3 * calculatedColNumberPosition) + calculatedRowNumberPosition;
+        return 3 * calculatedColNumberPosition + calculatedRowNumberPosition;
 
     }
 
