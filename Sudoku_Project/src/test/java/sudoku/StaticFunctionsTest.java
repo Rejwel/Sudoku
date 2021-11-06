@@ -81,4 +81,17 @@ class StaticFunctionsTest {
         SudokuBoard board = new SudokuBoard(backtracking);
         StaticFunctions.printBoard(board);
     }
+
+    @Test
+    void sudokuElementToArray(){
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
+        board.solveGame();
+
+        Integer[] newArray = StaticFunctions.sudokuElementToArray(board.getSudokuRow(0));
+
+        for (Integer i = 0; i < 9; i++) {
+            assertEquals(newArray[i],board.getSudokuRow(0).getFields()[i].getValue());
+        }
+    }
 }

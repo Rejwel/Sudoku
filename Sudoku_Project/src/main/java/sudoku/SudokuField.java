@@ -5,7 +5,11 @@ import java.util.List;
 
 public class SudokuField {
 
-    public SudokuField(SudokuElement row, SudokuElement col, SudokuElement box, Integer currentRow, Integer currentColumn) {
+    public SudokuField(SudokuElement row,
+                       SudokuElement col,
+                       SudokuElement box,
+                       Integer currentRow,
+                       Integer currentColumn) {
 
         this.value = 0;
         this.positionInRow = currentColumn;
