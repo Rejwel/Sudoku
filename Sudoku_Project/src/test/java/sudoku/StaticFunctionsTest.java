@@ -3,6 +3,7 @@ package sudoku;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,27 +19,27 @@ class StaticFunctionsTest {
         SudokuElement col = new SudokuColumn();
         SudokuElement box = new SudokuBox();
 
-        SudokuField f0 = new SudokuField(row,col,box,0,0);
-        SudokuField f1 = new SudokuField(row,col,box,0,0);
-        SudokuField f2 = new SudokuField(row,col,box,0,0);
-        SudokuField f3 = new SudokuField(row,col,box,0,0);
-        SudokuField f4 = new SudokuField(row,col,box,0,0);
+        SudokuField f0 = new SudokuField(0,0,0);
+        SudokuField f1 = new SudokuField(0,0,0);
+        SudokuField f2 = new SudokuField(0,0,0);
+        SudokuField f3 = new SudokuField(0,0,0);
+        SudokuField f4 = new SudokuField(0,0,0);
 
-        f0.setValue(0);
-        f1.setValue(1);
-        f2.setValue(2);
-        f3.setValue(3);
-        f4.setValue(4);
+        f0.setFieldValue(0);
+        f1.setFieldValue(1);
+        f2.setFieldValue(2);
+        f3.setFieldValue(3);
+        f4.setFieldValue(4);
 
         SudokuField[] firstArray = { f1, f2, f3 };
         SudokuField[] secondArray = { f1, f2, f2 };
         SudokuField[] thirdArray = { f1, f2, f3, f0, f0, f0 , f4 };
         SudokuField[] fourthArray = { f1, f2, f3, f3, f0, f0 , f4 };
 
-        assertFalse(StaticFunctions.hasDuplicate(firstArray));
-        assertTrue(StaticFunctions.hasDuplicate(secondArray));
-        assertFalse(StaticFunctions.hasDuplicate(thirdArray));
-        assertTrue(StaticFunctions.hasDuplicate(fourthArray));
+        assertFalse(StaticFunctions.hasDuplicate(List.of(firstArray)));
+        assertTrue(StaticFunctions.hasDuplicate(List.of(secondArray)));
+        assertFalse(StaticFunctions.hasDuplicate(List.of(thirdArray)));
+        assertTrue(StaticFunctions.hasDuplicate(List.of(fourthArray)));
 
     }
 
@@ -91,7 +92,7 @@ class StaticFunctionsTest {
         Integer[] newArray = StaticFunctions.sudokuElementToArray(board.getSudokuRow(0));
 
         for (Integer i = 0; i < 9; i++) {
-            assertEquals(newArray[i],board.getSudokuRow(0).getFields()[i].getValue());
+            assertEquals(newArray[i], board.getSudokuRow(0).getFields().get(i).getFieldValue());
         }
     }
 }
