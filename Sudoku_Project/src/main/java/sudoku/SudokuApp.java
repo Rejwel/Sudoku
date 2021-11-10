@@ -9,7 +9,7 @@ public class SudokuApp {
         StaticFunctions.printBoard(board);
 
         System.out.println();
-        SudokuElement col = board.getSudokuBox(0);
+        SudokuElement col = board.getSudokuRow(0);
         for (SudokuField x : col.getFields()) {
             System.out.print(x.getFieldValue() + " ");
         }
@@ -29,7 +29,7 @@ public class SudokuApp {
             System.out.print(x.getFieldValue() + " ");
         }
         System.out.println();
-        col = board.getSudokuBox(0);
+        col = board.getSudokuRow(0);
         for (SudokuField x : col.getFields()) {
             System.out.print(x.getFieldValue() + " ");
         }

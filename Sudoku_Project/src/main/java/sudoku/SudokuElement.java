@@ -10,6 +10,7 @@ public abstract class SudokuElement implements SudokuObserver {
     }
 
     public List<SudokuField> getFields() {
+
         List<SudokuField> listCol = Arrays.asList(new SudokuField[9]);
         for (int i = 0; i < 9; i++) {
             SudokuField field = new SudokuField(fields.get(i).getPositionInCol(),

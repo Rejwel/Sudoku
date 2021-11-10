@@ -54,7 +54,7 @@ public class SudokuBoard {
             sudokuRows.get(x).setNumberInArray(y, board[x][y].getField());
             sudokuColumns.get(y).setNumberInArray(x, board[x][y].getField());
             sudokuBoxes.get(board[x][y].getNumberOfBox())
-                    .setNumberInArray(countPositionInBox(x, y), board[x][y].getField());
+                    .setNumberInArray(board[x][y].getPositionInBox(), board[x][y].getField());
         }
     }
 
@@ -82,12 +82,7 @@ public class SudokuBoard {
     public SudokuElement getSudokuColumn(Integer x) {
         SudokuElement col = new SudokuColumn();
         for (int i = 0; i < 9; i++) {
-            SudokuField field = new SudokuField(
-                    sudokuColumns.get(x).getFields().get(i).getPositionInCol(),
-                    sudokuColumns.get(x).getFields().get(i).getPositionInRow(),
-                    sudokuColumns.get(x).getFields().get(i).getNumberOfBox());
-            field.setFieldValue(sudokuColumns.get(x).getFields().get(i).getFieldValue());
-            col.setNumberInArray(i, field);
+            col.setNumberInArray(i, sudokuColumns.get(x).getFields().get(i));
         }
         return col;
     }
@@ -95,12 +90,7 @@ public class SudokuBoard {
     public SudokuElement getSudokuRow(Integer y) {
         SudokuElement row = new SudokuRow();
         for (int i = 0; i < 9; i++) {
-            SudokuField field = new SudokuField(
-                    sudokuRows.get(y).getFields().get(i).getPositionInCol(),
-                    sudokuRows.get(y).getFields().get(i).getPositionInRow(),
-                    sudokuRows.get(y).getFields().get(i).getNumberOfBox());
-            field.setFieldValue(sudokuRows.get(y).getFields().get(i).getFieldValue());
-            row.setNumberInArray(i, field);
+            row.setNumberInArray(i, sudokuRows.get(y).getFields().get(i));
         }
         return row;
     }
@@ -108,13 +98,8 @@ public class SudokuBoard {
     public SudokuElement getSudokuBox(Integer x) {
         SudokuElement box = new SudokuBox();
         for (int i = 0; i < 9; i++) {
-            SudokuField field = new SudokuField(
-                    sudokuBoxes.get(x).getFields().get(i).getPositionInCol(),
-                    sudokuBoxes.get(x).getFields().get(i).getPositionInRow(),
-                    sudokuBoxes.get(x).getFields().get(i).getNumberOfBox());
-            field.setFieldValue(sudokuBoxes.get(x).getFields().get(i).getFieldValue());
-            box.setNumberInArray(countPositionInBox(
-                    field.getPositionInRow(), field.getPositionInCol()), field);
+            box.setNumberInArray(sudokuBoxes.get(x).getFields().get(i).getPositionInBox(),
+                    sudokuBoxes.get(x).getFields().get(i));
         }
         return box;
     }
@@ -123,15 +108,5 @@ public class SudokuBoard {
         solver.solve(this);
     }
 
-    private Integer countPositionInBox(int positionInRow, int positionInCol) {
 
-        int startingRowNumberPosition = positionInRow - (positionInRow % 3);
-        int startingColNumberPosition = positionInCol - (positionInCol % 3);
-
-        int calculatedRowNumberPosition = positionInRow - startingRowNumberPosition;
-        int calculatedColNumberPosition = positionInCol - startingColNumberPosition;
-
-        return 3 * calculatedColNumberPosition + calculatedRowNumberPosition;
-
-    }
 }

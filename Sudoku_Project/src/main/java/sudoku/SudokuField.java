@@ -10,6 +10,7 @@ public class SudokuField {
         this.positionInRow = j;
         this.positionInCol = i;
         this.numberOfBox = numberOfBox;
+        this.positionInBox = countPositionInBox(j,i);
     }
 
 
@@ -17,6 +18,7 @@ public class SudokuField {
     private final int positionInRow;
     private int positionInCol;
     private int numberOfBox;
+    private int positionInBox;
 
     public void setFieldValue(Integer value) {
         if (value >= 0 && value <= 9) {
@@ -32,6 +34,10 @@ public class SudokuField {
         return this.positionInRow;
     }
 
+    public int getPositionInBox() {
+        return this.positionInBox;
+    }
+
     public int getPositionInCol() {
         return this.positionInCol;
     }
@@ -42,6 +48,18 @@ public class SudokuField {
 
     public Integer getFieldValue() {
         return value;
+    }
+
+    private Integer countPositionInBox(int positionInRow, int positionInCol) {
+
+        int startingRowNumberPosition = positionInRow - (positionInRow % 3);
+        int startingColNumberPosition = positionInCol - (positionInCol % 3);
+
+        int calculatedRowNumberPosition = positionInRow - startingRowNumberPosition;
+        int calculatedColNumberPosition = positionInCol - startingColNumberPosition;
+
+        return 3 * calculatedColNumberPosition + calculatedRowNumberPosition;
+
     }
 
 }
