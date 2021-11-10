@@ -19,11 +19,12 @@ class StaticFunctionsTest {
         SudokuElement col = new SudokuColumn();
         SudokuElement box = new SudokuBox();
 
-        SudokuField f0 = new SudokuField(0,0,0);
-        SudokuField f1 = new SudokuField(0,0,0);
-        SudokuField f2 = new SudokuField(0,0,0);
-        SudokuField f3 = new SudokuField(0,0,0);
-        SudokuField f4 = new SudokuField(0,0,0);
+        SudokuField f0 = new SudokuField(0, 0, 0);
+        SudokuField f1 = new SudokuField(0, 0, 0);
+        SudokuField f2 = new SudokuField(0, 0, 0);
+        SudokuField f3 = new SudokuField(0, 0, 0);
+        SudokuField f4 = new SudokuField(0, 0, 0);
+        SudokuField f5 = new SudokuField(0, 0, 0);
 
         f0.setFieldValue(0);
         f1.setFieldValue(1);
@@ -31,15 +32,20 @@ class StaticFunctionsTest {
         f3.setFieldValue(3);
         f4.setFieldValue(4);
 
-        SudokuField[] firstArray = { f1, f2, f3 };
-        SudokuField[] secondArray = { f1, f2, f2 };
-        SudokuField[] thirdArray = { f1, f2, f3, f0, f0, f0 , f4 };
-        SudokuField[] fourthArray = { f1, f2, f3, f3, f0, f0 , f4 };
+
+        SudokuField[] firstArray = {f1, f2, f3};
+        SudokuField[] secondArray = {f1, f2, f2};
+        SudokuField[] thirdArray = {f1, f2, f3, f0, f0, f0, f4};
+        SudokuField[] fourthArray = {f1, f2, f3, f3, f0, f0, f4};
+        SudokuField[] fifthArray = {f0};
+
 
         assertFalse(StaticFunctions.hasDuplicate(List.of(firstArray)));
         assertTrue(StaticFunctions.hasDuplicate(List.of(secondArray)));
         assertFalse(StaticFunctions.hasDuplicate(List.of(thirdArray)));
         assertTrue(StaticFunctions.hasDuplicate(List.of(fourthArray)));
+        assertFalse(StaticFunctions.hasDuplicate(List.of(fifthArray)));
+
 
     }
 
@@ -69,7 +75,7 @@ class StaticFunctionsTest {
         tempArray[0][0] = 1;
 
 
-        board.set(0,0,1);
+        board.set(0, 0, 1);
         int[][] copiedArray = StaticFunctions.copyBoard(board);
 
         assertTrue(Arrays.deepEquals(copiedArray, tempArray));
@@ -84,7 +90,7 @@ class StaticFunctionsTest {
     }
 
     @Test
-    void sudokuElementToArray(){
+    void sudokuElementToArray() {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();

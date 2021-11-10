@@ -50,12 +50,10 @@ public class SudokuBoard {
     }
 
     private void setValueInElement(int value, int x, int y) {
-        if (value >= 0 && value <= 9) {
-            sudokuRows.get(x).setNumberInArray(y, board[x][y].getField());
-            sudokuColumns.get(y).setNumberInArray(x, board[x][y].getField());
-            sudokuBoxes.get(board[x][y].getNumberOfBox())
-                    .setNumberInArray(board[x][y].getPositionInBox(), board[x][y].getField());
-        }
+        sudokuRows.get(x).setNumberInArray(y, board[x][y].getField());
+        sudokuColumns.get(y).setNumberInArray(x, board[x][y].getField());
+        sudokuBoxes.get(board[x][y].getNumberOfBox())
+                .setNumberInArray(board[x][y].getPositionInBox(), board[x][y].getField());
     }
 
     public void set(int x, int y, int value) {
