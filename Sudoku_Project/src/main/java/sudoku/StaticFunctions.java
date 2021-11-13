@@ -15,6 +15,7 @@ public final class StaticFunctions {
         zeros = zero = 0;
         Integer[] temp = new Integer[values.size()];
 
+
         for (int i = 0; i < values.size(); i++) {
             if (values.get(i) == null || values.get(i).getFieldValue().equals(0)) {
                 temp[i] = 0;

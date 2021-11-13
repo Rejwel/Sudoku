@@ -1,8 +1,11 @@
 package sudoku;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.List;
 
-public class SudokuBoard {
+public class SudokuBoard implements PropertyChangeListener {
 
     private SudokuField[][] board;
     private SudokuSolver solver;
@@ -34,6 +37,7 @@ public class SudokuBoard {
                 startingColBoxNumber = j - (j % 3);
                 boxNumber = (3 * startingRowBoxNumber + startingColBoxNumber) / 3;
                 board[i][j] = new SudokuField(i, j, boxNumber);
+                board[i][j].addListener(this);
             }
         }
     }
@@ -49,7 +53,6 @@ public class SudokuBoard {
         if (x > 8 || x < 0 || y > 8 || y < 0 || value < 0 || value > 9) {
             return;
         }
-        if (!checkBoard()) System.out.println("Ten element nie pasuje w tym miejscu");
         setFieldInElement(x, y);
         this.board[x][y].setFieldValue(value);
     }
@@ -101,5 +104,12 @@ public class SudokuBoard {
             }
         }
         return true;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (!checkBoard()) {
+            System.out.println("Ten element nie pasuje w tym miejscu");
+        }
     }
 }
