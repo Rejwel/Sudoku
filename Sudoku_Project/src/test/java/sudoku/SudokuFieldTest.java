@@ -8,24 +8,19 @@ class SudokuFieldTest {
 
     @Test
     void setValuePositiveTest() {
-        SudokuElement row = new SudokuRow();
-        SudokuElement col = new SudokuColumn();
-        SudokuElement box = new SudokuBox();
-        SudokuField field = new SudokuField(row, col, box, 0, 0);
-        field.setValue(1);
-        assertEquals(field.getValue(), 1);
+        SudokuField field = new SudokuField(0, 0, 0);
+        field.setFieldValue(1);
+        assertEquals(field.getFieldValue(), 1);
     }
 
     @Test
     void setValueNegativeTest() {
-        SudokuElement row = new SudokuRow();
-        SudokuElement col = new SudokuColumn();
-        SudokuElement box = new SudokuBox();
-        SudokuField field = new SudokuField(row, col, box, 0, 0);
-        field.setValue(10);
-        assertEquals(field.getValue(), 0);
-        field.setValue(-1);
-        assertEquals(field.getValue(), 0);
+
+        SudokuField field = new SudokuField(0, 0, 0);
+        field.setFieldValue(10);
+        assertEquals(field.getFieldValue(), 0);
+        field.setFieldValue(-1);
+        assertEquals(field.getFieldValue(), 0);
     }
 
 }

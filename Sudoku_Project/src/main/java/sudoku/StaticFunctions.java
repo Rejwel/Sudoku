@@ -1,6 +1,7 @@
 package sudoku;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public final class StaticFunctions {
@@ -8,19 +9,19 @@ public final class StaticFunctions {
     private StaticFunctions() {
     }
 
-    public static boolean hasDuplicate(SudokuField[] values) {
+    public static boolean hasDuplicate(List<SudokuField> values) {
         int zeros;
         int zero;
         zeros = zero = 0;
-        Integer[] temp = new Integer[values.length];
+        Integer[] temp = new Integer[values.size()];
 
-        for (int i = 0; i < values.length; i++) {
-            if (values[i] == null || values[i].getValue().equals(0)) {
+        for (int i = 0; i < values.size(); i++) {
+            if (values.get(i).getFieldValue().equals(0)) {
                 temp[i] = 0;
                 zeros++;
                 zero = 1;
             } else {
-                temp[i] = values[i].getValue();
+                temp[i] = values.get(i).getFieldValue();
             }
         }
 
@@ -28,10 +29,10 @@ public final class StaticFunctions {
     }
 
     public static Integer[] sudokuElementToArray(SudokuElement fields) {
-        Integer[] temp = new Integer[fields.getFields().length];
+        Integer[] temp = new Integer[fields.getFields().size()];
 
-        for (int i = 0; i < fields.getFields().length; i++) {
-            temp[i] = fields.getFields()[i].getValue();
+        for (int i = 0; i < fields.getFields().size(); i++) {
+            temp[i] = fields.getFields().get(i).getFieldValue();
         }
 
         return temp;

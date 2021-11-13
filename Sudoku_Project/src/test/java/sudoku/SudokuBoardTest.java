@@ -196,4 +196,29 @@ class SudokuBoardTest {
 
         assertFalse((Boolean) checkBoardMethod.invoke(board));
     }
+
+    @Test
+    void setValueInElementPositive(){
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
+        board.solveGame();
+
+        board.set(0,0,1);
+        assertEquals(board.get(0,0), 1);
+    }
+
+    @Test
+    void setValueInElementNegative(){
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
+        board.solveGame();
+
+        int temp = board.get(0,0);
+        board.set(0,0,10);
+        assertEquals(board.get(0,0), temp);
+        temp = board.get(1,1);
+        board.set(1,1, -1);
+        assertEquals(board.get(1,1), temp);
+
+    }
 }

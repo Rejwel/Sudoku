@@ -5,70 +5,58 @@ import java.util.List;
 
 public class SudokuField {
 
-    public SudokuField(SudokuElement row,
-                       SudokuElement col,
-                       SudokuElement box,
-                       Integer currentRow,
-                       Integer currentColumn) {
-
+    public SudokuField(int i, int j, int numberOfBox) {
         this.value = 0;
-        this.positionInRow = currentColumn;
-        this.positionInCol = currentRow;
-        this.positionInBox = countPositionInBox();
-        this.row = row;
-        this.col = col;
-        this.box = box;
-        elements.add(this.row);
-        elements.add(this.col);
-        elements.add(this.box);
-
+        this.positionInRow = j;
+        this.positionInCol = i;
+        this.numberOfBox = numberOfBox;
+        this.positionInBox = countPositionInBox(j,i);
     }
+
 
     private int value;
-    private SudokuElement row;
-    private SudokuElement col;
-    private SudokuElement box;
-    private Integer positionInRow;
-    private Integer positionInCol;
-    private Integer positionInBox;
+    private final int positionInRow;
+    private int positionInCol;
+    private int numberOfBox;
+    private int positionInBox;
 
-    private List<SudokuObserver> elements = new ArrayList<>(3);
-
-    public void setValue(Integer value) {
-
+    public void setFieldValue(Integer value) {
         if (value >= 0 && value <= 9) {
             this.value = value;
-            row.setNumberInArray(positionInRow, this);
-            col.setNumberInArray(positionInCol, this);
-            box.setNumberInArray(positionInBox, this);
         }
-
-        checkValueCorrectness();
     }
 
-    private boolean checkValueCorrectness() {
-        boolean isValid = true;
-        for (SudokuObserver element : elements) {
-            isValid = element.verify();
-            if (!isValid) {
-                System.out.println("Wartosc nie pasuje!");
-                break;
-            }
-        }
-        return isValid;
+    public int getNumberOfBox() {
+        return this.numberOfBox;
     }
 
-    public Integer getValue() {
+    public int getPositionInRow() {
+        return this.positionInRow;
+    }
+
+    public int getPositionInBox() {
+        return this.positionInBox;
+    }
+
+    public int getPositionInCol() {
+        return this.positionInCol;
+    }
+
+    public SudokuField getField() {
+        return this;
+    }
+
+    public Integer getFieldValue() {
         return value;
     }
 
-    private Integer countPositionInBox() {
+    private Integer countPositionInBox(int positionInRow, int positionInCol) {
 
-        int startingRowNumberPosition = this.positionInRow - (this.positionInRow % 3);
-        int startingColNumberPosition = this.positionInCol - (this.positionInCol % 3);
+        int startingRowNumberPosition = positionInRow - (positionInRow % 3);
+        int startingColNumberPosition = positionInCol - (positionInCol % 3);
 
-        int calculatedRowNumberPosition = this.positionInRow - startingRowNumberPosition;
-        int calculatedColNumberPosition = this.positionInCol - startingColNumberPosition;
+        int calculatedRowNumberPosition = positionInRow - startingRowNumberPosition;
+        int calculatedColNumberPosition = positionInCol - startingColNumberPosition;
 
         return 3 * calculatedColNumberPosition + calculatedRowNumberPosition;
 
