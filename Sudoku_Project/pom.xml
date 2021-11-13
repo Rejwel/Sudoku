@@ -22,6 +22,15 @@
         </developer>
     </developers>
 
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://choosealicense.com/licenses/mit/</url>
+            <distribution>repo</distribution>
+            <comments>An open source license</comments>
+        </license>
+    </licenses>
+
     <reporting>
         <plugins>
             <plugin>

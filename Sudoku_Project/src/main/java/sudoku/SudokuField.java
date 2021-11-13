@@ -1,24 +1,22 @@
 package sudoku;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.event.ActionEvent;
 
 public class SudokuField {
-
-    public SudokuField(int i, int j, int numberOfBox) {
-        this.value = 0;
-        this.positionInRow = j;
-        this.positionInCol = i;
-        this.numberOfBox = numberOfBox;
-        this.positionInBox = countPositionInBox(j,i);
-    }
-
 
     private int value;
     private final int positionInRow;
     private int positionInCol;
     private int numberOfBox;
     private int positionInBox;
+
+    public SudokuField(int i, int j, int numberOfBox) {
+        this.value = 0;
+        this.positionInRow = j;
+        this.positionInCol = i;
+        this.numberOfBox = numberOfBox;
+        this.positionInBox = getPositionInBox(j,i);
+    }
 
     public void setFieldValue(Integer value) {
         if (value >= 0 && value <= 9) {
@@ -50,7 +48,7 @@ public class SudokuField {
         return value;
     }
 
-    private Integer countPositionInBox(int positionInRow, int positionInCol) {
+    private Integer getPositionInBox(int positionInRow, int positionInCol) {
 
         int startingRowNumberPosition = positionInRow - (positionInRow % 3);
         int startingColNumberPosition = positionInCol - (positionInCol % 3);
@@ -61,5 +59,4 @@ public class SudokuField {
         return 3 * calculatedColNumberPosition + calculatedRowNumberPosition;
 
     }
-
 }

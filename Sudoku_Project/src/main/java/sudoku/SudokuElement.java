@@ -3,7 +3,9 @@ package sudoku;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class SudokuElement implements SudokuObserver {
+public abstract class SudokuElement {
+
+    private List<SudokuField> fields;
 
     public SudokuElement() {
         fields = Arrays.asList(new SudokuField[9]);
@@ -22,8 +24,6 @@ public abstract class SudokuElement implements SudokuObserver {
         return listCol;
     }
 
-    private List<SudokuField> fields;
-
     public boolean verify() {
         return !StaticFunctions.hasDuplicate(fields);
     }
@@ -31,5 +31,4 @@ public abstract class SudokuElement implements SudokuObserver {
     public void setNumberInArray(Integer pos, SudokuField field) {
         this.fields.set(pos, field);
     }
-
 }
