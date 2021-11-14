@@ -1,45 +1,36 @@
 package sudoku;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 public class SudokuField {
 
-    public SudokuField(int i, int j, int numberOfBox) {
-        this.value = 0;
-        this.positionInRow = j;
-        this.positionInCol = i;
-        this.numberOfBox = numberOfBox;
-        this.positionInBox = countPositionInBox(j,i);
-    }
-
-
+    private PropertyChangeSupport support;
     private int value;
     private final int positionInRow;
     private int positionInCol;
     private int numberOfBox;
     private int positionInBox;
 
+    public SudokuField(int i, int j, int numberOfBox) {
+        this.support = new PropertyChangeSupport(this);
+        this.value = 0;
+        this.positionInRow = j;
+        this.positionInCol = i;
+        this.numberOfBox = numberOfBox;
+        this.positionInBox = getPositionInBox(j,i);
+    }
+
     public void setFieldValue(Integer value) {
-        if (value >= 0 && value <= 9) {
+        if (value >= 0 && value <= 9 && this.value != value) {
+            int oldVal = this.value;
             this.value = value;
+            support.firePropertyChange("value", oldVal, (int)value);
         }
     }
 
-    public int getNumberOfBox() {
-        return this.numberOfBox;
-    }
-
-    public int getPositionInRow() {
-        return this.positionInRow;
-    }
-
-    public int getPositionInBox() {
-        return this.positionInBox;
-    }
-
-    public int getPositionInCol() {
-        return this.positionInCol;
+    public void addListener(PropertyChangeListener listener) {
+        support.addPropertyChangeListener(listener);
     }
 
     public SudokuField getField() {
@@ -50,7 +41,19 @@ public class SudokuField {
         return value;
     }
 
-    private Integer countPositionInBox(int positionInRow, int positionInCol) {
+    public int getNumberOfBox() {
+        return this.numberOfBox;
+    }
+
+    public int getPositionInRow() {
+        return this.positionInRow;
+    }
+
+    public int getPositionInCol() {
+        return this.positionInCol;
+    }
+
+    private Integer getPositionInBox(int positionInRow, int positionInCol) {
 
         int startingRowNumberPosition = positionInRow - (positionInRow % 3);
         int startingColNumberPosition = positionInCol - (positionInCol % 3);
@@ -59,7 +62,9 @@ public class SudokuField {
         int calculatedColNumberPosition = positionInCol - startingColNumberPosition;
 
         return 3 * calculatedColNumberPosition + calculatedRowNumberPosition;
-
     }
 
+    public int getPositionInBox() {
+        return this.positionInBox;
+    }
 }

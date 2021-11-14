@@ -34,12 +34,10 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
             }
         }
 
-        // No empty space left
         if (full) {
             return true;
         }
 
-        // Else for each-row backtrack + random sudoku board generator
         Integer[] numbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         List<Integer> intList = Arrays.asList(numbers);
         Collections.shuffle(intList);
@@ -61,21 +59,18 @@ public class BacktrackingSudokuSolver implements SudokuSolver {
 
     private boolean isSafePosition(SudokuBoard board, int row, int col, int num) {
 
-        // check if num is already in row
         for (int i = 0; i < 9; i++) {
             if (board.get(row,i) == num) {
                 return false;
             }
         }
 
-        // check if num is already in col
         for (int i = 0; i < 9; i++) {
             if (board.get(i,col) == num) {
                 return false;
             }
         }
 
-        // check if num is already in box
         int sqrt = (int)Math.sqrt(9);
         int boxRowStart = row - row % sqrt;
         int boxColStart = col - col % sqrt;

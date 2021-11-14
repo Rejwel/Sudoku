@@ -1,10 +1,17 @@
 package sudoku;
 
-
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.List;
 
-public class SudokuBoard {
+public class SudokuBoard implements PropertyChangeListener {
+
+    private SudokuField[][] board;
+    private SudokuSolver solver;
+    private List<SudokuElement> sudokuColumns;
+    private List<SudokuElement> sudokuRows;
+    private List<SudokuElement> sudokuBoxes;
 
     public SudokuBoard(SudokuSolver solver) {
 
@@ -30,17 +37,10 @@ public class SudokuBoard {
                 startingColBoxNumber = j - (j % 3);
                 boxNumber = (3 * startingRowBoxNumber + startingColBoxNumber) / 3;
                 board[i][j] = new SudokuField(i, j, boxNumber);
+                board[i][j].addListener(this);
             }
         }
     }
-
-    private SudokuField[][] board;
-
-    private List<SudokuElement> sudokuColumns;
-    private List<SudokuElement> sudokuRows;
-    private List<SudokuElement> sudokuBoxes;
-
-    private SudokuSolver solver;
 
     public int get(int x, int y) {
         if (x > 8 || x < 0 || y > 8 || y < 0) {
@@ -49,32 +49,19 @@ public class SudokuBoard {
         return board[x][y].getFieldValue();
     }
 
-    private void setValueInElement(int value, int x, int y) {
-        sudokuRows.get(x).setNumberInArray(y, board[x][y].getField());
-        sudokuColumns.get(y).setNumberInArray(x, board[x][y].getField());
-        sudokuBoxes.get(board[x][y].getNumberOfBox())
-                .setNumberInArray(board[x][y].getPositionInBox(), board[x][y].getField());
-    }
-
     public void set(int x, int y, int value) {
         if (x > 8 || x < 0 || y > 8 || y < 0 || value < 0 || value > 9) {
             return;
         }
-        setValueInElement(value, x, y);
+        setFieldInElement(x, y);
         this.board[x][y].setFieldValue(value);
     }
 
-    private boolean checkBoard() {
-        boolean isValid = true;
-        for (int i = 0; i < 9; i++) {
-            isValid = sudokuColumns.get(i).verify();
-            isValid = sudokuRows.get(i).verify();
-            isValid = sudokuBoxes.get(i).verify();
-            if (!isValid) {
-                return false;
-            }
-        }
-        return true;
+    private void setFieldInElement(int x, int y) {
+        sudokuRows.get(x).setNumberInArray(y, board[x][y].getField());
+        sudokuColumns.get(y).setNumberInArray(x, board[x][y].getField());
+        sudokuBoxes.get(board[x][y].getNumberOfBox())
+                .setNumberInArray(board[x][y].getPositionInBox(), board[x][y].getField());
     }
 
     public SudokuElement getSudokuColumn(Integer x) {
@@ -106,5 +93,23 @@ public class SudokuBoard {
         solver.solve(this);
     }
 
+    private boolean checkBoard() {
+        boolean isValid;
+        for (int i = 0; i < 9; i++) {
+            isValid = sudokuColumns.get(i).verify();
+            isValid = sudokuRows.get(i).verify();
+            isValid = sudokuBoxes.get(i).verify();
+            if (!isValid) {
+                return false;
+            }
+        }
+        return true;
+    }
 
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (!checkBoard()) {
+            System.out.println("Ten element nie pasuje w tym miejscu");
+        }
+    }
 }
