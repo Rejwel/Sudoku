@@ -2,6 +2,9 @@ package sudoku;
 
 import java.util.Arrays;
 import java.util.List;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public abstract class SudokuElement {
 
@@ -30,5 +33,32 @@ public abstract class SudokuElement {
 
     public void setNumberInArray(Integer pos, SudokuField field) {
         this.fields.set(pos, field);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("fields", fields).toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof SudokuField)) {
+            return false;
+        }
+        SudokuElement that = (SudokuElement) o;
+        return new EqualsBuilder()
+                .append(this.fields, that.fields)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(this.fields)
+                .toHashCode();
     }
 }
