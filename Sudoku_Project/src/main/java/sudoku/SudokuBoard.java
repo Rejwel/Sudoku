@@ -4,6 +4,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class SudokuBoard implements PropertyChangeListener {
 
@@ -111,5 +114,32 @@ public class SudokuBoard implements PropertyChangeListener {
         if (!checkBoard()) {
             System.out.println("Ten element nie pasuje w tym miejscu");
         }
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("board", board).toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof SudokuField)) {
+            return false;
+        }
+        SudokuBoard that = (SudokuBoard) o;
+        return new EqualsBuilder()
+                .append(this.board, that.board)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(this.board)
+                .toHashCode();
     }
 }

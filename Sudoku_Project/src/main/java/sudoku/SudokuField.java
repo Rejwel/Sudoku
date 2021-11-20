@@ -1,7 +1,11 @@
 package sudoku;
 
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class SudokuField {
 
@@ -18,14 +22,14 @@ public class SudokuField {
         this.positionInRow = j;
         this.positionInCol = i;
         this.numberOfBox = numberOfBox;
-        this.positionInBox = getPositionInBox(j,i);
+        this.positionInBox = getPositionInBox(j, i);
     }
 
     public void setFieldValue(Integer value) {
         if (value >= 0 && value <= 9 && this.value != value) {
             int oldVal = this.value;
             this.value = value;
-            support.firePropertyChange("value", oldVal, (int)value);
+            support.firePropertyChange("value", oldVal, (int) value);
         }
     }
 
@@ -66,5 +70,44 @@ public class SudokuField {
 
     public int getPositionInBox() {
         return this.positionInBox;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("value", value)
+                .append("positionInRow", positionInRow)
+                .append("positionInCol", positionInCol)
+                .append("numberOfBox", numberOfBox)
+                .append("positionInBox", positionInBox).toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof SudokuField)) {
+            return false;
+        }
+        SudokuField that = (SudokuField) o;
+        return new EqualsBuilder()
+                .append(this.value, that.value)
+                .append(this.positionInRow, that.positionInRow)
+                .append(this.positionInCol, that.positionInCol)
+                .append(this.numberOfBox, that.numberOfBox)
+                .append(this.positionInBox, that.positionInBox)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(value)
+                .append(positionInRow)
+                .append(positionInCol)
+                .append(numberOfBox)
+                .append(positionInBox)
+                .toHashCode();
     }
 }
