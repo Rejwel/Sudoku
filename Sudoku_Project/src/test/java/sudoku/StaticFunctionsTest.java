@@ -59,7 +59,7 @@ class StaticFunctionsTest {
         int[][] clearArray = new int[9][9];
 
         StaticFunctions.clearBoard(board);
-        int[][] copiedArray = StaticFunctions.copyBoard(board);
+        int[][] copiedArray = StaticFunctions.boardTo2DArray(board);
 
         assertTrue(Arrays.deepEquals(copiedArray, clearArray));
 
@@ -76,7 +76,7 @@ class StaticFunctionsTest {
 
 
         board.set(0, 0, 1);
-        int[][] copiedArray = StaticFunctions.copyBoard(board);
+        int[][] copiedArray = StaticFunctions.boardTo2DArray(board);
 
         assertTrue(Arrays.deepEquals(copiedArray, tempArray));
 

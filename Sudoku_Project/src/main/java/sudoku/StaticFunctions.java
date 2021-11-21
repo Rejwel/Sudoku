@@ -54,7 +54,7 @@ public final class StaticFunctions {
         }
     }
 
-    public static int[][] copyBoard(SudokuBoard board) {
+    public static int[][] boardTo2DArray(SudokuBoard board) {
         int[][] boardCopy = new int[9][9];
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {

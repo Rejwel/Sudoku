@@ -20,12 +20,12 @@ class SudokuBoardTest {
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
 
-        int[][] startingBoard = StaticFunctions.copyBoard(board);
+        int[][] startingBoard = StaticFunctions.boardTo2DArray(board);
 
         StaticFunctions.clearRandomSquaresFromBoard(board);
 
         board.solveGame();
-        int[][] afterSolvingBoard = StaticFunctions.copyBoard(board);
+        int[][] afterSolvingBoard = StaticFunctions.boardTo2DArray(board);
 
 
         assertTrue(Arrays.deepEquals(startingBoard, afterSolvingBoard));
@@ -220,5 +220,92 @@ class SudokuBoardTest {
         board.set(1,1, -1);
         assertEquals(board.get(1,1), temp);
 
+    }
+
+    @Test
+    void toStringTest() {
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
+        String str = board.toString();
+        assertEquals(str, board.toString());
+    }
+
+    @Test
+    void equalsThisTest() {
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
+
+        assertTrue(board.equals(board));
+    }
+
+    @Test
+    void notEqualsObjectsTest() {
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
+        SudokuElement row = new SudokuRow();
+
+        assertFalse(board.equals(row));
+    }
+
+    @Test
+    void equalsTest() {
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
+        SudokuBoard board2 = new SudokuBoard(backtracking);
+
+        assertTrue(board.equals(board2));
+    }
+
+    @Test
+    void notEqualsTest() {
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
+        board.solveGame();
+        SudokuBoard board2 = new SudokuBoard(backtracking);
+        board2.solveGame();
+
+        assertFalse(board.equals(board2));
+    }
+
+    @Test
+    void sameHashCodeTest() {
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
+        SudokuBoard board2 = new SudokuBoard(backtracking);
+
+        assertEquals(board.hashCode(), board2.hashCode());
+    }
+
+    @Test
+    void differentHashCodeTest() {
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
+        board.solveGame();
+        SudokuBoard board2 = new SudokuBoard(backtracking);
+        board2.solveGame();
+
+        assertNotEquals(board.hashCode(), board2.hashCode());
+    }
+
+    @Test
+    void hashCodeFalseEqualsMustBeFalse() {
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
+        board.solveGame();
+        SudokuBoard board2 = new SudokuBoard(backtracking);
+        board2.solveGame();
+
+        assertNotEquals(board.hashCode(), board2.hashCode());
+        assertFalse(board.equals(board2));
+    }
+
+    @Test
+    void equalsTrueHashCodeMustBeTrue() {
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
+        SudokuBoard board2 = new SudokuBoard(backtracking);
+
+        assertTrue(board.equals(board2));
+        assertEquals(board.hashCode(), board2.hashCode());
     }
 }

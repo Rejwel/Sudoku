@@ -127,7 +127,7 @@ public class SudokuBoard implements PropertyChangeListener {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof SudokuField)) {
+        if (!(o instanceof SudokuBoard)) {
             return false;
         }
         SudokuBoard that = (SudokuBoard) o;
