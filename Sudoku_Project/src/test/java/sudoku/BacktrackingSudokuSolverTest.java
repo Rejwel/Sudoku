@@ -34,7 +34,7 @@ class BacktrackingSudokuSolverTest {
 
         boolean isTheSameBoard = true;
 
-        int[][] firstBoard = StaticFunctions.copyBoard(sudokuBoard);
+        int[][] firstBoard = StaticFunctions.boardTo2DArray(sudokuBoard);
         StaticFunctions.clearBoard(sudokuBoard);
         sudokuBoard.solveGame();
 

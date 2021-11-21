@@ -46,7 +46,7 @@ public abstract class SudokuElement {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof SudokuField)) {
+        if (getClass() != o.getClass()) {
             return false;
         }
         SudokuElement that = (SudokuElement) o;
