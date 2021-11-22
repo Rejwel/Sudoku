@@ -1,8 +1,10 @@
 package sudoku;
 
 
+import java.io.IOException;
+
 public class SudokuApp {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
@@ -19,5 +21,8 @@ public class SudokuApp {
         System.out.println(board.equals(board1));
         System.out.println(board1.hashCode());
 
+        SudokuBoardDaoFactory dao = new SudokuBoardDaoFactory();
+        dao.getFileDao("test").write(board);
+        StaticFunctions.printBoard((SudokuBoard) dao.getFileDao("test").read());
     }
 }
