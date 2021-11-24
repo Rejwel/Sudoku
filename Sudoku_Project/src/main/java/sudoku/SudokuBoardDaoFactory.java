@@ -4,11 +4,7 @@ public class SudokuBoardDaoFactory {
     public SudokuBoardDaoFactory() {
     }
 
-    Dao getFileDao(String fileName) {
-        try(FileSudokuBoardDao dao =  new FileSudokuBoardDao(fileName)){
-            return dao;
-        } catch (Exception e) {
-            throw new RuntimeException("Cos");
-        }
+    Dao<SudokuBoard> getFileDao(String fileName) {
+        return new FileSudokuBoardDao(fileName);
     }
 }

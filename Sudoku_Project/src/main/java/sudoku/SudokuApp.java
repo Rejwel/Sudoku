@@ -22,7 +22,7 @@ public class SudokuApp {
         System.out.println(board1.hashCode());
 
         SudokuBoardDaoFactory dao = new SudokuBoardDaoFactory();
-        dao.getFileDao("test").write(board);
+        //dao.getFileDao("test").write(board);
         StaticFunctions.printBoard((SudokuBoard) dao.getFileDao("test").read());
     }
 }
