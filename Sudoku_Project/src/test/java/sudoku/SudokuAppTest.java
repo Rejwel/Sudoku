@@ -2,6 +2,8 @@ package sudoku;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SudokuAppTest {
@@ -18,7 +20,7 @@ class SudokuAppTest {
             SudokuApp app = new SudokuApp();
             String[] args = null;
             SudokuApp.main(args);
-        } catch (ExceptionInInitializerError e) {
+        } catch (ExceptionInInitializerError | IOException e) {
             hasErrors = true;
         }
 
