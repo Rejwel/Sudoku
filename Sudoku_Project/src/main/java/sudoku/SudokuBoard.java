@@ -2,13 +2,14 @@ package sudoku;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class SudokuBoard implements PropertyChangeListener {
+public class SudokuBoard implements PropertyChangeListener, Serializable {
 
     private SudokuField[][] board;
     private SudokuSolver solver;

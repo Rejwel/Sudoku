@@ -3,7 +3,7 @@ package sudoku;
 import java.io.*;
 import java.sql.SQLOutput;
 
-public class FileSudokuBoardDao implements Dao<SudokuBoard>, AutoCloseable {
+public class FileSudokuBoardDao implements Dao<SudokuBoard> {
 
     private String fileName;
 
@@ -13,41 +13,31 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard>, AutoCloseable {
 
     @Override
     public SudokuBoard read() {
-        try (BufferedReader fileReader = new BufferedReader(new FileReader(fileName + ".txt"));) {
-            String linia;
-            BacktrackingSudokuSolver back = new BacktrackingSudokuSolver();
-            SudokuBoard board = new SudokuBoard(back);
-            String[] tablica;
-            int counter = 0;
-            while ((linia = fileReader.readLine()) != null) {
-                tablica = linia.split(",");
-                for (int i = 0; i < 9; i++) {
-                    board.set(counter, i, Integer.parseInt(tablica[i]));
-                }
-                counter++;
-            }
+        try (
+                FileInputStream f = new FileInputStream(fileName + ".txt");
+                ObjectInputStream o = new ObjectInputStream(f);
+        ) {
+            SudokuBoard board = (SudokuBoard) o.readObject();
             return board;
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public void write(SudokuBoard object) {
-        try (FileWriter fw = new FileWriter(fileName + ".txt");) {
-            for (int i = 0; i < 9; i++) {
-                for (int j = 0; j < 9; j++) {
-                    fw.write(object.get(i, j) + ",");
-                }
-                fw.write("\n");
-            }
+        try (
+                FileOutputStream f = new FileOutputStream(fileName + ".txt");
+                ObjectOutputStream o = new ObjectOutputStream(f)
+        ) {
+            o.writeObject(object);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         System.out.println("Zamykanie");
     }
 }

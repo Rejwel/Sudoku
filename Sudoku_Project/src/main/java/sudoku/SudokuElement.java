@@ -1,12 +1,13 @@
 package sudoku;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public abstract class SudokuElement {
+public abstract class SudokuElement implements Serializable {
 
     private List<SudokuField> fields;
 
