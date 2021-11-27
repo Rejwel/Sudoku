@@ -1,6 +1,11 @@
 package sudoku;
 
-import java.io.*;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.SQLOutput;
 
 public class FileSudokuBoardDao implements Dao<SudokuBoard> {
@@ -14,7 +19,7 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     @Override
     public SudokuBoard read() {
         try (
-                FileInputStream f = new FileInputStream(fileName + ".txt");
+                FileInputStream f = new FileInputStream(fileName + ".bin");
                 ObjectInputStream o = new ObjectInputStream(f);
         ) {
             SudokuBoard board = (SudokuBoard) o.readObject();
@@ -27,7 +32,7 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     @Override
     public void write(SudokuBoard object) {
         try (
-                FileOutputStream f = new FileOutputStream(fileName + ".txt");
+                FileOutputStream f = new FileOutputStream(fileName + ".bin");
                 ObjectOutputStream o = new ObjectOutputStream(f)
         ) {
             o.writeObject(object);

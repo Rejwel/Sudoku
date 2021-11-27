@@ -22,6 +22,8 @@ class SudokuAppTest {
             SudokuApp.main(args);
         } catch (ExceptionInInitializerError | IOException e) {
             hasErrors = true;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         assertFalse(hasErrors);

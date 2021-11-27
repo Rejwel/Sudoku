@@ -4,7 +4,7 @@ package sudoku;
 import java.io.IOException;
 
 public class SudokuApp {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
 
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
