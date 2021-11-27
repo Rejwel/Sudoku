@@ -1,6 +1,7 @@
 package sudoku;
 
 public class SudokuBoardDaoFactory {
+
     public SudokuBoardDaoFactory() {
     }
 
