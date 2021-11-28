@@ -13,19 +13,14 @@ class SudokuAppTest {
 
     @Test
     void sudokuAppTest() {
-
-        boolean hasErrors = false;
-
         try {
             SudokuApp app = new SudokuApp();
             String[] args = null;
             SudokuApp.main(args);
-        } catch (ExceptionInInitializerError | IOException e) {
-            hasErrors = true;
-        } catch (Exception e) {
+            assertDoesNotThrow(SudokuApp::new);
+            assertDoesNotThrow(() -> SudokuApp.main(args));
+        } catch (ExceptionInInitializerError | Exception e) {
             e.printStackTrace();
         }
-
-        assertFalse(hasErrors);
     }
 }

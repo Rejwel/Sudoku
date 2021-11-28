@@ -3,6 +3,9 @@ package sudoku;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import sudoku.elements.SudokuBoard;
+import sudoku.elements.SudokuElement;
+import sudoku.elements.SudokuField;
 
 public final class StaticFunctions {
 

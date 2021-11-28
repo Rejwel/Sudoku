@@ -1,6 +1,12 @@
-package sudoku;
+package sudoku.solver;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import sudoku.StaticFunctions;
+import sudoku.elements.SudokuBoard;
+import sudoku.elements.SudokuField;
+import sudoku.solver.BacktrackingSudokuSolver;
+import sudoku.solver.SudokuSolver;
 
 import java.util.List;
 
@@ -19,7 +25,7 @@ class BacktrackingSudokuSolverTest {
             List<SudokuField> row = sudokuBoard.getSudokuRow(i).getFields();
             List<SudokuField> column = sudokuBoard.getSudokuColumn(i).getFields();
             List<SudokuField> box = sudokuBoard.getSudokuBox(i).getFields();
-            assertFalse(StaticFunctions.hasDuplicate(row));
+            Assertions.assertFalse(StaticFunctions.hasDuplicate(row));
             assertFalse(StaticFunctions.hasDuplicate(column));
             assertFalse(StaticFunctions.hasDuplicate(box));
         }

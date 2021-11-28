@@ -1,6 +1,10 @@
-package sudoku;
+package sudoku.elements;
 
 import org.junit.jupiter.api.Test;
+import sudoku.elements.SudokuBoard;
+import sudoku.elements.SudokuField;
+import sudoku.solver.BacktrackingSudokuSolver;
+import sudoku.solver.SudokuSolver;
 
 import static org.junit.jupiter.api.Assertions.*;
 

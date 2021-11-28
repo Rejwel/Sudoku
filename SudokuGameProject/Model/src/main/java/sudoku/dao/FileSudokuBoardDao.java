@@ -1,12 +1,12 @@
-package sudoku;
-
+package sudoku.dao;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.sql.SQLOutput;
+import sudoku.elements.SudokuBoard;
+
 
 public class FileSudokuBoardDao implements Dao<SudokuBoard> {
 
@@ -24,7 +24,7 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
         ) {
             SudokuBoard board = (SudokuBoard) o.readObject();
             return board;
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (ClassNotFoundException | IOException e) {
             throw new RuntimeException(e);
         }
     }

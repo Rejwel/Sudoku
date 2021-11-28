@@ -1,4 +1,4 @@
-package sudoku;
+package sudoku.dao;
 
 import java.io.IOException;
 

@@ -1,7 +1,10 @@
-package sudoku;
+package sudoku.elements;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sudoku.elements.*;
+import sudoku.solver.BacktrackingSudokuSolver;
+import sudoku.solver.SudokuSolver;
 
 import static org.junit.jupiter.api.Assertions.*;
 

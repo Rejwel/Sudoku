@@ -1,4 +1,4 @@
-package sudoku;
+package sudoku.elements;
 
 
 import java.beans.PropertyChangeListener;

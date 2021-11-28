@@ -1,4 +1,4 @@
-package sudoku;
+package sudoku.elements;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import sudoku.solver.SudokuSolver;
 
 public class SudokuBoard implements PropertyChangeListener, Serializable {
 

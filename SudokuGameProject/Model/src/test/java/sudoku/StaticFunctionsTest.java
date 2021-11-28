@@ -1,6 +1,9 @@
 package sudoku;
 
 import org.junit.jupiter.api.Test;
+import sudoku.elements.*;
+import sudoku.solver.BacktrackingSudokuSolver;
+import sudoku.solver.SudokuSolver;
 
 import java.util.Arrays;
 import java.util.List;
