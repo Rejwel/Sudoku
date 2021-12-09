@@ -1,6 +1,7 @@
 package sudoku.elements;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -8,7 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import sudoku.StaticFunctions;
 
-public abstract class SudokuElement implements Serializable {
+public abstract class SudokuElement implements Serializable, Cloneable {
 
     private List<SudokuField> fields;
 
@@ -16,15 +17,11 @@ public abstract class SudokuElement implements Serializable {
         fields = Arrays.asList(new SudokuField[9]);
     }
 
-    public List<SudokuField> getFields() {
+    public List<SudokuField> getFields() throws CloneNotSupportedException {
 
         List<SudokuField> listCol = Arrays.asList(new SudokuField[9]);
         for (int i = 0; i < 9; i++) {
-            SudokuField field = new SudokuField(fields.get(i).getPositionInCol(),
-                    fields.get(i).getPositionInRow(),
-                    fields.get(i).getNumberOfBox());
-            field.setFieldValue(fields.get(i).getFieldValue());
-            listCol.set(i, field);
+            listCol.set(i, fields.get(i).clone());
         }
         return listCol;
     }
@@ -62,5 +59,15 @@ public abstract class SudokuElement implements Serializable {
         return new HashCodeBuilder()
                 .append(this.fields)
                 .toHashCode();
+    }
+
+    @Override
+    public SudokuElement clone() throws CloneNotSupportedException {
+        SudokuElement clone = (SudokuElement) super.clone();
+        clone.fields = new ArrayList<>(fields);
+        for (int i = 0; i < 9; i++) {
+            clone.fields.set(i, fields.get(i).clone());
+        }
+        return clone;
     }
 }

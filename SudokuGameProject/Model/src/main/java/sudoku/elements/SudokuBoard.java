@@ -3,6 +3,7 @@ package sudoku.elements;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -10,7 +11,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import sudoku.solver.SudokuSolver;
 
-public class SudokuBoard implements PropertyChangeListener, Serializable {
+public class SudokuBoard implements PropertyChangeListener, Serializable, Cloneable {
 
     private SudokuField[][] board;
     private SudokuSolver solver;
@@ -69,7 +70,7 @@ public class SudokuBoard implements PropertyChangeListener, Serializable {
                 .setNumberInArray(board[x][y].getPositionInBox(), board[x][y].getField());
     }
 
-    public SudokuElement getSudokuColumn(Integer x) {
+    public SudokuElement getSudokuColumn(Integer x) throws CloneNotSupportedException {
         SudokuElement col = new SudokuColumn();
         for (int i = 0; i < 9; i++) {
             col.setNumberInArray(i, sudokuColumns.get(x).getFields().get(i));
@@ -77,7 +78,7 @@ public class SudokuBoard implements PropertyChangeListener, Serializable {
         return col;
     }
 
-    public SudokuElement getSudokuRow(Integer y) {
+    public SudokuElement getSudokuRow(Integer y) throws CloneNotSupportedException {
         SudokuElement row = new SudokuRow();
         for (int i = 0; i < 9; i++) {
             row.setNumberInArray(i, sudokuRows.get(y).getFields().get(i));
@@ -85,7 +86,7 @@ public class SudokuBoard implements PropertyChangeListener, Serializable {
         return row;
     }
 
-    public SudokuElement getSudokuBox(Integer x) {
+    public SudokuElement getSudokuBox(Integer x) throws CloneNotSupportedException {
         SudokuElement box = new SudokuBox();
         for (int i = 0; i < 9; i++) {
             box.setNumberInArray(sudokuBoxes.get(x).getFields().get(i).getPositionInBox(),
@@ -143,5 +144,23 @@ public class SudokuBoard implements PropertyChangeListener, Serializable {
         return new HashCodeBuilder()
                 .append(this.board)
                 .toHashCode();
+    }
+
+    @Override
+    protected SudokuBoard clone() throws CloneNotSupportedException {
+        SudokuBoard clone = (SudokuBoard) super.clone();
+        clone.board = new SudokuField[9][9];
+        clone.sudokuRows = new ArrayList<>(sudokuBoxes);
+        clone.sudokuRows = new ArrayList<>(sudokuColumns);
+        clone.sudokuRows = new ArrayList<>(sudokuRows);
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                clone.board[i][j] = board[i][j].clone();
+            }
+            clone.sudokuBoxes.set(i, sudokuBoxes.get(i).clone());
+            clone.sudokuColumns.set(i, sudokuColumns.get(i).clone());
+            clone.sudokuRows.set(i, sudokuRows.get(i).clone());
+        }
+        return clone;
     }
 }

@@ -93,7 +93,7 @@ class StaticFunctionsTest {
     }
 
     @Test
-    void sudokuElementToArray() {
+    void sudokuElementToArray() throws CloneNotSupportedException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();

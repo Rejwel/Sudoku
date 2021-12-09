@@ -119,7 +119,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void verifyTest() {
+    void verifyTest() throws CloneNotSupportedException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
 
@@ -133,7 +133,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void verifyNegativeTest() {
+    void verifyNegativeTest() throws CloneNotSupportedException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
 
@@ -165,8 +165,8 @@ class SudokuBoardTest {
 
         assertTrue((Boolean) checkBoardMethod.invoke(board));
 
-        board.set(0,0,1);
-        board.set(0,1,1);
+        board.set(0, 0, 1);
+        board.set(0, 1, 1);
 
         assertFalse((Boolean) checkBoardMethod.invoke(board));
     }
@@ -181,8 +181,8 @@ class SudokuBoardTest {
 
         assertTrue((Boolean) checkBoardMethod.invoke(board));
 
-        board.set(0,0,1);
-        board.set(1,0,1);
+        board.set(0, 0, 1);
+        board.set(1, 0, 1);
 
         assertFalse((Boolean) checkBoardMethod.invoke(board));
     }
@@ -197,34 +197,34 @@ class SudokuBoardTest {
 
         assertTrue((Boolean) checkBoardMethod.invoke(board));
 
-        board.set(0,0,1);
-        board.set(1,1,1);
+        board.set(0, 0, 1);
+        board.set(1, 1, 1);
 
         assertFalse((Boolean) checkBoardMethod.invoke(board));
     }
 
     @Test
-    void setValueInElementPositive(){
+    void setValueInElementPositive() {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
 
-        board.set(0,0,1);
-        assertEquals(board.get(0,0), 1);
+        board.set(0, 0, 1);
+        assertEquals(board.get(0, 0), 1);
     }
 
     @Test
-    void setValueInElementNegative(){
+    void setValueInElementNegative() {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
 
-        int temp = board.get(0,0);
-        board.set(0,0,10);
-        assertEquals(board.get(0,0), temp);
-        temp = board.get(1,1);
-        board.set(1,1, -1);
-        assertEquals(board.get(1,1), temp);
+        int temp = board.get(0, 0);
+        board.set(0, 0, 10);
+        assertEquals(board.get(0, 0), temp);
+        temp = board.get(1, 1);
+        board.set(1, 1, -1);
+        assertEquals(board.get(1, 1), temp);
 
     }
 
@@ -313,5 +313,30 @@ class SudokuBoardTest {
 
         assertTrue(board.equals(board2));
         assertEquals(board.hashCode(), board2.hashCode());
+    }
+
+    @Test
+    void copyTest() throws CloneNotSupportedException {
+        SudokuSolver backtracking = new BacktrackingSudokuSolver();
+        SudokuBoard board = new SudokuBoard(backtracking);
+        board.solveGame();
+
+        SudokuBoard clone = board.clone();
+        assertEquals(clone.get(0, 0), board.get(0, 0));
+        assertEquals(clone.get(1, 0), board.get(1, 0));
+        assertEquals(clone.get(2, 0), board.get(2, 0));
+
+        clone.set(0, 0, 1);
+        clone.set(1, 0, 1);
+        clone.set(2, 0, 1);
+        board.set(0, 0, 9);
+        board.set(1, 0, 9);
+        board.set(2, 0, 9);
+
+        assertNotEquals(clone.get(0, 0), board.get(0, 0));
+        assertNotEquals(clone.get(1, 0), board.get(1, 0));
+        assertNotEquals(clone.get(2, 0), board.get(2, 0));
+
+
     }
 }

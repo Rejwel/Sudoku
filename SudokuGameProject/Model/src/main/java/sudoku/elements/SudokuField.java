@@ -8,14 +8,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class SudokuField implements Serializable {
+public class SudokuField implements Serializable, Cloneable, Comparable<SudokuField> {
 
     private PropertyChangeSupport support;
     private int value;
     private final int positionInRow;
-    private int positionInCol;
-    private int numberOfBox;
-    private int positionInBox;
+    private final int positionInCol;
+    private final int numberOfBox;
+    private final int positionInBox;
 
     public SudokuField(int i, int j, int numberOfBox) {
         this.support = new PropertyChangeSupport(this);
@@ -110,5 +110,18 @@ public class SudokuField implements Serializable {
                 .append(numberOfBox)
                 .append(positionInBox)
                 .toHashCode();
+    }
+
+    @Override
+    public int compareTo(SudokuField o) {
+        if (o == null) {
+            throw new NullPointerException("Podany obiekt jest nullem");
+        }
+        return this.value - o.value;
+    }
+
+    @Override
+    public SudokuField clone() throws CloneNotSupportedException {
+        return (SudokuField) super.clone();
     }
 }
