@@ -139,4 +139,18 @@ class SudokuElementTest {
         assertEquals(row1.hashCode(), col1.hashCode());
     }
 
+    @Test
+    void sudokuElementCloneTest() throws CloneNotSupportedException {
+        SudokuElement clone = row1.clone();
+
+        assertEquals(clone.getFields().get(0),row1.getFields().get(0));
+        assertEquals(clone.getFields().get(1),row1.getFields().get(1));
+        assertEquals(clone.getFields().get(2),row1.getFields().get(2));
+        row1.setNumberInArray(0,f8);
+        row1.setNumberInArray(1,f8);
+        row1.setNumberInArray(2,f8);
+        assertNotEquals(clone.getFields().get(0),row1.getFields().get(0));
+        assertNotEquals(clone.getFields().get(1),row1.getFields().get(1));
+        assertNotEquals(clone.getFields().get(2),row1.getFields().get(2));
+    }
 }

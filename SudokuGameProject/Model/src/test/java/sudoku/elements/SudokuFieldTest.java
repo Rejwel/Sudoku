@@ -29,6 +29,16 @@ class SudokuFieldTest {
     }
 
     @Test
+    void getPositionInRowTest() {
+        assertEquals(field3.getPositionInRow(), 1);
+    }
+
+    @Test
+    void getPositionInColumnTest() {
+        assertEquals(field3.getPositionInCol(), 1);
+    }
+
+    @Test
     void toStringTest() {
         String str = field.toString();
         assertEquals(str, field.toString());
@@ -78,4 +88,21 @@ class SudokuFieldTest {
         assertTrue(field.equals(field2));
     }
 
+    @Test
+    void compareToTest() {
+        assertEquals(field.compareTo(field2), field.getFieldValue() - field2.getFieldValue());
+    }
+
+    @Test
+    void compareToNullPointerExcepionTest() {
+        assertThrows(NullPointerException.class, ()->{field.compareTo(null);});
+    }
+
+    @Test
+    void copyTest() throws CloneNotSupportedException {
+        SudokuField copy = field.clone();
+        assertEquals(copy,field);
+        field.setFieldValue(9);
+        assertNotEquals(copy,field);
+    }
 }

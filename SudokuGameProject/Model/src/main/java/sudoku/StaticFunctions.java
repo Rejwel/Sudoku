@@ -32,7 +32,8 @@ public final class StaticFunctions {
         return Arrays.stream(temp).distinct().count() - zero != temp.length - zeros;
     }
 
-    public static Integer[] sudokuElementToArray(SudokuElement fields) {
+    public static Integer[] sudokuElementToArray(SudokuElement fields)
+            throws CloneNotSupportedException {
         Integer[] temp = new Integer[fields.getFields().size()];
 
         for (int i = 0; i < fields.getFields().size(); i++) {
