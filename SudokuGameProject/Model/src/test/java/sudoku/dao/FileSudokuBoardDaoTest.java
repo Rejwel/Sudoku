@@ -37,6 +37,8 @@ class FileSudokuBoardDaoTest {
         try(Dao dao = daoFactory.getFileDao("test")) {
             assertThrows(ClassCastException.class, () -> dao.write(SudokuRow));
             assertThrows(ClassNotFoundException.class, () -> dao.write(Class.forName("temp")));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -54,6 +56,8 @@ class FileSudokuBoardDaoTest {
                 assertThrows(RuntimeException.class, dao::read);
                 assertThrows(RuntimeException.class, () -> dao.write(board));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

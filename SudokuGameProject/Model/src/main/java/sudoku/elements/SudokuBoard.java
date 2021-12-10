@@ -44,6 +44,7 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
                 boxNumber = (3 * startingRowBoxNumber + startingColBoxNumber) / 3;
                 board[i][j] = new SudokuField(i, j, boxNumber);
                 board[i][j].addListener(this);
+                setFieldInElement(i, j);
             }
         }
     }
@@ -59,7 +60,6 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
         if (x > 8 || x < 0 || y > 8 || y < 0 || value < 0 || value > 9) {
             return;
         }
-        setFieldInElement(x, y);
         this.board[x][y].setFieldValue(value);
     }
 
@@ -147,7 +147,7 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
     }
 
     @Override
-    protected SudokuBoard clone() throws CloneNotSupportedException {
+    public SudokuBoard clone() throws CloneNotSupportedException {
         SudokuBoard clone = (SudokuBoard) super.clone();
         clone.board = new SudokuField[9][9];
         clone.sudokuRows = new ArrayList<>(sudokuBoxes);

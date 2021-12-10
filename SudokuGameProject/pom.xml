@@ -8,6 +8,7 @@
     <artifactId>SudokuGameProject</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
     <modules>
         <module>Model</module>
         <module>View</module>
