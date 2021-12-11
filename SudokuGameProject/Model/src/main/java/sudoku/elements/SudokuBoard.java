@@ -121,8 +121,7 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .append("board", board).toString();
+        return new ToStringBuilder(this).append("board", board).toString();
     }
 
     @Override
