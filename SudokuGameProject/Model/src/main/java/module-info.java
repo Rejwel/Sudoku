@@ -6,5 +6,6 @@
     exports sudoku;
     exports sudoku.elements;
     exports sudoku.solver;
+    exports sudoku.difficulty;
 }
 //CHECKSTYLE:ON

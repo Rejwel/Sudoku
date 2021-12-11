@@ -18,6 +18,7 @@ public class Main extends Application {
 
         primaryStage.setTitle("Sudoku Game");
         primaryStage.setScene(new Scene(main));
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 

@@ -3,17 +3,16 @@ package sudoku;
 import sudoku.elements.SudokuBoard;
 import sudoku.solver.SudokuSolver;
 
-public final class Repository {
+public class Repository {
 
-    private SudokuSolver solver;
     private SudokuBoard board;
 
-    private Repository(SudokuSolver solver) {
-        this.solver = solver;
+    public Repository(SudokuSolver solver) {
         board = new SudokuBoard(solver);
     }
 
     public SudokuBoard createSudokuBoard() throws CloneNotSupportedException {
+        board.solveGame();
         return board.clone();
     }
 }
