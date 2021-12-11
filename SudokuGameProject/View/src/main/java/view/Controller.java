@@ -15,7 +15,6 @@ import sudoku.difficulty.Level;
 import sudoku.elements.SudokuBoard;
 import sudoku.solver.BacktrackingSudokuSolver;
 
-
 public class Controller {
 
     private Repository repo = new Repository(new BacktrackingSudokuSolver());
@@ -30,18 +29,21 @@ public class Controller {
 
     @FXML
     private void setEasyDifficulty() throws IOException {
+        board.solveGame();
         Level.EASY.setDifficulty(board);
         startGame();
     }
 
     @FXML
     private void setMediumDifficulty() throws IOException {
+        board.solveGame();
         Level.MEDIUM.setDifficulty(board);
         startGame();
     }
 
     @FXML
     private void setHardDifficulty() throws IOException {
+        board.solveGame();
         Level.HARD.setDifficulty(board);
         startGame();
     }

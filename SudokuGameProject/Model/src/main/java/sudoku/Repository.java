@@ -12,7 +12,6 @@ public class Repository {
     }
 
     public SudokuBoard createSudokuBoard() throws CloneNotSupportedException {
-        board.solveGame();
         return board.clone();
     }
 }

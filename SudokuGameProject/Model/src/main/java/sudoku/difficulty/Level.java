@@ -11,7 +11,7 @@ public enum Level {
             case EASY -> removeFieldsFromBoard(board, 10);
             case MEDIUM -> removeFieldsFromBoard(board, 25);
             case HARD -> removeFieldsFromBoard(board, 50);
-            default -> throw new RuntimeException("Blad w wybieraniu trudnosci poziomu");
+            default -> throw new RuntimeException("Blad przy wyborze poziomu trodnosci");
         }
     }
 
@@ -22,7 +22,7 @@ public enum Level {
             int x = random.nextInt(9);
             int y = random.nextInt(9);
             if (board.get(x, y) != 0) {
-                board.set(random.nextInt(9), random.nextInt(9), 0);
+                board.set(x, y, 0);
                 counter--;
             }
         }

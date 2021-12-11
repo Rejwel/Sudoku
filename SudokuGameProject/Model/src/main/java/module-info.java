@@ -1,5 +1,4 @@
-//CHECKSTYLE:OFF
- open module ModelProject {
+open module ModelProject {
     requires org.apache.commons.lang3;
     requires java.desktop;
 
@@ -8,4 +7,3 @@
     exports sudoku.solver;
     exports sudoku.difficulty;
 }
-//CHECKSTYLE:ON
