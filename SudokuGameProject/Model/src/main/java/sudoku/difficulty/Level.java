@@ -4,19 +4,17 @@ import java.util.Random;
 import sudoku.elements.SudokuBoard;
 
 public enum Level {
-    EASY, MEDIUM, HARD;
+    EASY(10), MEDIUM(25), HARD(50);
 
-    public void setDifficulty(SudokuBoard board) {
-        switch (this) {
-            case EASY -> removeFieldsFromBoard(board, 10);
-            case MEDIUM -> removeFieldsFromBoard(board, 25);
-            case HARD -> removeFieldsFromBoard(board, 50);
-            default -> throw new RuntimeException("Blad przy wyborze poziomu trodnosci");
-        }
+    private final int level;
+
+    Level(int i) {
+        this.level = i;
     }
 
-    private void removeFieldsFromBoard(SudokuBoard board, int fieldsToDelete) {
-        int counter = fieldsToDelete;
+
+    public void removeFieldsFromBoard(SudokuBoard board) {
+        int counter = level;
         Random random = new Random();
         while (counter > 0) {
             int x = random.nextInt(9);

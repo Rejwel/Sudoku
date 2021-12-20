@@ -6,9 +6,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import sudoku.solver.BacktrackingSudokuSolver;
 import sudoku.solver.SudokuSolver;
 
 public class SudokuBoard implements PropertyChangeListener, Serializable, Cloneable {
@@ -152,6 +154,7 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
         clone.sudokuRows = new ArrayList<>(sudokuBoxes);
         clone.sudokuRows = new ArrayList<>(sudokuColumns);
         clone.sudokuRows = new ArrayList<>(sudokuRows);
+        clone.solver = solver.clone();
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 clone.board[i][j] = board[i][j].clone();
