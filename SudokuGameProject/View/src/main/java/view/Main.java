@@ -13,6 +13,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Locale.setDefault(new Locale("en"));
         ResourceBundle bundle = ResourceBundle.getBundle("bundles.basic");
         FXMLLoader main = new FXMLLoader(Objects
                 .requireNonNull(getClass().getResource("/sampleJavaFX.fxml")));

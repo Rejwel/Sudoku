@@ -1,10 +1,8 @@
 package view;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.adapter.JavaBeanStringProperty;
@@ -173,8 +171,15 @@ public class Controller {
     private Label languageLabel;
     @FXML
     private Label welcomeLabel;
+    @FXML
+    private Label author1;
+    @FXML
+    private Label author2;
+    @FXML
+    private Label authorTitle;
     private Locale locale;
     private ResourceBundle bundle;
+    private ResourceBundle bundleList;
 
     @FXML
     private Button start;
@@ -192,6 +197,7 @@ public class Controller {
         loadLanguage("pl");
     }
 
+
     private void loadLanguage(String lang) {
         locale = new Locale(lang);
         bundle = ResourceBundle.getBundle("bundles.basic",locale);
@@ -199,7 +205,13 @@ public class Controller {
         welcomeLabel.setText(bundle.getString("welcomeToGame"));
         start.setText(bundle.getString("start"));
         exit.setText(bundle.getString("exit"));
+        authorTitle.setText(bundle.getString("authors"));
+        bundleList = ResourceBundle.getBundle("view.listBundle.Authors",locale);
+        author1.setText(bundleList.getString("author1"));
+        author2.setText(bundleList.getString("author2"));
     }
+
+
 
     public class SudokuBidirectionalBinding {
         private SudokuBoard board;
