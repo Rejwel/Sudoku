@@ -2,7 +2,9 @@ package view;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.adapter.JavaBeanStringProperty;
@@ -16,9 +18,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import sudoku.Repository;
 import sudoku.StaticFunctions;
@@ -62,28 +67,34 @@ public class Controller {
     @FXML
     private void start() throws IOException {
 
-        Parent part = FXMLLoader.load(Objects.requireNonNull(getClass()
+        FXMLLoader part = new FXMLLoader(Objects.requireNonNull(getClass()
                 .getResource("/Levels.fxml")));
-
+        part.setResources(bundle);
         Stage stage = new Stage();
-        Scene scene = new Scene(part);
+        Scene scene = new Scene(part.load());
         stage.setScene(scene);
         stage.setTitle("Wybierz poziom");
+        stage.setHeight(600);
+        stage.setWidth(600);
         stage.setResizable(false);
         stage.show();
     }
 
     @FXML
     private void startGame() throws IOException {
-        Parent part = FXMLLoader.load(Objects.requireNonNull(getClass()
+
+        FXMLLoader part = new FXMLLoader(Objects.requireNonNull(getClass()
                 .getResource("/Game.fxml")));
+        part.setResources(bundle);
         Stage stage = new Stage();
-        //        stage.setResizable(false);
+        Pane borderPane = part.load();
         stage.setTitle("Gra Sudoku");
-        Scene scene = new Scene(part);
+        stage.setHeight(600);
+        stage.setWidth(600);
+        Scene scene = new Scene(borderPane);
         stage.setScene(scene);
 
-        gameBoard = (GridPane) part.lookup("#gameBoard");
+        gameBoard = (GridPane) borderPane.lookup("#gameBoard");
         gameBoard.setAlignment(Pos.CENTER);
         StaticFunctions.printBoard(board);
 
@@ -158,6 +169,38 @@ public class Controller {
         System.exit(0);
     }
 
+    @FXML
+    private Label languageLabel;
+    @FXML
+    private Label welcomeLabel;
+    private Locale locale;
+    private ResourceBundle bundle;
+
+    @FXML
+    private Button start;
+
+    @FXML
+    private Button exit;
+
+    @FXML
+    private void english() {
+        loadLanguage("en");
+    }
+
+    @FXML
+    private void polish() {
+        loadLanguage("pl");
+    }
+
+    private void loadLanguage(String lang) {
+        locale = new Locale(lang);
+        bundle = ResourceBundle.getBundle("bundles.basic",locale);
+        languageLabel.setText(bundle.getString("changeTolanguage"));
+        welcomeLabel.setText(bundle.getString("welcomeToGame"));
+        start.setText(bundle.getString("start"));
+        exit.setText(bundle.getString("exit"));
+    }
+
     public class SudokuBidirectionalBinding {
         private SudokuBoard board;
         private int xd;
@@ -183,4 +226,7 @@ public class Controller {
             System.out.println();
         }
     }
+
+
+
 }
