@@ -5,11 +5,16 @@ import java.util.Collections;
 import java.util.List;
 import sudoku.elements.SudokuBoard;
 
-public class BacktrackingSudokuSolver implements SudokuSolver {
+public class BacktrackingSudokuSolver implements SudokuSolver,Cloneable {
 
     @Override
     public void solve(SudokuBoard board) {
         solveBoard(board);
+    }
+
+    @Override
+    public SudokuSolver clone() throws CloneNotSupportedException {
+        return (BacktrackingSudokuSolver) super.clone();
     }
 
     // algorithm modified from https://www.geeksforgeeks.org/sudoku-backtracking-7/

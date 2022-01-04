@@ -1,24 +1,30 @@
 package view;
 
-import java.io.IOException;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent main = FXMLLoader.load(Objects
+        Locale.setDefault(new Locale("en"));
+        ResourceBundle bundle = ResourceBundle.getBundle("bundles.basic");
+        FXMLLoader main = new FXMLLoader(Objects
                 .requireNonNull(getClass().getResource("/sampleJavaFX.fxml")));
 
-        primaryStage.setTitle("Sudoku Game");
-        primaryStage.setScene(new Scene(main));
+
+        main.setResources(bundle);
+        primaryStage.setScene(new Scene(main.load()));
+        primaryStage.setTitle(bundle.getString("title.application"));
         primaryStage.setResizable(false);
+        primaryStage.setWidth(600);
+        primaryStage.setHeight(600);
         primaryStage.show();
     }
 

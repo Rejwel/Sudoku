@@ -5,4 +5,5 @@ module View {
     requires ModelProject;
 
     opens view;
+    opens view.listBundle;
 }

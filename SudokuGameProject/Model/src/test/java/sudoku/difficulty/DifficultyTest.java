@@ -20,9 +20,9 @@ public class DifficultyTest {
         b2.solveGame();
         b3.solveGame();
 
-        Level.EASY.setDifficulty(b1);
-        Level.MEDIUM.setDifficulty(b2);
-        Level.HARD.setDifficulty(b3);
+        Level.EASY.removeFieldsFromBoard(b1);
+        Level.MEDIUM.removeFieldsFromBoard(b2);
+        Level.HARD.removeFieldsFromBoard(b3);
 
         int b1ZerosCounter = 0;
         int b2ZerosCounter = 0;

@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controller">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controller">
    <children>
-      <Label layoutX="127.0" layoutY="46.0" text="Wybierz poziom trudności">
+      <Label layoutX="127.0" layoutY="46.0" text="%choosingLevel">
          <font>
             <Font size="30.0" />
          </font></Label>
-      <Button layoutX="192.0" layoutY="144.0" mnemonicParsing="false" onAction="#setEasyDifficulty" prefHeight="35.0" prefWidth="216.0" text="Łatwy" />
-      <Button layoutX="193.0" layoutY="210.0" mnemonicParsing="false" onAction="#setMediumDifficulty" prefHeight="35.0" prefWidth="216.0" text="Średni" />
-      <Button layoutX="192.0" layoutY="277.0" mnemonicParsing="false" onAction="#setHardDifficulty" prefHeight="35.0" prefWidth="216.0" text="Trudny" />
+      <Button layoutX="192.0" layoutY="144.0" mnemonicParsing="false" onAction="#setEasyDifficulty" prefHeight="35.0" prefWidth="216.0" text="%easy" />
+      <Button layoutX="193.0" layoutY="210.0" mnemonicParsing="false" onAction="#setMediumDifficulty" prefHeight="35.0" prefWidth="216.0" text="%medium" />
+      <Button layoutX="192.0" layoutY="277.0" mnemonicParsing="false" onAction="#setHardDifficulty" prefHeight="35.0" prefWidth="216.0" text="%hard" />
    </children>
 </AnchorPane>

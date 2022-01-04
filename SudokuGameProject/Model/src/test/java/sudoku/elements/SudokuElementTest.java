@@ -7,6 +7,7 @@ import sudoku.solver.BacktrackingSudokuSolver;
 import sudoku.solver.SudokuSolver;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class SudokuElementTest {
 
@@ -152,5 +153,6 @@ class SudokuElementTest {
         assertNotEquals(clone.getFields().get(0),row1.getFields().get(0));
         assertNotEquals(clone.getFields().get(1),row1.getFields().get(1));
         assertNotEquals(clone.getFields().get(2),row1.getFields().get(2));
+        assertFalse(clone.equals(row1));
     }
 }
