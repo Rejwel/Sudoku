@@ -22,9 +22,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sudoku.Repository;
@@ -54,10 +52,12 @@ public class Controller {
     }
 
     @FXML
-    private GridPane gameBoard;
+    private VBox gameBoard;
 
     @FXML
     private void setEasyDifficulty(ActionEvent event) throws IOException, CloneNotSupportedException {
+        System.out.println("setEasy");
+        StaticFunctions.printBoard(board);
         ((Node)event.getSource()).getScene().getWindow().hide();
         board.solveGame();
         Level.EASY.removeFieldsFromBoard(board);
@@ -88,6 +88,8 @@ public class Controller {
 
     @FXML
     private void start(ActionEvent event) throws IOException {
+        System.out.println("start");
+        StaticFunctions.printBoard(board);
         ((Node)event.getSource()).getScene().getWindow().hide();
 
         FXMLLoader part = new FXMLLoader(Objects.requireNonNull(getClass()
@@ -106,10 +108,16 @@ public class Controller {
 
     @FXML
     private void startGame() throws IOException {
-
+        System.out.println("startGame");
+        StaticFunctions.printBoard(board);
+        board.set(0,0,5);
+        board.set(0,1,5);
+        StaticFunctions.printBoard(board);
 
         FXMLLoader part = new FXMLLoader(Objects.requireNonNull(getClass()
                 .getResource("/Game.fxml")));
+
+
         part.setResources(bundle);
 
         Stage stage = new Stage();
@@ -120,12 +128,11 @@ public class Controller {
         Scene scene = new Scene(borderPane);
         stage.setScene(scene);
 
-        gameBoard = (GridPane) borderPane.lookup("#gameBoard");
-        gameBoard.setAlignment(Pos.CENTER);
-
+        gameBoard = (VBox) borderPane.lookup("#gameBoard");
         for (int i = 0; i < 9; i++) {
+            HBox wiersz = (HBox)gameBoard.getChildren().get(i);
             for (int j = 0; j < 9; j++) {
-                TextField text = new TextField();
+                TextField text = (TextField) wiersz.getChildren().get(j);
 
                 text.setMaxWidth(44);
                 text.setMaxHeight(46);
@@ -135,26 +142,8 @@ public class Controller {
                 if (board.get(i, j) != 0) {
                     text.setDisable(true);
                 }
-                text.textProperty().addListener(new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observableValue,
-                                        String s, String t1) {
-                        if (t1.length() == 0) {
-                            return;
-                        }
-                        if (t1.length() > 1) {
-                            t1 = t1.substring(0, 1);
-                        }
-                        if (!(t1.charAt(0) >= 49 && t1.charAt(0) <= 57)) {
-                            t1 = "";
-                            text.setText(t1);
-                            text.positionCaret(text.getText().length());
-                        } else {
-                            text.setText(t1);
-                        }
-                    }
-                });
-                gameBoard.add(text, j, i);
+                text.textProperty().addListener(this::fieldListener);
+
             }
         }
 
@@ -164,24 +153,17 @@ public class Controller {
 
 
     private void bind() {
-        System.out.println(gameBoard.getChildren());
-        List<Node> lista = gameBoard.getChildren();
-        lista.remove(0);
+
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 try {
+                    TextField text = (TextField) ((HBox)gameBoard.getChildren().get(i)).getChildren().get(j);
                     SudokuBidirectionalBinding fieldAdapter = new
                             SudokuBidirectionalBinding(board, i, j);
                     StringProperty textField = JavaBeanStringPropertyBuilder.create()
                             .bean(fieldAdapter).name("xd").build();
 
-                    for (Node node : lista) {
-                        if (gameBoard.getRowIndex(node) == i
-                                && gameBoard.getColumnIndex(node) == j) {
-                            ((TextField) node).textProperty().bindBidirectional(textField);
-                            break;
-                        }
-                    }
+                    text.textProperty().bindBidirectional(textField);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -190,10 +172,13 @@ public class Controller {
     }
 
     @FXML
+    private Button save;
+
+    @FXML
     private void save(ActionEvent event){
-        StaticFunctions.printBoard(boardOriginal);
+        System.out.println("save");
+        StaticFunctions.printBoard(this.board);
         System.out.println();
-        StaticFunctions.printBoard(board);
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File("C:\\kompo\\mka_pn_1015_02\\SudokuGameProject\\View\\src\\main\\resources\\sudoku.boards"));
         fileChooser.setInitialFileName("sudoku");
@@ -215,6 +200,8 @@ public class Controller {
         } catch (Exception e){
             System.out.println(e);
         }
+        System.out.println("saveKoniec");
+        StaticFunctions.printBoard(board);
     }
 
     @FXML
@@ -246,13 +233,13 @@ public class Controller {
             Scene scene = new Scene(borderPane);
             stage1.setScene(scene);
 
-            gameBoard = (GridPane) borderPane.lookup("#gameBoard");
-            gameBoard.setAlignment(Pos.CENTER);
+            gameBoard = (VBox) borderPane.lookup("#gameBoard");
 
             for (int i = 0; i < 9; i++) {
+                HBox wiersz = (HBox)gameBoard.getChildren().get(i);
                 for (int j = 0; j < 9; j++) {
-                    TextField text = new TextField();
-
+                    TextField text = (TextField) wiersz.getChildren().get(j);
+                    System.out.println(i);
                     text.setMaxWidth(44);
                     text.setMaxHeight(46);
                     text.setAlignment(Pos.CENTER);
@@ -261,37 +248,37 @@ public class Controller {
                     if (board.get(i, j) != 0) {
                         text.setDisable(true);
                     }
-                    text.textProperty().addListener(new ChangeListener<String>() {
-                        @Override
-                        public void changed(ObservableValue<? extends String> observableValue,
-                                            String s, String t1) {
-                            if (t1.length() == 0) {
-                                return;
-                            }
-                            if (t1.length() > 1) {
-                                t1 = t1.substring(0, 1);
-                            }
-                            if (!(t1.charAt(0) >= 49 && t1.charAt(0) <= 57)) {
-                                t1 = "";
-                                text.setText(t1);
-                                text.positionCaret(text.getText().length());
-                            } else {
-                                text.setText(t1);
-                            }
-                        }
-                    });
-                    gameBoard.add(text, j, i);
+                    text.textProperty().addListener(this::fieldListener);
                 }
             }
-
-            stage1.show();
+            System.out.println("loading function");
+            StaticFunctions.printBoard(board);
             bind();
+            stage1.show();
+
+
             creatingNewSudokuBoard = false;
         } catch (Exception e){
             System.out.println(e);
         }
     }
 
+    private void fieldListener(ObservableValue<? extends String> observableValue,
+                               String s, String t1) {
+        StringProperty text = (StringProperty) observableValue;
+        if (t1.length() == 0) {
+            return;
+        }
+        if (t1.length() > 1) {
+            t1 = t1.substring(0, 1);
+        }
+        if (!(t1.charAt(0) >= 49 && t1.charAt(0) <= 57)) {
+            t1 = "";
+            text.setValue(t1);
+        } else {
+            text.setValue(t1);
+        }
+    }
 
     @FXML
     private void wyjdz() {
@@ -352,9 +339,6 @@ public class Controller {
 
     @FXML
     private void loadMainScene(ActionEvent event) throws IOException, InterruptedException {
-        StaticFunctions.printBoard(boardOriginal);
-        System.out.println();
-        StaticFunctions.printBoard(board);
         try {
             ((Node)event.getSource()).getScene().getWindow().hide();
             FXMLLoader main = new FXMLLoader(Objects
