@@ -1,4 +1,4 @@
-package view.listBundle;
+package view.listbundle;
 
 import java.util.ListResourceBundle;
 

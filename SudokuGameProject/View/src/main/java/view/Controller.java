@@ -1,14 +1,17 @@
 package view;
 
 import java.io.IOException;
-import java.util.*;
-
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.adapter.JavaBeanStringProperty;
 import javafx.beans.property.adapter.JavaBeanStringPropertyBuilder;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -33,43 +36,53 @@ public class Controller {
 
     private Repository repo = new Repository(new BacktrackingSudokuSolver());
     private SudokuBoard board;
+    private static int iteration = 0;
 
     public Controller() throws CloneNotSupportedException {
         board = repo.createSudokuBoard();
+        if (iteration == 0) {
+            bundle = ResourceBundle.getBundle("bundles.basic");
+            iteration++;
+        }
     }
 
     @FXML
     private GridPane gameBoard;
 
     @FXML
-    private void setEasyDifficulty() throws IOException {
+    private void setEasyDifficulty(ActionEvent event) throws IOException {
+        ((Node)event.getSource()).getScene().getWindow().hide();
         board.solveGame();
         Level.EASY.removeFieldsFromBoard(board);
         startGame();
     }
 
     @FXML
-    private void setMediumDifficulty() throws IOException {
+    private void setMediumDifficulty(ActionEvent event) throws IOException {
+        ((Node)event.getSource()).getScene().getWindow().hide();
         board.solveGame();
         Level.MEDIUM.removeFieldsFromBoard(board);
         startGame();
     }
 
     @FXML
-    private void setHardDifficulty() throws IOException {
+    private void setHardDifficulty(ActionEvent event) throws IOException {
+        ((Node)event.getSource()).getScene().getWindow().hide();
         board.solveGame();
         Level.HARD.removeFieldsFromBoard(board);
         startGame();
     }
 
     @FXML
-    private void start() throws IOException {
+    private void start(ActionEvent event) throws IOException {
+        ((Node)event.getSource()).getScene().getWindow().hide();
 
         FXMLLoader part = new FXMLLoader(Objects.requireNonNull(getClass()
                 .getResource("/Levels.fxml")));
         part.setResources(bundle);
+        Pane borderPane = part.load();
         Stage stage = new Stage();
-        Scene scene = new Scene(part.load());
+        Scene scene = new Scene(borderPane);
         stage.setScene(scene);
         stage.setTitle("Wybierz poziom");
         stage.setHeight(600);
@@ -80,6 +93,7 @@ public class Controller {
 
     @FXML
     private void startGame() throws IOException {
+
 
         FXMLLoader part = new FXMLLoader(Objects.requireNonNull(getClass()
                 .getResource("/Game.fxml")));
@@ -177,9 +191,10 @@ public class Controller {
     private Label author2;
     @FXML
     private Label authorTitle;
-    private Locale locale;
-    private ResourceBundle bundle;
-    private ResourceBundle bundleList;
+    private static Locale locale;
+    private static ResourceBundle bundle;
+    private static String language;
+    private static ResourceBundle bundleList;
 
     @FXML
     private Button start;
@@ -187,18 +202,23 @@ public class Controller {
     @FXML
     private Button exit;
 
+
     @FXML
-    private void english() {
-        loadLanguage("en");
+    private void english(ActionEvent event) {
+        Node node = (Node)event.getSource();
+        language = "en";
+        loadLanguage(language,node);
     }
 
     @FXML
-    private void polish() {
-        loadLanguage("pl");
+    private void polish(ActionEvent event) {
+        Node node = (Node)event.getSource();
+        language = "pl";
+        loadLanguage(language,node);
     }
 
 
-    private void loadLanguage(String lang) {
+    private void loadLanguage(String lang,Node node) {
         locale = new Locale(lang);
         bundle = ResourceBundle.getBundle("bundles.basic",locale);
         languageLabel.setText(bundle.getString("changeTolanguage"));
@@ -206,12 +226,34 @@ public class Controller {
         start.setText(bundle.getString("start"));
         exit.setText(bundle.getString("exit"));
         authorTitle.setText(bundle.getString("authors"));
-        bundleList = ResourceBundle.getBundle("view.listBundle.Authors",locale);
+        bundleList = ResourceBundle.getBundle("view.listbundle.Authors",locale);
         author1.setText(bundleList.getString("author1"));
         author2.setText(bundleList.getString("author2"));
+        Stage stage = (Stage) node.getScene().getWindow();
+        stage.setTitle(bundle.getString("title.application"));
     }
 
+    @FXML
+    private void loadMainScene(ActionEvent event) throws IOException, InterruptedException {
+        try {
+            ((Node)event.getSource()).getScene().getWindow().hide();
+            FXMLLoader main = new FXMLLoader(Objects
+                    .requireNonNull(getClass().getResource("/sampleJavaFX.fxml")));
 
+
+            main.setResources(bundle);
+            Stage primaryStage = new Stage();
+            primaryStage.setScene(new Scene(main.load()));
+            primaryStage.setTitle(bundle.getString("title.application"));
+
+            primaryStage.setResizable(false);
+            primaryStage.setWidth(600);
+            primaryStage.setHeight(600);
+            primaryStage.show();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 
     public class SudokuBidirectionalBinding {
         private SudokuBoard board;
