@@ -40,5 +40,7 @@
          </font>
       </Label>
       <Button layoutX="209.0" layoutY="416.0" mnemonicParsing="false" onAction="#loadMainScene" prefHeight="31.0" prefWidth="182.0" text="%backToMenu" />
+      <Button layoutX="101.0" layoutY="419.0" mnemonicParsing="false" onAction="#save" prefHeight="24.0" prefWidth="58.0" text="%saving" />
+      <Button layoutX="455.0" layoutY="419.0" mnemonicParsing="false" onAction="#loadSudokuBoard" prefHeight="24.0" prefWidth="58.0" text="%opening" />
    </children>
 </AnchorPane>

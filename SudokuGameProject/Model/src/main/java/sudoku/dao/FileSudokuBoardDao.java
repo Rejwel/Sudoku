@@ -19,7 +19,7 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     @Override
     public SudokuBoard read() {
         try (
-                FileInputStream f = new FileInputStream(fileName + ".bin");
+                FileInputStream f = new FileInputStream(fileName);
                 ObjectInputStream o = new ObjectInputStream(f);
         ) {
             SudokuBoard board = (SudokuBoard) o.readObject();
@@ -32,7 +32,7 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     @Override
     public void write(SudokuBoard object) {
         try (
-                FileOutputStream f = new FileOutputStream(fileName + ".bin");
+                FileOutputStream f = new FileOutputStream(fileName);
                 ObjectOutputStream o = new ObjectOutputStream(f)
         ) {
             o.writeObject(object);
