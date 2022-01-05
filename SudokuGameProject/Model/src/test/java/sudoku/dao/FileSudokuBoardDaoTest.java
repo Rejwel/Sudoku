@@ -51,9 +51,9 @@ class FileSudokuBoardDaoTest {
             SudokuBoard board = new SudokuBoard(backtracking);
             board.solveGame();
 
-            try (RandomAccessFile file = new RandomAccessFile("test.bin", "rw")) {
+            try (RandomAccessFile file = new RandomAccessFile("test", "rw")) {
                 file.getChannel().lock();
-                assertThrows(RuntimeException.class, dao::read);
+                assertThrows(RuntimeException.class, () -> dao.read());
                 assertThrows(RuntimeException.class, () -> dao.write(board));
             }
         } catch (Exception e) {

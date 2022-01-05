@@ -1,37 +1,29 @@
 package view;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.property.adapter.JavaBeanStringProperty;
-import javafx.beans.property.adapter.JavaBeanStringPropertyBuilder;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.stage.FileChooser;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import sudoku.Repository;
-import sudoku.StaticFunctions;
-import sudoku.dao.Dao;
-import sudoku.dao.SudokuBoardDaoFactory;
 import sudoku.difficulty.Level;
 import sudoku.elements.SudokuBoard;
 import sudoku.solver.BacktrackingSudokuSolver;
+
 
 public class Controller {
 
@@ -53,47 +45,39 @@ public class Controller {
     }
 
     @FXML
-    private VBox gameBoard;
-
-    @FXML
-    private void setEasyDifficulty(ActionEvent event) throws IOException, CloneNotSupportedException {
+    private void setEasyDifficulty(ActionEvent event) throws IOException,
+            CloneNotSupportedException {
         ((Node)event.getSource()).getScene().getWindow().hide();
         level = Level.EASY;
         board.solveGame();
         level.removeFieldsFromBoard(board);
         startGame();
         boardOriginal = board.clone();
-        creatingNewSudokuBoard = true;
+        GameController.setCreatingNewSudokuBoard(true);
     }
 
     @FXML
-    private void setMediumDifficulty(ActionEvent event) throws IOException, CloneNotSupportedException {
+    private void setMediumDifficulty(ActionEvent event) throws IOException,
+            CloneNotSupportedException {
         ((Node)event.getSource()).getScene().getWindow().hide();
         level = Level.MEDIUM;
         board.solveGame();
         level.removeFieldsFromBoard(board);
         startGame();
         boardOriginal = board.clone();
-        creatingNewSudokuBoard = true;
-    }
-
-    public static SudokuBoard getBoardOriginal() throws CloneNotSupportedException {
-        return boardOriginal.clone();
-    }
-
-    public static boolean isCreatingNewSudokuBoard() {
-        return creatingNewSudokuBoard;
+        GameController.setCreatingNewSudokuBoard(true);
     }
 
     @FXML
-    private void setHardDifficulty(ActionEvent event) throws IOException, CloneNotSupportedException {
+    private void setHardDifficulty(ActionEvent event) throws IOException,
+            CloneNotSupportedException {
         ((Node)event.getSource()).getScene().getWindow().hide();
         level = Level.HARD;
         board.solveGame();
         level.removeFieldsFromBoard(board);
         startGame();
         boardOriginal = board.clone();
-        creatingNewSudokuBoard = true;
+        GameController.setCreatingNewSudokuBoard(true);
     }
 
     @FXML
@@ -115,10 +99,8 @@ public class Controller {
     }
 
     private void startGame() throws IOException {
-
         FXMLLoader part = new FXMLLoader(Objects.requireNonNull(getClass()
                 .getResource("/Game.fxml")));
-
 
         part.setResources(bundle);
 
@@ -149,27 +131,8 @@ public class Controller {
         }
 
         stage.show();
-        bind();
+        GameController.bind(gameBoard,board);
         GameController.setBoard(board);
-    }
-
-    private void bind() {
-
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                try {
-                    TextField text = (TextField) ((HBox)gameBoard.getChildren().get(i)).getChildren().get(j);
-                    GameController.SudokuBidirectionalBinding fieldAdapter = new
-                            GameController.SudokuBidirectionalBinding(board, i, j);
-                    StringProperty textField = JavaBeanStringPropertyBuilder.create()
-                            .bean(fieldAdapter).name("xd").build();
-
-                    text.textProperty().bindBidirectional(textField);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
     }
 
     private void fieldListener(ObservableValue<? extends String> observableValue,
@@ -189,15 +152,16 @@ public class Controller {
         }
     }
 
-
     @FXML
     private Button save;
-
 
     @FXML
     private void wyjdz() {
         System.exit(0);
     }
+
+    @FXML
+    private VBox gameBoard;
 
     @FXML
     private Label languageLabel;
@@ -209,25 +173,14 @@ public class Controller {
     private Label author2;
     @FXML
     private Label authorTitle;
+    @FXML
+    private Button start;
+    @FXML
+    private Button exit;
     private static Locale locale;
     private static ResourceBundle bundle;
     private static String language;
     private static ResourceBundle bundleList;
-
-    public static ResourceBundle getBundle(){
-        return bundle;
-    }
-
-    public static Level getLevel(){
-        return level;
-    }
-
-    @FXML
-    private Button start;
-
-    @FXML
-    private Button exit;
-
 
     @FXML
     private void english(ActionEvent event) {
@@ -242,7 +195,6 @@ public class Controller {
         language = "pl";
         loadLanguage(language,node);
     }
-
 
     private void loadLanguage(String lang,Node node) {
         locale = new Locale(lang);
@@ -259,10 +211,16 @@ public class Controller {
         stage.setTitle(bundle.getString("title.application"));
     }
 
+    public static SudokuBoard getBoardOriginal() throws CloneNotSupportedException {
+        return boardOriginal.clone();
+    }
 
+    public static boolean isCreatingNewSudokuBoard() {
+        return creatingNewSudokuBoard;
+    }
 
-
-
-
+    public static ResourceBundle getBundle() {
+        return bundle;
+    }
 
 }
