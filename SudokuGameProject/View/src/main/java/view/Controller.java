@@ -36,13 +36,14 @@ import sudoku.solver.BacktrackingSudokuSolver;
 public class Controller {
 
     private Repository repo = new Repository(new BacktrackingSudokuSolver());
-    private SudokuBoard board;
-    private static SudokuBoard boardOriginal;
+
     private static int iteration = 0;
     private static boolean creatingNewSudokuBoard = false;
+    private static Level level;
+    private SudokuBoard board;
+    private static SudokuBoard boardOriginal;
 
     public Controller() throws CloneNotSupportedException {
-        System.out.println("aaaa");
         board = repo.createSudokuBoard();
         if (iteration == 0) {
             bundle = ResourceBundle.getBundle("bundles.basic");
@@ -56,40 +57,47 @@ public class Controller {
 
     @FXML
     private void setEasyDifficulty(ActionEvent event) throws IOException, CloneNotSupportedException {
-        System.out.println("setEasy");
-        StaticFunctions.printBoard(board);
         ((Node)event.getSource()).getScene().getWindow().hide();
+        level = Level.EASY;
         board.solveGame();
-        Level.EASY.removeFieldsFromBoard(board);
-        boardOriginal = board.clone();
+        level.removeFieldsFromBoard(board);
         startGame();
+        boardOriginal = board.clone();
         creatingNewSudokuBoard = true;
     }
 
     @FXML
     private void setMediumDifficulty(ActionEvent event) throws IOException, CloneNotSupportedException {
         ((Node)event.getSource()).getScene().getWindow().hide();
+        level = Level.MEDIUM;
         board.solveGame();
-        Level.MEDIUM.removeFieldsFromBoard(board);
-        boardOriginal = board.clone();
+        level.removeFieldsFromBoard(board);
         startGame();
+        boardOriginal = board.clone();
         creatingNewSudokuBoard = true;
+    }
+
+    public static SudokuBoard getBoardOriginal() throws CloneNotSupportedException {
+        return boardOriginal.clone();
+    }
+
+    public static boolean isCreatingNewSudokuBoard() {
+        return creatingNewSudokuBoard;
     }
 
     @FXML
     private void setHardDifficulty(ActionEvent event) throws IOException, CloneNotSupportedException {
         ((Node)event.getSource()).getScene().getWindow().hide();
+        level = Level.HARD;
         board.solveGame();
-        Level.HARD.removeFieldsFromBoard(board);
-        boardOriginal = board.clone();
+        level.removeFieldsFromBoard(board);
         startGame();
+        boardOriginal = board.clone();
         creatingNewSudokuBoard = true;
     }
 
     @FXML
     private void start(ActionEvent event) throws IOException {
-        System.out.println("start");
-        StaticFunctions.printBoard(board);
         ((Node)event.getSource()).getScene().getWindow().hide();
 
         FXMLLoader part = new FXMLLoader(Objects.requireNonNull(getClass()
@@ -106,13 +114,7 @@ public class Controller {
         stage.show();
     }
 
-    @FXML
     private void startGame() throws IOException {
-        System.out.println("startGame");
-        StaticFunctions.printBoard(board);
-        board.set(0,0,5);
-        board.set(0,1,5);
-        StaticFunctions.printBoard(board);
 
         FXMLLoader part = new FXMLLoader(Objects.requireNonNull(getClass()
                 .getResource("/Game.fxml")));
@@ -138,7 +140,6 @@ public class Controller {
                 text.setMaxHeight(46);
                 text.setAlignment(Pos.CENTER);
                 text.lengthProperty();
-
                 if (board.get(i, j) != 0) {
                     text.setDisable(true);
                 }
@@ -149,8 +150,8 @@ public class Controller {
 
         stage.show();
         bind();
+        GameController.setBoard(board);
     }
-
 
     private void bind() {
 
@@ -158,8 +159,8 @@ public class Controller {
             for (int j = 0; j < 9; j++) {
                 try {
                     TextField text = (TextField) ((HBox)gameBoard.getChildren().get(i)).getChildren().get(j);
-                    SudokuBidirectionalBinding fieldAdapter = new
-                            SudokuBidirectionalBinding(board, i, j);
+                    GameController.SudokuBidirectionalBinding fieldAdapter = new
+                            GameController.SudokuBidirectionalBinding(board, i, j);
                     StringProperty textField = JavaBeanStringPropertyBuilder.create()
                             .bean(fieldAdapter).name("xd").build();
 
@@ -168,98 +169,6 @@ public class Controller {
                     throw new RuntimeException(e);
                 }
             }
-        }
-    }
-
-    @FXML
-    private Button save;
-
-    @FXML
-    private void save(ActionEvent event){
-        System.out.println("save");
-        StaticFunctions.printBoard(this.board);
-        System.out.println();
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File("C:\\kompo\\mka_pn_1015_02\\SudokuGameProject\\View\\src\\main\\resources\\sudoku.boards"));
-        fileChooser.setInitialFileName("sudoku");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("bin file", "*.bin"));
-        //Stage stage = new Stage();
-        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        try {
-            File file = fileChooser.showSaveDialog(stage);
-            fileChooser.setInitialDirectory(file.getParentFile());
-            String path = file.getPath();
-            String fileName = file.getName();
-            new SudokuBoardDaoFactory().getFileDao(path).write(board);
-            if(creatingNewSudokuBoard && !boardOriginal.equals(board)){
-                String newPath = path.substring(0,path.length()-4) + "Original.bin";
-                new SudokuBoardDaoFactory().getFileDao(newPath).write(boardOriginal);
-                creatingNewSudokuBoard = false;
-            }
-
-        } catch (Exception e){
-            System.out.println(e);
-        }
-        System.out.println("saveKoniec");
-        StaticFunctions.printBoard(board);
-    }
-
-    @FXML
-    private void loadSudokuBoard(ActionEvent event){
-        StaticFunctions.printBoard(boardOriginal);
-        System.out.println();
-        StaticFunctions.printBoard(board);
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File("C:\\kompo\\mka_pn_1015_02\\SudokuGameProject\\View\\src\\main\\resources\\sudoku.boards"));
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("bin file", "*.bin"));
-        Stage stage = new Stage();
-        try {
-            File file = fileChooser.showOpenDialog(stage);
-            fileChooser.setInitialDirectory(file.getParentFile());
-
-            ((Node)event.getSource()).getScene().getWindow().hide();
-            board = new SudokuBoardDaoFactory().getFileDao(file.getAbsolutePath()).read();
-
-            FXMLLoader part = new FXMLLoader(Objects.requireNonNull(getClass()
-                    .getResource("/Game.fxml")));
-            part.setResources(bundle);
-
-            Stage stage1 = new Stage();
-            Pane borderPane = part.load();
-            stage1.setTitle(bundle.getString("title.application"));
-            stage1.setHeight(600);
-            stage1.setWidth(600);
-            Scene scene = new Scene(borderPane);
-            stage1.setScene(scene);
-
-            gameBoard = (VBox) borderPane.lookup("#gameBoard");
-
-            for (int i = 0; i < 9; i++) {
-                HBox wiersz = (HBox)gameBoard.getChildren().get(i);
-                for (int j = 0; j < 9; j++) {
-                    TextField text = (TextField) wiersz.getChildren().get(j);
-                    System.out.println(i);
-                    text.setMaxWidth(44);
-                    text.setMaxHeight(46);
-                    text.setAlignment(Pos.CENTER);
-                    text.lengthProperty();
-
-                    if (board.get(i, j) != 0) {
-                        text.setDisable(true);
-                    }
-                    text.textProperty().addListener(this::fieldListener);
-                }
-            }
-            System.out.println("loading function");
-            StaticFunctions.printBoard(board);
-            bind();
-            stage1.show();
-
-
-            creatingNewSudokuBoard = false;
-        } catch (Exception e){
-            System.out.println(e);
         }
     }
 
@@ -280,6 +189,11 @@ public class Controller {
         }
     }
 
+
+    @FXML
+    private Button save;
+
+
     @FXML
     private void wyjdz() {
         System.exit(0);
@@ -299,6 +213,14 @@ public class Controller {
     private static ResourceBundle bundle;
     private static String language;
     private static ResourceBundle bundleList;
+
+    public static ResourceBundle getBundle(){
+        return bundle;
+    }
+
+    public static Level getLevel(){
+        return level;
+    }
 
     @FXML
     private Button start;
@@ -337,54 +259,9 @@ public class Controller {
         stage.setTitle(bundle.getString("title.application"));
     }
 
-    @FXML
-    private void loadMainScene(ActionEvent event) throws IOException, InterruptedException {
-        try {
-            ((Node)event.getSource()).getScene().getWindow().hide();
-            FXMLLoader main = new FXMLLoader(Objects
-                    .requireNonNull(getClass().getResource("/sampleJavaFX.fxml")));
 
 
-            main.setResources(bundle);
-            Pane mainPane = main.load();
-            Stage primaryStage = new Stage();
-            primaryStage.setScene(new Scene(mainPane));
-            primaryStage.setTitle(bundle.getString("title.application"));
 
-            primaryStage.setResizable(false);
-            primaryStage.setWidth(600);
-            primaryStage.setHeight(600);
-            primaryStage.show();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
-    public class SudokuBidirectionalBinding {
-        private SudokuBoard board;
-        private int xd;
-        private int yd;
-
-        public SudokuBidirectionalBinding(SudokuBoard board, int x, int y) {
-            this.board = board;
-            this.xd = x;
-            this.yd = y;
-        }
-
-        public String getXd() {
-            return String.valueOf(this.board.get(xd, yd));
-        }
-
-        public void setXd(String value) {
-            if (value.equals("")) {
-                board.set(xd, yd, 0);
-            } else {
-                board.set(xd, yd, Integer.parseInt(value));
-            }
-            StaticFunctions.printBoard(board);
-            System.out.println();
-        }
-    }
 
 
 
