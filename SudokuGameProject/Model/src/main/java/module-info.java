@@ -6,4 +6,5 @@ open module ModelProject {
     exports sudoku.elements;
     exports sudoku.solver;
     exports sudoku.difficulty;
+    exports sudoku.dao;
 }
