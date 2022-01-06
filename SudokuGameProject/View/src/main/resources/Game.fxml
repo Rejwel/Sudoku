@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="486.0" prefWidth="689.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.GameController">
+<AnchorPane prefHeight="486.0" prefWidth="689.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controller">
    <children>
       <VBox fx:id="gameBoard" layoutX="101.0" layoutY="83.0" prefHeight="300.0" prefWidth="400.0">
          <children>
@@ -137,7 +137,8 @@
          </font>
       </Label>
       <Button layoutX="209.0" layoutY="416.0" mnemonicParsing="false" onAction="#loadMainScene" prefHeight="31.0" prefWidth="182.0" text="%backToMenu" />
-      <Button layoutX="101.0" layoutY="419.0" mnemonicParsing="false" onAction="#save" prefHeight="24.0" prefWidth="58.0" text="%saving" />
+      <Button layoutX="101.0" layoutY="432.0" mnemonicParsing="false" onAction="#saveCurrent" prefHeight="24.0" prefWidth="58.0" text="%saving" />
       <Button layoutX="455.0" layoutY="419.0" mnemonicParsing="false" onAction="#loadSudokuBoard" prefHeight="24.0" prefWidth="58.0" text="%opening" />
+      <Button layoutX="101.0" layoutY="391.0" mnemonicParsing="false" onAction="#saveOriginal" prefHeight="25.0" prefWidth="101.0" text="%saveOriginal" />
    </children>
 </AnchorPane>
