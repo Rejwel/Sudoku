@@ -9,7 +9,12 @@ import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import sudoku.solver.BacktrackingSudokuSolver;
+import org.apache.log4j.Logger;
+import sudoku.exceptions.CalculationsException;
+import sudoku.exceptions.CloneException;
+import sudoku.exceptions.GetSetException;
+import sudoku.exceptions.SolverException;
+import sudoku.exceptions.SudokuElementConstructorException;
 import sudoku.solver.SudokuSolver;
 
 public class SudokuBoard implements PropertyChangeListener, Serializable, Cloneable {
@@ -19,105 +24,133 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
     private List<SudokuElement> sudokuColumns;
     private List<SudokuElement> sudokuRows;
     private List<SudokuElement> sudokuBoxes;
+    private static Logger log = Logger.getLogger(SudokuBoard.class.getName());
 
-    public SudokuBoard(SudokuSolver solver) {
+    public SudokuBoard(SudokuSolver solver) throws SudokuElementConstructorException {
+        try {
+            this.solver = solver;
+            this.board = new SudokuField[9][9];
+            this.sudokuColumns = Arrays.asList(new SudokuColumn[9]);
+            this.sudokuRows = Arrays.asList(new SudokuRow[9]);
+            this.sudokuBoxes = Arrays.asList(new SudokuBox[9]);
 
-        this.solver = solver;
-        this.board = new SudokuField[9][9];
-        this.sudokuColumns = Arrays.asList(new SudokuColumn[9]);
-        this.sudokuRows = Arrays.asList(new SudokuRow[9]);
-        this.sudokuBoxes = Arrays.asList(new SudokuBox[9]);
-
-        for (int i = 0; i < 9; i++) {
-            sudokuColumns.set(i, new SudokuColumn());
-            sudokuRows.set(i, new SudokuRow());
-            sudokuBoxes.set(i, new SudokuBox());
-        }
-
-        int boxNumber;
-        int startingRowBoxNumber;
-        int startingColBoxNumber;
-
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                startingRowBoxNumber = i - (i % 3);
-                startingColBoxNumber = j - (j % 3);
-                boxNumber = (3 * startingRowBoxNumber + startingColBoxNumber) / 3;
-                board[i][j] = new SudokuField(i, j, boxNumber);
-                board[i][j].addListener(this);
-                setFieldInElement(i, j);
+            for (int i = 0; i < 9; i++) {
+                sudokuColumns.set(i, new SudokuColumn());
+                sudokuRows.set(i, new SudokuRow());
+                sudokuBoxes.set(i, new SudokuBox());
             }
+
+            int boxNumber;
+            int startingRowBoxNumber;
+            int startingColBoxNumber;
+
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    startingRowBoxNumber = i - (i % 3);
+                    startingColBoxNumber = j - (j % 3);
+                    boxNumber = (3 * startingRowBoxNumber + startingColBoxNumber) / 3;
+                    board[i][j] = new SudokuField(i, j, boxNumber);
+                    board[i][j].addListener(this);
+                    setFieldInElement(i, j);
+                }
+            }
+        } catch (Exception e) {
+            throw new SudokuElementConstructorException("SudokuElementConstructorException");
         }
     }
 
-    public int get(int x, int y) {
+    public int get(int x, int y) throws GetSetException {
         if (x > 8 || x < 0 || y > 8 || y < 0) {
-            return -1;
+            throw new GetSetException("GetSetException");
         }
         return board[x][y].getFieldValue();
     }
 
-    public void set(int x, int y, int value) {
+    public void set(int x, int y, int value) throws GetSetException {
         if (x > 8 || x < 0 || y > 8 || y < 0 || value < 0 || value > 9) {
-            return;
+            throw new GetSetException("GetSetException");
         }
         this.board[x][y].setFieldValue(value);
     }
 
-    private void setFieldInElement(int x, int y) {
-        sudokuRows.get(x).setNumberInArray(y, board[x][y].getField());
-        sudokuColumns.get(y).setNumberInArray(x, board[x][y].getField());
-        sudokuBoxes.get(board[x][y].getNumberOfBox())
-                .setNumberInArray(board[x][y].getPositionInBox(), board[x][y].getField());
-    }
-
-    public SudokuElement getSudokuColumn(Integer x) throws CloneNotSupportedException {
-        SudokuElement col = new SudokuColumn();
-        for (int i = 0; i < 9; i++) {
-            col.setNumberInArray(i, sudokuColumns.get(x).getFields().get(i));
+    private void setFieldInElement(int x, int y) throws GetSetException {
+        try {
+            sudokuRows.get(x).setNumberInArray(y, board[x][y].getField());
+            sudokuColumns.get(y).setNumberInArray(x, board[x][y].getField());
+            sudokuBoxes.get(board[x][y].getNumberOfBox())
+                    .setNumberInArray(board[x][y].getPositionInBox(), board[x][y].getField());
+        } catch (Exception e) {
+            throw new GetSetException("GetSetException");
         }
-        return col;
     }
 
-    public SudokuElement getSudokuRow(Integer y) throws CloneNotSupportedException {
-        SudokuElement row = new SudokuRow();
-        for (int i = 0; i < 9; i++) {
-            row.setNumberInArray(i, sudokuRows.get(y).getFields().get(i));
+    public SudokuElement getSudokuColumn(Integer x) throws GetSetException {
+        try {
+            SudokuElement col = new SudokuColumn();
+            for (int i = 0; i < 9; i++) {
+                col.setNumberInArray(i, sudokuColumns.get(x).getFields().get(i));
+            }
+            return col;
+        } catch (Exception e) {
+            throw new GetSetException("GetSetException");
         }
-        return row;
     }
 
-    public SudokuElement getSudokuBox(Integer x) throws CloneNotSupportedException {
-        SudokuElement box = new SudokuBox();
-        for (int i = 0; i < 9; i++) {
-            box.setNumberInArray(sudokuBoxes.get(x).getFields().get(i).getPositionInBox(),
-                    sudokuBoxes.get(x).getFields().get(i));
+    public SudokuElement getSudokuRow(Integer y) throws GetSetException {
+        try {
+            SudokuElement row = new SudokuRow();
+            for (int i = 0; i < 9; i++) {
+                row.setNumberInArray(i, sudokuRows.get(y).getFields().get(i));
+            }
+            return row;
+        } catch (Exception e) {
+            throw new GetSetException("GetSetException");
         }
-        return box;
     }
 
-    public void solveGame() {
+    public SudokuElement getSudokuBox(Integer x) throws GetSetException {
+        try {
+            SudokuElement box = new SudokuBox();
+            for (int i = 0; i < 9; i++) {
+                box.setNumberInArray(sudokuBoxes.get(x).getFields().get(i).getPositionInBox(),
+                        sudokuBoxes.get(x).getFields().get(i));
+            }
+            return box;
+        } catch (Exception e) {
+            throw new GetSetException("GetSetException");
+        }
+    }
+
+    public void solveGame() throws SolverException {
         solver.solve(this);
     }
 
-    private boolean checkBoard() {
-        boolean isValid;
-        for (int i = 0; i < 9; i++) {
-            isValid = sudokuColumns.get(i).verify();
-            isValid = sudokuRows.get(i).verify();
-            isValid = sudokuBoxes.get(i).verify();
-            if (!isValid) {
-                return false;
+    public boolean checkBoard() throws CalculationsException {
+        try {
+            boolean isValid;
+            for (int i = 0; i < 9; i++) {
+                isValid = sudokuColumns.get(i).verify() && sudokuColumns.get(i).getFields().stream().filter(s -> s.getFieldValue() != 0).count() == 9;
+                isValid = sudokuRows.get(i).verify() && sudokuColumns.get(i).getFields().stream().filter(s -> s.getFieldValue() != 0).count() == 9;
+                isValid = sudokuBoxes.get(i).verify() && sudokuColumns.get(i).getFields().stream().filter(s -> s.getFieldValue() != 0).count() == 9;
+                if (!isValid) {
+                    return false;
+                }
             }
+            return true;
+        } catch (Exception e) {
+            throw new CalculationsException("CalculationsException");
         }
-        return true;
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (!checkBoard()) {
-            System.out.println("Ten element nie pasuje w tym miejscu");
-        }
+//        try {
+//            if (!checkBoard()) {
+//                log.debug("Ten element nie pasuje w tym miejscu");
+//            }
+//        } catch (CalculationsException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -148,20 +181,24 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
 
     @Override
     public SudokuBoard clone() throws CloneNotSupportedException {
-        SudokuBoard clone = (SudokuBoard) super.clone();
-        clone.board = new SudokuField[9][9];
-        clone.sudokuRows = new ArrayList<>(sudokuBoxes);
-        clone.sudokuRows = new ArrayList<>(sudokuColumns);
-        clone.sudokuRows = new ArrayList<>(sudokuRows);
-        clone.solver = solver.clone();
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                clone.board[i][j] = board[i][j].clone();
+        try {
+            SudokuBoard clone = (SudokuBoard) super.clone();
+            clone.board = new SudokuField[9][9];
+            clone.sudokuRows = new ArrayList<>(sudokuBoxes);
+            clone.sudokuRows = new ArrayList<>(sudokuColumns);
+            clone.sudokuRows = new ArrayList<>(sudokuRows);
+            clone.solver = solver.clone();
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    clone.board[i][j] = board[i][j].clone();
+                }
+                clone.sudokuBoxes.set(i, sudokuBoxes.get(i).clone());
+                clone.sudokuColumns.set(i, sudokuColumns.get(i).clone());
+                clone.sudokuRows.set(i, sudokuRows.get(i).clone());
             }
-            clone.sudokuBoxes.set(i, sudokuBoxes.get(i).clone());
-            clone.sudokuColumns.set(i, sudokuColumns.get(i).clone());
-            clone.sudokuRows.set(i, sudokuRows.get(i).clone());
+            return clone;
+        } catch (Exception e) {
+            throw new CloneException("CloneException");
         }
-        return clone;
     }
 }

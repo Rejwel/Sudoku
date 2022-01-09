@@ -1,10 +1,16 @@
 package sudoku.elements;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import sudoku.StaticFunctions;
+import sudoku.difficulty.Level;
 import sudoku.elements.SudokuBoard;
 import sudoku.elements.SudokuElement;
 import sudoku.elements.SudokuRow;
+import sudoku.exceptions.GetSetException;
+import sudoku.exceptions.SetLevelException;
+import sudoku.exceptions.SolverException;
+import sudoku.exceptions.SudokuElementConstructorException;
 import sudoku.solver.BacktrackingSudokuSolver;
 import sudoku.solver.SudokuSolver;
 
@@ -20,7 +26,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void solveGameTest() {
+    void solveGameTest() throws SudokuElementConstructorException, SolverException, GetSetException {
 
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
@@ -39,21 +45,20 @@ class SudokuBoardTest {
     }
 
     @Test
-    void getPositionNegativeTest() {
+    void getPositionNegativeTest() throws GetSetException, SudokuElementConstructorException, SolverException {
 
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
 
-        assertEquals(-1, board.get(-1, 1));
-        assertEquals(-1, board.get(0, -1));
-        assertEquals(-1, board.get(9, 1));
-        assertEquals(-1, board.get(1, 9));
-
+        assertThrows(GetSetException.class, () -> board.get(-1, 1));
+        assertThrows(GetSetException.class, () -> board.get(0, -1));
+        assertThrows(GetSetException.class, () -> board.get(9, 1));
+        assertThrows(GetSetException.class, () -> board.get(1, 9));
     }
 
     @Test
-    void getPositionTest() {
+    void getPositionTest() throws SudokuElementConstructorException, GetSetException, SolverException {
 
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
@@ -64,35 +69,22 @@ class SudokuBoardTest {
     }
 
     @Test
-    void setPositionNegativeTest() {
+    void setPositionNegativeTest() throws SudokuElementConstructorException, GetSetException, SolverException {
 
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
 
-        int testingNumber = board.get(0, 0);
-
-        board.set(-1, 0, 1);
-        assertEquals(testingNumber, board.get(0, 0));
-
-        board.set(0, -1, 1);
-        assertEquals(testingNumber, board.get(0, 0));
-
-        board.set(9, 0, 1);
-        assertEquals(testingNumber, board.get(0, 0));
-
-        board.set(0, 9, 1);
-        assertEquals(testingNumber, board.get(0, 0));
-
-        board.set(0, 0, -1);
-        assertEquals(testingNumber, board.get(0, 0));
-
-        board.set(0, 0, 10);
-        assertEquals(testingNumber, board.get(0, 0));
+        assertThrows(GetSetException.class, () -> board.set(-1, 0, 1));
+        assertThrows(GetSetException.class, () -> board.set(0, -1, 1));
+        assertThrows(GetSetException.class, () -> board.set(9, 0, 1));
+        assertThrows(GetSetException.class, () -> board.set(0, 9, 1));
+        assertThrows(GetSetException.class, () -> board.set(0, 0, -1));
+        assertThrows(GetSetException.class, () ->  board.set(0, 0, 10));
     }
 
     @Test
-    void setPositionTest() {
+    void setPositionTest() throws SudokuElementConstructorException, GetSetException {
 
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
@@ -103,23 +95,18 @@ class SudokuBoardTest {
     }
 
     @Test
-    void setPositionAbondTheLimitsTest() {
+    void setPositionAbondTheLimitsTest() throws SudokuElementConstructorException {
 
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
 
-        int numberOne = board.get(0, 0);
-        int numberTwo = board.get(0, 1);
-
-        board.set(0, 0, 10);
-        board.set(0, 1, -1);
-        assertEquals(board.get(0, 0), numberOne);
-        assertEquals(board.get(0, 1), numberTwo);
+        assertThrows(GetSetException.class, () -> board.set(0, 0, 10));
+        assertThrows(GetSetException.class, () -> board.set(0, 1, -1));
 
     }
 
     @Test
-    void verifyTest() throws CloneNotSupportedException {
+    void verifyTest() throws CloneNotSupportedException, SudokuElementConstructorException, SolverException, GetSetException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
 
@@ -133,19 +120,23 @@ class SudokuBoardTest {
     }
 
     @Test
-    void verifyNegativeTest() throws CloneNotSupportedException {
+    void verifyNegativeTest() throws CloneNotSupportedException, SudokuElementConstructorException, SolverException, GetSetException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
-
         board.solveGame();
-        board.set(0, 0, 1);
-        board.set(0, 1, 1);
 
-        assertFalse(board.getSudokuBox(0).verify());
+        assertThrows(GetSetException.class, () -> board.getSudokuBox(10).verify());
+        assertThrows(GetSetException.class, () -> board.getSudokuBox(-1).verify());
+
+        assertThrows(GetSetException.class, () -> board.getSudokuColumn(10).verify());
+        assertThrows(GetSetException.class, () -> board.getSudokuColumn(-1).verify());
+
+        assertThrows(GetSetException.class, () -> board.getSudokuRow(10).verify());
+        assertThrows(GetSetException.class, () -> board.getSudokuRow(-1).verify());
     }
 
     @Test
-    void checkBoardPositive() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    void checkBoardPositive() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, SudokuElementConstructorException, SolverException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
@@ -156,7 +147,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void checkBoardNegativeRowTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    void checkBoardNegativeRowTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, SudokuElementConstructorException, SolverException, GetSetException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
@@ -172,7 +163,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void checkBoardNegativeColTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    void checkBoardNegativeColTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, SudokuElementConstructorException, SolverException, GetSetException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
@@ -188,7 +179,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void checkBoardNegativeBoxTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    void checkBoardNegativeBoxTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, SudokuElementConstructorException, SolverException, GetSetException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
@@ -204,7 +195,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void setValueInElementPositive() {
+    void setValueInElementPositive() throws SudokuElementConstructorException, SolverException, GetSetException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
@@ -214,22 +205,17 @@ class SudokuBoardTest {
     }
 
     @Test
-    void setValueInElementNegative() {
+    void setValueInElementNegative() throws SudokuElementConstructorException, GetSetException, SolverException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
 
-        int temp = board.get(0, 0);
-        board.set(0, 0, 10);
-        assertEquals(board.get(0, 0), temp);
-        temp = board.get(1, 1);
-        board.set(1, 1, -1);
-        assertEquals(board.get(1, 1), temp);
-
+        assertThrows(GetSetException.class, () -> board.set(0, 0, 10));
+        assertThrows(GetSetException.class, () -> board.set(1, 1, -1));
     }
 
     @Test
-    void toStringTest() {
+    void toStringTest() throws SudokuElementConstructorException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         String str = board.toString();
@@ -237,7 +223,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void equalsThisTest() {
+    void equalsThisTest() throws SudokuElementConstructorException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
 
@@ -245,7 +231,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void notEqualsObjectsTest() {
+    void notEqualsObjectsTest() throws SudokuElementConstructorException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         SudokuElement row = new SudokuRow();
@@ -254,7 +240,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void equalsTest() {
+    void equalsTest() throws SudokuElementConstructorException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         SudokuBoard board2 = new SudokuBoard(backtracking);
@@ -263,7 +249,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void notEqualsTest() {
+    void notEqualsTest() throws SudokuElementConstructorException, SolverException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
@@ -274,7 +260,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void sameHashCodeTest() {
+    void sameHashCodeTest() throws SudokuElementConstructorException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         SudokuBoard board2 = new SudokuBoard(backtracking);
@@ -283,7 +269,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void differentHashCodeTest() {
+    void differentHashCodeTest() throws SudokuElementConstructorException, SolverException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
@@ -294,7 +280,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void hashCodeFalseEqualsMustBeFalse() {
+    void hashCodeFalseEqualsMustBeFalse() throws SudokuElementConstructorException, SolverException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
@@ -306,7 +292,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void equalsTrueHashCodeMustBeTrue() {
+    void equalsTrueHashCodeMustBeTrue() throws SudokuElementConstructorException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         SudokuBoard board2 = new SudokuBoard(backtracking);
@@ -316,7 +302,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void copyTest() throws CloneNotSupportedException {
+    void copyTest() throws CloneNotSupportedException, SudokuElementConstructorException, SolverException, GetSetException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();

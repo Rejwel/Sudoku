@@ -4,12 +4,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import sudoku.Repository;
 import sudoku.elements.SudokuBoard;
+import sudoku.exceptions.GetSetException;
+import sudoku.exceptions.SetLevelException;
+import sudoku.exceptions.SolverException;
+import sudoku.exceptions.SudokuElementConstructorException;
 import sudoku.solver.BacktrackingSudokuSolver;
 
 public class DifficultyTest {
 
     @Test
-    public void difficultyTest() throws CloneNotSupportedException {
+    public void difficultyTest() throws CloneNotSupportedException, SetLevelException, SolverException, GetSetException, SudokuElementConstructorException {
         Repository r = new Repository(new BacktrackingSudokuSolver());
 
         SudokuBoard b1 = r.createSudokuBoard();
@@ -23,6 +27,8 @@ public class DifficultyTest {
         Level.EASY.removeFieldsFromBoard(b1);
         Level.MEDIUM.removeFieldsFromBoard(b2);
         Level.HARD.removeFieldsFromBoard(b3);
+
+        Assertions.assertThrows(SetLevelException.class, () -> Level.EASY.removeFieldsFromBoard(null));
 
         int b1ZerosCounter = 0;
         int b2ZerosCounter = 0;
