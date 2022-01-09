@@ -3,6 +3,7 @@ package sudoku.elements;
 import org.junit.jupiter.api.Test;
 import sudoku.elements.SudokuBoard;
 import sudoku.elements.SudokuField;
+import sudoku.exceptions.SudokuElementConstructorException;
 import sudoku.solver.BacktrackingSudokuSolver;
 import sudoku.solver.SudokuSolver;
 
@@ -50,7 +51,7 @@ class SudokuFieldTest {
     }
 
     @Test
-    void notEqualsRowObjectsTest() {
+    void notEqualsRowObjectsTest() throws SudokuElementConstructorException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         assertFalse(field.equals(board));

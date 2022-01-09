@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 import sudoku.StaticFunctions;
 import sudoku.elements.SudokuBoard;
 import sudoku.elements.SudokuField;
+import sudoku.exceptions.GetSetException;
+import sudoku.exceptions.SolverException;
+import sudoku.exceptions.SudokuElementConstructorException;
 import sudoku.solver.BacktrackingSudokuSolver;
 import sudoku.solver.SudokuSolver;
 
@@ -15,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BacktrackingSudokuSolverTest {
 
     @Test
-    void solverRowsColumnsSquaresBoardTest() throws CloneNotSupportedException {
+    void solverRowsColumnsSquaresBoardTest() throws CloneNotSupportedException, GetSetException, SudokuElementConstructorException, SolverException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard sudokuBoard = new SudokuBoard(backtracking);
         sudokuBoard.solveGame();
@@ -32,7 +35,7 @@ class BacktrackingSudokuSolverTest {
     }
 
     @Test
-    void boardGeneratorTest() {
+    void boardGeneratorTest() throws GetSetException, SolverException, SudokuElementConstructorException {
 
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard sudokuBoard = new SudokuBoard(backtracking);

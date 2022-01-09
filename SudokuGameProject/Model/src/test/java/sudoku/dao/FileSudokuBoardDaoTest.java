@@ -3,6 +3,7 @@ package sudoku.dao;
 import org.junit.jupiter.api.Test;
 import sudoku.StaticFunctions;
 import sudoku.elements.*;
+import sudoku.exceptions.DaoException;
 import sudoku.solver.BacktrackingSudokuSolver;
 import sudoku.solver.SudokuSolver;
 
@@ -29,7 +30,7 @@ class FileSudokuBoardDaoTest {
     }
 
     @Test
-    void daoWriteExceptionTest() throws Exception {
+    void daoWriteExceptionTest() {
         SudokuElement SudokuRow = new SudokuRow();
 
         SudokuBoardDaoFactory daoFactory = new SudokuBoardDaoFactory();
@@ -43,7 +44,7 @@ class FileSudokuBoardDaoTest {
     }
 
     @Test
-    void daoReadExceptionTest() throws Exception {
+    void daoReadExceptionTest() {
         SudokuBoardDaoFactory daoFactory = new SudokuBoardDaoFactory();
 
         try(Dao dao = daoFactory.getFileDao("test")) {
@@ -53,8 +54,8 @@ class FileSudokuBoardDaoTest {
 
             try (RandomAccessFile file = new RandomAccessFile("test", "rw")) {
                 file.getChannel().lock();
-                assertThrows(RuntimeException.class, () -> dao.read());
-                assertThrows(RuntimeException.class, () -> dao.write(board));
+                assertThrows(DaoException.class, () -> dao.read());
+                assertThrows(DaoException.class, () -> dao.write(board));
             }
         } catch (Exception e) {
             e.printStackTrace();
