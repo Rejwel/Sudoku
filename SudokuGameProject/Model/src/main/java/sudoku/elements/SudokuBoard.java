@@ -130,7 +130,13 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
             boolean isValid;
             for (int i = 0; i < 9; i++) {
                 isValid = sudokuColumns.get(i).verify() && sudokuColumns.get(i).getFields().stream().filter(s -> s.getFieldValue() != 0).count() == 9;
+                if (!isValid) {
+                    return false;
+                }
                 isValid = sudokuRows.get(i).verify() && sudokuColumns.get(i).getFields().stream().filter(s -> s.getFieldValue() != 0).count() == 9;
+                if (!isValid) {
+                    return false;
+                }
                 isValid = sudokuBoxes.get(i).verify() && sudokuColumns.get(i).getFields().stream().filter(s -> s.getFieldValue() != 0).count() == 9;
                 if (!isValid) {
                     return false;
@@ -163,10 +169,9 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
         if (o == this) {
             return true;
         }
-        if (!(o instanceof SudokuBoard)) {
+        if (!(o instanceof SudokuBoard that)) {
             return false;
         }
-        SudokuBoard that = (SudokuBoard) o;
         return new EqualsBuilder()
                 .append(this.board, that.board)
                 .isEquals();
@@ -184,17 +189,23 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
         try {
             SudokuBoard clone = (SudokuBoard) super.clone();
             clone.board = new SudokuField[9][9];
-            clone.sudokuRows = new ArrayList<>(sudokuBoxes);
-            clone.sudokuRows = new ArrayList<>(sudokuColumns);
+            clone.sudokuBoxes = new ArrayList<>(sudokuBoxes);
+            clone.sudokuColumns = new ArrayList<>(sudokuColumns);
             clone.sudokuRows = new ArrayList<>(sudokuRows);
             clone.solver = solver.clone();
             for (int i = 0; i < 9; i++) {
+                clone.sudokuColumns.set(i, new SudokuColumn());
+                clone.sudokuRows.set(i, new SudokuRow());
+                clone.sudokuBoxes.set(i, new SudokuBox());
+            }
+            for (int i = 0; i < 9; i++) {
                 for (int j = 0; j < 9; j++) {
                     clone.board[i][j] = board[i][j].clone();
+                    clone.sudokuRows.get(i).setNumberInArray(j, clone.board[i][j].getField());
+                    clone.sudokuColumns.get(j).setNumberInArray(i, clone.board[i][j].getField());
+                    clone.sudokuBoxes.get(clone.board[i][j].getNumberOfBox())
+                            .setNumberInArray(clone.board[i][j].getPositionInBox(), clone.board[i][j].getField());
                 }
-                clone.sudokuBoxes.set(i, sudokuBoxes.get(i).clone());
-                clone.sudokuColumns.set(i, sudokuColumns.get(i).clone());
-                clone.sudokuRows.set(i, sudokuRows.get(i).clone());
             }
             return clone;
         } catch (Exception e) {

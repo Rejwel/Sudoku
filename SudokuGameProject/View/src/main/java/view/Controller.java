@@ -118,7 +118,7 @@ public class Controller {
     }
 
     @FXML
-    private void start(ActionEvent event) throws IOException {
+    private void start(ActionEvent event) {
         ((Node)event.getSource()).getScene().getWindow().hide();
         try {
             Stage stage = creatingGamePane(bundle,"/Levels.fxml");
@@ -147,9 +147,9 @@ public class Controller {
                 }
             }
 
+            stage.show();
             bind(gameBoard,board);
             boardToSaving = board;
-            stage.show();
 
         } catch (Exception e) {
             log.error(new GameStatusException(bundle.getString("GameStatusException"), e));
@@ -162,24 +162,24 @@ public class Controller {
     }
 
     public String isTextFieldDisabled(SudokuBoard board) {
-        String string = "";
+        StringBuilder string = new StringBuilder();
         try {
             for (int i = 0; i < 9; i++) {
                 for (int j = 0; j < 9; j++) {
                     if (board.get(i,j) != 0) {
-                        string += "1,";
+                        string.append("1,");
                     } else  {
-                        string += "0,";
+                        string.append("0,");
                     }
                 }
             }
-            return string;
+            return string.toString();
         } catch (GetSetException e) {
             log.error(new GetSetException(e.getMessage(), e));
         } catch (Exception e) {
             log.error(new MainLogicException(bundle.getString("MainLogicException"), e));
         }
-        return string;
+        return string.toString();
     }
 
     private void fieldListener(ObservableValue<? extends String> observableValue,
@@ -305,7 +305,7 @@ public class Controller {
     }
 
     @FXML
-    private void checkBoard(ActionEvent event) throws CalculationsException, GetSetException, CloneNotSupportedException {
+    private void checkBoard(ActionEvent event) throws CalculationsException, GetSetException {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
         StaticFunctions.printBoard(boardToSaving);
