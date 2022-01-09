@@ -2,6 +2,7 @@ package sudoku.elements;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import sudoku.Repository;
 import sudoku.StaticFunctions;
 import sudoku.difficulty.Level;
 import sudoku.elements.SudokuBoard;
@@ -45,7 +46,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void getPositionNegativeTest() throws GetSetException, SudokuElementConstructorException, SolverException {
+    void getPositionNegativeTest() throws SudokuElementConstructorException, SolverException {
 
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
@@ -69,7 +70,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void setPositionNegativeTest() throws SudokuElementConstructorException, GetSetException, SolverException {
+    void setPositionNegativeTest() throws SudokuElementConstructorException, SolverException {
 
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
@@ -108,7 +109,9 @@ class SudokuBoardTest {
     @Test
     void verifyTest() throws CloneNotSupportedException, SudokuElementConstructorException, SolverException, GetSetException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
-        SudokuBoard board = new SudokuBoard(backtracking);
+
+        Repository repo = new Repository(new BacktrackingSudokuSolver());
+        SudokuBoard board = repo.createSudokuBoard();
 
         board.solveGame();
 
@@ -120,7 +123,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void verifyNegativeTest() throws CloneNotSupportedException, SudokuElementConstructorException, SolverException, GetSetException {
+    void verifyNegativeTest() throws SudokuElementConstructorException, SolverException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
@@ -205,7 +208,7 @@ class SudokuBoardTest {
     }
 
     @Test
-    void setValueInElementNegative() throws SudokuElementConstructorException, GetSetException, SolverException {
+    void setValueInElementNegative() throws SudokuElementConstructorException, SolverException {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
@@ -227,7 +230,7 @@ class SudokuBoardTest {
         SudokuSolver backtracking = new BacktrackingSudokuSolver();
         SudokuBoard board = new SudokuBoard(backtracking);
 
-        assertTrue(board.equals(board));
+        assertEquals(board, board);
     }
 
     @Test
@@ -236,7 +239,7 @@ class SudokuBoardTest {
         SudokuBoard board = new SudokuBoard(backtracking);
         SudokuElement row = new SudokuRow();
 
-        assertFalse(board.equals(row));
+        assertNotEquals(board, row);
     }
 
     @Test
@@ -245,7 +248,7 @@ class SudokuBoardTest {
         SudokuBoard board = new SudokuBoard(backtracking);
         SudokuBoard board2 = new SudokuBoard(backtracking);
 
-        assertTrue(board.equals(board2));
+        assertEquals(board, board2);
     }
 
     @Test
@@ -256,7 +259,7 @@ class SudokuBoardTest {
         SudokuBoard board2 = new SudokuBoard(backtracking);
         board2.solveGame();
 
-        assertFalse(board.equals(board2));
+        assertNotEquals(board, board2);
     }
 
     @Test
@@ -288,7 +291,7 @@ class SudokuBoardTest {
         board2.solveGame();
 
         assertNotEquals(board.hashCode(), board2.hashCode());
-        assertFalse(board.equals(board2));
+        assertNotEquals(board, board2);
     }
 
     @Test
@@ -297,7 +300,7 @@ class SudokuBoardTest {
         SudokuBoard board = new SudokuBoard(backtracking);
         SudokuBoard board2 = new SudokuBoard(backtracking);
 
-        assertTrue(board.equals(board2));
+        assertEquals(board, board2);
         assertEquals(board.hashCode(), board2.hashCode());
     }
 
