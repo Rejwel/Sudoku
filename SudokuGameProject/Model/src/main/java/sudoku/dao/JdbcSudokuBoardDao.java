@@ -4,8 +4,7 @@ import java.sql.*;
 import org.apache.log4j.Logger;
 import sudoku.StaticFunctions;
 import sudoku.elements.SudokuBoard;
-import sudoku.exceptions.DaoException;
-import sudoku.exceptions.SudokuElementConstructorException;
+import sudoku.exceptions.*;
 import sudoku.solver.BacktrackingSudokuSolver;
 
 
@@ -36,12 +35,12 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
     }
 
     @Override
-    public void connect() throws DaoException {
+    public void connect() throws DatabaseConnectionError {
         try {
             conn = DriverManager.getConnection(stringDbUrl);
         } catch (Exception e) {
             log.error(e);
-            throw new DaoException("DaoException", e);
+            throw new DatabaseConnectionError("DatabaseConnectionError", e);
         }
     }
 
@@ -58,7 +57,7 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
             if(e.getSQLState().equals("X0Y32")) return;
             log.error(e);
             conn.close();
-            throw new DaoException("DaoException", e);
+            throw new DatabaseGeneralError("DatabaseGeneralError", e);
         }
     }
 
@@ -77,7 +76,7 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
             if(e.getSQLState().equals("X0Y32")) return;
             log.error(e);
             conn.close();
-            throw new DaoException("DaoException", e);
+            throw new DatabaseGeneralError("DatabaseGeneralError", e);
         }
     }
 
@@ -87,7 +86,8 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
         connect();
 
         String query;
-        int boardDBId;
+
+        try {
 
         if(!boardAlreadyInDatabase(name)) {
             connect();
@@ -96,10 +96,8 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
                 preparedStmt.setString(1, name);
                 preparedStmt.executeUpdate();
             }
-        }
 
-        try {
-            boardDBId = getIdFromName(name);
+            int boardDBId = getIdFromName(name);
 
             for (int i = 0; i < 9; i++) {
                 for (int j = 0; j < 9; j++) {
@@ -114,13 +112,15 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
                     }
                 }
             }
-
             conn.close();
             return boardDBId;
+        }
+            conn.close();
+            throw new AlreadyInDatabaseException("AlreadyInDatabaseException");
         } catch(Exception e){
             log.error(e);
             conn.close();
-            throw new DaoException("DaoException", e);
+            throw new DatabaseGeneralError("DatabaseGeneralError", e);
         }
     }
 
@@ -135,7 +135,7 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
         } catch (Exception e) {
             log.error(e);
             conn.close();
-            throw new DaoException("DaoException", e);
+            throw new DatabaseGeneralError("DatabaseGeneralError", e);
         }
     }
 
@@ -145,21 +145,21 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
 
         int boardDBId = getIdFromName(name);
 
-        String query1 = "DELETE FROM boards WHERE board_id LIKE ?";
-        String query2 = "DELETE FROM game_boards WHERE game_board_id LIKE ?";
+        String query1 = "DELETE FROM boards WHERE board_id = ?";
+        String query2 = "DELETE FROM game_boards WHERE game_board_id = ?";
         try(
             PreparedStatement preparedStmt1 = conn.prepareStatement(query1);
             PreparedStatement preparedStmt2 = conn.prepareStatement(query2);
         ) {
             preparedStmt1.setInt(1, boardDBId);
             preparedStmt2.setInt(1, boardDBId);
-            preparedStmt1.executeUpdate();
             preparedStmt2.executeUpdate();
+            preparedStmt1.executeUpdate();
             conn.close();
         } catch (Exception e) {
             log.error(e);
             conn.close();
-            throw new DaoException("DaoException", e);
+            throw new DatabaseGeneralError("DatabaseGeneralError", e);
         }
     }
 
@@ -178,7 +178,7 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
 
                 if (boardDBId == -1) {
                     conn.close();
-                    throw new DaoException("DaoException");
+                    throw new ObjectNotInDatabase("ObjectNotInDatabase");
                 }
 
                 return boardDBId;
@@ -186,7 +186,7 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
         } catch (Exception e) {
             log.error(e);
             conn.close();
-            throw new DaoException("DaoException", e);
+            throw new DatabaseGeneralError("DatabaseGeneralError", e);
         }
     }
 
@@ -214,7 +214,7 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
         } catch (Exception e) {
             log.error(e);
             conn.close();
-            throw new DaoException("DaoException", e);
+            throw new DatabaseGeneralError("DatabaseGeneralError", e);
         }
     }
 
@@ -238,7 +238,7 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
             } catch (Exception e) {
                 log.error(e);
                 conn.close();
-                throw new DaoException("DaoException", e);
+                throw new ObjectNotInDatabase("ObjectNotInDatabase", e);
             }
         }
     }

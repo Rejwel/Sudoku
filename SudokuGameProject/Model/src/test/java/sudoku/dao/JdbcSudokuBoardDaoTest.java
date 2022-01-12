@@ -13,6 +13,7 @@ public class JdbcSudokuBoardDaoTest {
     private static Logger log = Logger.getLogger(StaticFunctions.class.getName());
 
     DbDao<SudokuBoard> db = SudokuBoardDaoFactory.getDatabaseDao();
+    Dao<SudokuBoard> dbDao = SudokuBoardDaoFactory.JdbcSudokuBoardDao("testBoard");
     SudokuBoard board = new SudokuBoard(new BacktrackingSudokuSolver());
 
 
@@ -23,8 +24,15 @@ public class JdbcSudokuBoardDaoTest {
     public void test1() throws Exception {
 
         board.solveGame();
-
-        db.insertInto(board, "test7");
+        StaticFunctions.printBoard(board);
+//
+//        db.insertInto(board, "test2");
+//        dbDao.write(board);
+//        db.deleteRecord("test3");
+//
+//        SudokuBoard boardFromDb = dbDao.read();
+//
+//        StaticFunctions.printBoard(boardFromDb);
 
 //        SudokuBoard dbBoard = db.get("test3");
 

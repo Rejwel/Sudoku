@@ -30,20 +30,9 @@ public final class SudokuBoardDaoFactory {
         return null;
     }
 
-    public static DbDao<SudokuBoard> getDatabaseDao(String boardName) {
+    public static Dao<SudokuBoard> JdbcSudokuBoardDao(String name) {
         try (
-                DbDao<SudokuBoard> dao = new JdbcSudokuBoardDao(boardName)
-        ) {
-            return dao;
-        } catch (Exception e) {
-            log.error(e);
-        }
-        return null;
-    }
-
-    public static Dao<SudokuBoard> JdbcSudokuBoardDao() {
-        try (
-                Dao<SudokuBoard> dao = new JdbcSudokuBoardDao()
+                Dao<SudokuBoard> dao = new JdbcSudokuBoardDao(name)
         ) {
             return dao;
         } catch (Exception e) {
