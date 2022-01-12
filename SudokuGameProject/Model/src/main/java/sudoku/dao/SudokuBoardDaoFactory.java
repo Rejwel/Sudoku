@@ -21,7 +21,7 @@ public final class SudokuBoardDaoFactory {
 
     public static DbDao<SudokuBoard> getDatabaseDao() {
         try (
-                DbDao<SudokuBoard> dao = new JdbcSudokuBoardDao()
+                DbDao<SudokuBoard> dao = new JdbcSudokuBoardDao();
         ) {
             return dao;
         } catch (Exception e) {

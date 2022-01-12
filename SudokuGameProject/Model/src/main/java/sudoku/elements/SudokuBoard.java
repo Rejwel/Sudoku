@@ -129,15 +129,27 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
         try {
             boolean isValid;
             for (int i = 0; i < 9; i++) {
-                isValid = sudokuColumns.get(i).verify() && sudokuColumns.get(i).getFields().stream().filter(s -> s.getFieldValue() != 0).count() == 9;
+                isValid = sudokuColumns.get(i).verify() && sudokuColumns.get(i)
+                        .getFields()
+                        .stream()
+                        .filter(s -> s.getFieldValue() != 0)
+                        .count() == 9;
                 if (!isValid) {
                     return false;
                 }
-                isValid = sudokuRows.get(i).verify() && sudokuColumns.get(i).getFields().stream().filter(s -> s.getFieldValue() != 0).count() == 9;
+                isValid = sudokuRows.get(i).verify() && sudokuColumns.get(i)
+                        .getFields()
+                        .stream()
+                        .filter(s -> s.getFieldValue() != 0)
+                        .count() == 9;
                 if (!isValid) {
                     return false;
                 }
-                isValid = sudokuBoxes.get(i).verify() && sudokuColumns.get(i).getFields().stream().filter(s -> s.getFieldValue() != 0).count() == 9;
+                isValid = sudokuBoxes.get(i).verify() && sudokuColumns.get(i)
+                        .getFields()
+                        .stream()
+                        .filter(s -> s.getFieldValue() != 0)
+                        .count() == 9;
                 if (!isValid) {
                     return false;
                 }

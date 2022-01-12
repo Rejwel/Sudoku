@@ -1,19 +1,21 @@
 package sudoku.dao;
 
 import org.apache.log4j.Logger;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sudoku.StaticFunctions;
 import sudoku.elements.SudokuBoard;
+import sudoku.exceptions.AlreadyInDatabaseException;
+import sudoku.exceptions.DaoException;
+import sudoku.exceptions.SolverException;
 import sudoku.solver.BacktrackingSudokuSolver;
-
-import java.util.ArrayList;
+import java.sql.SQLException;
 
 public class JdbcSudokuBoardDaoTest {
 
     private static Logger log = Logger.getLogger(StaticFunctions.class.getName());
-
     DbDao<SudokuBoard> db = SudokuBoardDaoFactory.getDatabaseDao();
-    Dao<SudokuBoard> dbDao = SudokuBoardDaoFactory.JdbcSudokuBoardDao("testBoard");
     SudokuBoard board = new SudokuBoard(new BacktrackingSudokuSolver());
 
 
@@ -21,23 +23,45 @@ public class JdbcSudokuBoardDaoTest {
     }
 
     @Test
-    public void test1() throws Exception {
+    public void daoSaveAndReadObjectTest() throws Exception {
 
-        board.solveGame();
-        StaticFunctions.printBoard(board);
+//        board.solveGame();
+//        db.insertInto(board, "testBoard");
+//        Dao<SudokuBoard> dbDao = SudokuBoardDaoFactory.JdbcSudokuBoardDao("testBoard");
 //
-//        db.insertInto(board, "test2");
 //        dbDao.write(board);
-//        db.deleteRecord("test3");
 //
-//        SudokuBoard boardFromDb = dbDao.read();
+//        SudokuBoard dbBoard = dbDao.read();
 //
-//        StaticFunctions.printBoard(boardFromDb);
+//        Assertions.assertEquals(board, dbBoard);
+    }
 
-//        SudokuBoard dbBoard = db.get("test3");
+    @Test
+    public void sameObjectInDatabase() throws Exception {
 
-//        StaticFunctions.printBoard(dbBoard);
+//        board.solveGame();
+//
+//        db.insertInto(board, "testBoard2");
+//
+//        Assertions.assertThrows(AlreadyInDatabaseException.class, () -> db.insertInto(board, "testBoard2"));
+    }
 
+    @Test
+    public void nullInsert() throws SQLException, DaoException {
+
+        db.deleteRecord("testBoard");
+        Assertions.assertThrows(NullPointerException.class, () -> db.insertInto(null, "testBoard"));
+
+    }
+
+    @Test
+    public void getAllBoardNames() throws SolverException, SQLException, DaoException {
+        board.solveGame();
+
+        db.deleteRecord("testBoard");
+        db.insertInto(board, "testBoard");
+
+        Assertions.assertTrue(db.getAll().size() > 0);
     }
 
 }

@@ -86,7 +86,7 @@ public final class StaticFunctions {
         log.info(boardInfo);
     }
 
-    public static String toDBString(SudokuBoard board) throws GetSetException {
+    public static String toDbString(SudokuBoard board) throws GetSetException {
         StringBuilder boardInfo = new StringBuilder();
 
         for (int i = 0; i < 9; i++) {
