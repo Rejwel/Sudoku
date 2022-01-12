@@ -18,9 +18,7 @@ public class SudokuApp {
 
         StaticFunctions.printBoard(board);
 
-        SudokuBoardDaoFactory daoFactory = new SudokuBoardDaoFactory();
-
-        try (Dao<SudokuBoard> dao = daoFactory.getFileDao("test")) {
+        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao("test")) {
             dao.write(board);
             SudokuBoard board2 = dao.read();
             StaticFunctions.printBoard(board2);

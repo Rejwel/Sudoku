@@ -11,6 +11,8 @@ import sudoku.exceptions.GetSetException;
 
 public final class StaticFunctions {
 
+    private static Logger log = Logger.getLogger(StaticFunctions.class.getName());
+
     private StaticFunctions() {
     }
 
@@ -71,8 +73,6 @@ public final class StaticFunctions {
     }
 
     public static void printBoard(SudokuBoard board) throws GetSetException {
-
-        Logger log = Logger.getLogger(StaticFunctions.class.getName());
         StringBuilder boardInfo = new StringBuilder();
         boardInfo.append("\n");
 
@@ -84,5 +84,17 @@ public final class StaticFunctions {
         }
 
         log.info(boardInfo);
+    }
+
+    public static String toDBString(SudokuBoard board) throws GetSetException {
+        StringBuilder boardInfo = new StringBuilder();
+
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                boardInfo.append(board.get(i, j)).append(",");
+            }
+        }
+
+        return boardInfo.toString();
     }
 }

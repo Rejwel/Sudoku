@@ -20,8 +20,7 @@ class FileSudokuBoardDaoTest {
         SudokuBoard board = new SudokuBoard(backtracking);
         board.solveGame();
 
-        SudokuBoardDaoFactory daoFactory = new SudokuBoardDaoFactory();
-        try (Dao<SudokuBoard> dao = daoFactory.getFileDao("test")) {
+        try (Dao<SudokuBoard> dao = SudokuBoardDaoFactory.getFileDao("test")) {
             dao.write(board);
             SudokuBoard board2 = dao.read();
             assertEquals(board, board2);
@@ -33,9 +32,7 @@ class FileSudokuBoardDaoTest {
     void daoWriteExceptionTest() {
         SudokuElement SudokuRow = new SudokuRow();
 
-        SudokuBoardDaoFactory daoFactory = new SudokuBoardDaoFactory();
-
-        try(Dao dao = daoFactory.getFileDao("test")) {
+        try(Dao dao = SudokuBoardDaoFactory.getFileDao("test")) {
             assertThrows(ClassCastException.class, () -> dao.write(SudokuRow));
             assertThrows(ClassNotFoundException.class, () -> dao.write(Class.forName("temp")));
         } catch (Exception e) {
@@ -45,9 +42,8 @@ class FileSudokuBoardDaoTest {
 
     @Test
     void daoReadExceptionTest() {
-        SudokuBoardDaoFactory daoFactory = new SudokuBoardDaoFactory();
 
-        try(Dao dao = daoFactory.getFileDao("test")) {
+        try(Dao dao = SudokuBoardDaoFactory.getFileDao("test")) {
             SudokuSolver backtracking = new BacktrackingSudokuSolver();
             SudokuBoard board = new SudokuBoard(backtracking);
             board.solveGame();
