@@ -24,14 +24,11 @@ public class JdbcSudokuBoardDaoTest {
 
         board.solveGame();
 
-        db.insertInto(board, "asasdd");
+        db.insertInto(board, "test7");
 
-        ArrayList<SudokuBoard> dbBoards = db.get("asasdd");
+//        SudokuBoard dbBoard = db.get("test3");
 
-        for (SudokuBoard board :
-                dbBoards) {
-            StaticFunctions.printBoard(board);
-        }
+//        StaticFunctions.printBoard(dbBoard);
 
     }
 

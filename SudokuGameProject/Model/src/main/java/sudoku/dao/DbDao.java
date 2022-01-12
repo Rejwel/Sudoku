@@ -12,5 +12,7 @@ public interface DbDao<T> extends AutoCloseable {
 
     int insertInto(T obj, String name) throws DaoException, SQLException;
 
-    ArrayList<T> get(String name) throws DaoException, SQLException;
+    T get(String name) throws DaoException, SQLException;
+
+    void deleteRecord(String name) throws DaoException, SQLException;
 }

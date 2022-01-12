@@ -1,12 +1,10 @@
 package sudoku.dao;
 
 import java.sql.*;
-import java.util.ArrayList;
 import org.apache.log4j.Logger;
 import sudoku.StaticFunctions;
 import sudoku.elements.SudokuBoard;
 import sudoku.exceptions.DaoException;
-import sudoku.exceptions.GetSetException;
 import sudoku.exceptions.SudokuElementConstructorException;
 import sudoku.solver.BacktrackingSudokuSolver;
 
@@ -70,8 +68,10 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
             stmt.executeUpdate(
                     "CREATE TABLE game_boards (" +
                             "game_board_id INT REFERENCES boards(board_id), " +
-                            "board_saved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
-                            "board_values varchar(255))");
+                            "board_x SMALLINT NOT NULL," +
+                            "board_y SMALLINT NOT NULL," +
+                            "field_value SMALLINT NOT NULL," +
+                            "is_disabled BOOLEAN)");
             conn.close();
         } catch (SQLException e) {
             if(e.getSQLState().equals("X0Y32")) return;
@@ -85,43 +85,53 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
     @Override
     public int insertInto(SudokuBoard obj, String name) throws DaoException, SQLException {
         connect();
-        try (Statement stmt = conn.createStatement()) {
 
-            PreparedStatement preparedStmt;
-            String query;
-            int boardDBId = -1;
+        String query;
+        int boardDBId;
 
-            query = "SELECT board_id FROM boards WHERE board_name LIKE ?";
-            preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setString(1, name);
-            ResultSet rs = preparedStmt.executeQuery();
-            while (rs.next()) {
-                boardDBId = rs.getInt(1);
-            }
-
-            if(boardDBId == -1) {
-                query = "INSERT INTO boards (board_name) VALUES (?)";
-                preparedStmt = conn.prepareStatement(query);
+        if(!boardAlreadyInDatabase(name)) {
+            connect();
+            query = "INSERT INTO boards (board_name) VALUES (?)";
+            try (PreparedStatement preparedStmt = conn.prepareStatement(query)) {
                 preparedStmt.setString(1, name);
                 preparedStmt.executeUpdate();
+            }
+        }
 
-                query = "SELECT board_id FROM boards WHERE board_name LIKE ?";
-                preparedStmt = conn.prepareStatement(query);
-                preparedStmt.setString(1, name);
-                rs = preparedStmt.executeQuery();
-                while (rs.next()) {
-                    boardDBId = rs.getInt(1);
+        try {
+            boardDBId = getIdFromName(name);
+
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    query = "INSERT INTO game_boards (game_board_id, board_x, board_y, field_value, is_disabled) VALUES (?, ?, ?, ?, ?)";
+                    try (PreparedStatement preparedStmt = conn.prepareStatement(query)) {
+                        preparedStmt.setInt(1, boardDBId);
+                        preparedStmt.setInt(2, i);
+                        preparedStmt.setInt(3, j);
+                        preparedStmt.setInt(4, obj.get(i, j));
+                        preparedStmt.setBoolean(5, false);
+                        preparedStmt.executeUpdate();
+                    }
                 }
             }
 
-            query = "INSERT INTO game_boards (game_board_id, board_values) VALUES (?, ?)";
-            preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setInt(1, boardDBId);
-            preparedStmt.setString(2, StaticFunctions.toDBString(obj));
-            preparedStmt.executeUpdate();
-
             conn.close();
             return boardDBId;
+        } catch(Exception e){
+            log.error(e);
+            conn.close();
+            throw new DaoException("DaoException", e);
+        }
+    }
+
+    @Override
+    public SudokuBoard get(String name) throws DaoException, SQLException {
+        connect();
+        try {
+            int boardDBId = getIdFromName(name);
+            SudokuBoard board = getSudokuBoardFromDatabaseId(boardDBId);
+            conn.close();
+            return board;
         } catch (Exception e) {
             log.error(e);
             conn.close();
@@ -130,34 +140,48 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
     }
 
     @Override
-    public ArrayList<SudokuBoard> get(String name) throws DaoException, SQLException {
+    public void deleteRecord(String name) throws DaoException, SQLException {
+        connect();
+
+        int boardDBId = getIdFromName(name);
+
+        String query1 = "DELETE FROM boards WHERE board_id LIKE ?";
+        String query2 = "DELETE FROM game_boards WHERE game_board_id LIKE ?";
+        try(
+            PreparedStatement preparedStmt1 = conn.prepareStatement(query1);
+            PreparedStatement preparedStmt2 = conn.prepareStatement(query2);
+        ) {
+            preparedStmt1.setInt(1, boardDBId);
+            preparedStmt2.setInt(1, boardDBId);
+            preparedStmt1.executeUpdate();
+            preparedStmt2.executeUpdate();
+            conn.close();
+        } catch (Exception e) {
+            log.error(e);
+            conn.close();
+            throw new DaoException("DaoException", e);
+        }
+    }
+
+    private int getIdFromName(String name) throws DaoException, SQLException {
         connect();
 
         int boardDBId = -1;
         String query = "SELECT board_id FROM boards WHERE board_name LIKE ?";
 
-        try (PreparedStatement boardId = conn.prepareStatement(query)) {
+        try(PreparedStatement boardId = conn.prepareStatement(query)) {
             boardId.setString(1, name);
-            ResultSet rs = boardId.executeQuery();
-            while (rs.next()) {
-                boardDBId = rs.getInt(1);
-            }
-
-            //TODO: CHANGE THIS TO EXCEPTION OR STH
-            if(boardDBId == -1) throw new DaoException("DaoException");
-
-            query = "SELECT * FROM game_boards WHERE game_board_id = ?";
-            try(PreparedStatement boards = conn.prepareStatement(query)) {
-                boards.setInt(1, boardDBId);
-
-                ArrayList<SudokuBoard> sudokuBoards = new ArrayList<>();
-
-                rs = boards.executeQuery();
+            try(ResultSet rs = boardId.executeQuery()) {
                 while (rs.next()) {
-                    String boardValues = rs.getString(3);
-                    sudokuBoards.add(stringToBoard(boardValues));
+                    boardDBId = rs.getInt(1);
                 }
-                return sudokuBoards;
+
+                if (boardDBId == -1) {
+                    conn.close();
+                    throw new DaoException("DaoException");
+                }
+
+                return boardDBId;
             }
         } catch (Exception e) {
             log.error(e);
@@ -166,18 +190,57 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
         }
     }
 
-    private SudokuBoard stringToBoard(String board) throws SudokuElementConstructorException, GetSetException {
-        String[] parts = board.split(",");
-        SudokuBoard boardObj = new SudokuBoard(new BacktrackingSudokuSolver());
-        int counter = 0;
+    private Boolean boardAlreadyInDatabase(String name) throws DaoException, SQLException {
+        connect();
 
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                boardObj.set(i,j, Integer.parseInt(parts[counter++]));
+        int boardDBId = -1;
+        String query = "SELECT board_id FROM boards WHERE board_name LIKE ?";
+
+        try(PreparedStatement boardId = conn.prepareStatement(query)) {
+            boardId.setString(1, name);
+            try(ResultSet rs = boardId.executeQuery()) {
+                while (rs.next()) {
+                    boardDBId = rs.getInt(1);
+                }
+
+                if (boardDBId == -1) {
+                    conn.close();
+                    return false;
+                }
+
+                conn.close();
+                return true;
+            }
+        } catch (Exception e) {
+            log.error(e);
+            conn.close();
+            throw new DaoException("DaoException", e);
+        }
+    }
+
+    private SudokuBoard getSudokuBoardFromDatabaseId(int boardId) throws DaoException, SQLException, SudokuElementConstructorException {
+        connect();
+
+        String query = "SELECT * FROM game_boards WHERE game_board_id = ?";
+        try(PreparedStatement boards = conn.prepareStatement(query)) {
+            boards.setInt(1, boardId);
+            SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
+            try(ResultSet rs = boards.executeQuery()) {
+                rs.next();
+                for (int i = 0; i < 9; i++) {
+                    for (int j = 0; j < 9; j++) {
+                        sudokuBoard.set(rs.getInt(2), rs.getInt(3), rs.getInt(4));
+                        rs.next();
+                    }
+                }
+                conn.close();
+                return sudokuBoard;
+            } catch (Exception e) {
+                log.error(e);
+                conn.close();
+                throw new DaoException("DaoException", e);
             }
         }
-
-        return boardObj;
     }
 
     @Override
@@ -187,20 +250,15 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
 
     @Override
     public SudokuBoard read() throws DaoException {
-        throw new DaoException("DaoException");
-    }
-
-    @Override
-    public ArrayList<SudokuBoard> readAll() throws DaoException, SQLException {
         try {
             return get(this.name);
         } catch (Exception e) {
-            throw new DaoException("DaoException", e);
+            throw new DaoException("DaoException");
         }
     }
 
     @Override
-    public void write(SudokuBoard object) throws DaoException, SQLException {
+    public void write(SudokuBoard object) throws DaoException {
         try {
             insertInto(object, this.name);
         } catch (Exception e) {

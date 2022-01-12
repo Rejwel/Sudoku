@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import org.apache.log4j.Logger;
 import sudoku.elements.SudokuBoard;
 import sudoku.exceptions.DaoException;
@@ -31,11 +30,6 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
         } catch (ClassNotFoundException | IOException e) {
             throw new DaoException("DaoException");
         }
-    }
-
-    @Override
-    public ArrayList<SudokuBoard> readAll() throws DaoException {
-        throw new DaoException("DaoException");
     }
 
     @Override
