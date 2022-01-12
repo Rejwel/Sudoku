@@ -3,7 +3,6 @@ open module ModelProject {
     requires java.desktop;
     requires log4j;
     requires java.sql;
-    requires derby;
 
     exports sudoku;
     exports sudoku.elements;

@@ -1,5 +1,7 @@
 package sudoku.dao;
 
+import java.sql.*;
+import java.util.ArrayList;
 import org.apache.log4j.Logger;
 import sudoku.StaticFunctions;
 import sudoku.elements.SudokuBoard;
@@ -8,10 +10,8 @@ import sudoku.exceptions.GetSetException;
 import sudoku.exceptions.SudokuElementConstructorException;
 import sudoku.solver.BacktrackingSudokuSolver;
 
-import java.sql.*;
-import java.util.ArrayList;
 
-public class JdbcSudokuBoardDao implements DBDao<SudokuBoard>, Dao<SudokuBoard>, AutoCloseable {
+public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>, AutoCloseable {
 
     private static final String stringDbUrl = "jdbc:derby:boardsDB;create=true";
     private Logger log = Logger.getLogger(StaticFunctions.class.getName());
@@ -49,10 +49,10 @@ public class JdbcSudokuBoardDao implements DBDao<SudokuBoard>, Dao<SudokuBoard>,
 
     private void createBoardsTable() throws DaoException, SQLException {
         connect();
-        try (Statement stmt = conn.createStatement()){
+        try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(
-                    "CREATE TABLE boards (" +
-                            "board_id INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), " +
+                    "CREATE TABLE boards ("
+                            + "board_id INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), " +
                             "board_name varchar(30)," +
                             "PRIMARY KEY (board_id))");
             conn.close();

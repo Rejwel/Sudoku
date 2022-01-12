@@ -1,10 +1,7 @@
 package sudoku.dao;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import sudoku.exceptions.CalculationsException;
 import sudoku.exceptions.DaoException;
 
 

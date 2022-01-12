@@ -3,7 +3,6 @@ package sudoku.dao;
 import org.apache.log4j.Logger;
 import sudoku.StaticFunctions;
 import sudoku.elements.SudokuBoard;
-import sudoku.exceptions.DaoException;
 
 public final class SudokuBoardDaoFactory {
 
@@ -20,9 +19,9 @@ public final class SudokuBoardDaoFactory {
         }
     }
 
-    public static DBDao<SudokuBoard> getDatabaseDao() {
+    public static DbDao<SudokuBoard> getDatabaseDao() {
         try (
-                DBDao<SudokuBoard> dao = new JdbcSudokuBoardDao()
+                DbDao<SudokuBoard> dao = new JdbcSudokuBoardDao()
         ) {
             return dao;
         } catch (Exception e) {
@@ -31,9 +30,9 @@ public final class SudokuBoardDaoFactory {
         return null;
     }
 
-    public static DBDao<SudokuBoard> getDatabaseDao(String boardName) {
+    public static DbDao<SudokuBoard> getDatabaseDao(String boardName) {
         try (
-                DBDao<SudokuBoard> dao = new JdbcSudokuBoardDao(boardName)
+                DbDao<SudokuBoard> dao = new JdbcSudokuBoardDao(boardName)
         ) {
             return dao;
         } catch (Exception e) {

@@ -1,11 +1,11 @@
 package sudoku.dao;
 
-import sudoku.exceptions.DaoException;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
+import sudoku.exceptions.DaoException;
 
-public interface DBDao<T> extends AutoCloseable {
+
+public interface DbDao<T> extends AutoCloseable {
     void connect() throws DaoException;
 
     void createDB() throws SQLException, DaoException;

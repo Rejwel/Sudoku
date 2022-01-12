@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
 import org.apache.log4j.Logger;
 import sudoku.elements.SudokuBoard;
 import sudoku.exceptions.DaoException;
