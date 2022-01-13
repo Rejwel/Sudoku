@@ -162,6 +162,11 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
     }
 
     @Override
+    public Boolean checkIfExsist(String name) throws SQLException, DaoException {
+        return boardAlreadyInDatabase(name);
+    }
+
+    @Override
     public void deleteRecord(String name) throws DaoException, SQLException {
         connect();
 
