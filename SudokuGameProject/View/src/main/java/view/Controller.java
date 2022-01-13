@@ -340,7 +340,7 @@ public class Controller {
             String path = file.getPath();
             String fileName = file.getName();
             SudokuBoard saving = board.clone();
-            new SudokuBoardDaoFactory()
+            SudokuBoardDaoFactory
                     .getFileDao(path)
                     .write(saving);
             path = file.getAbsolutePath()
@@ -391,7 +391,7 @@ public class Controller {
                     .getScene()
                     .getWindow()
                     .hide();
-            board = new SudokuBoardDaoFactory().getFileDao(file.getAbsolutePath())
+            board = SudokuBoardDaoFactory.getFileDao(file.getAbsolutePath())
                     .read();
             String path = file.getAbsolutePath()
                     .substring(0,file.getAbsolutePath().length() - 4)

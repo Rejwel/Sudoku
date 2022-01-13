@@ -2,6 +2,7 @@ open module ModelProject {
     requires org.apache.commons.lang3;
     requires java.desktop;
     requires log4j;
+    requires java.sql;
 
     exports sudoku;
     exports sudoku.elements;

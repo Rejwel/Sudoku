@@ -23,7 +23,7 @@ public class FileSudokuBoardDao implements Dao<SudokuBoard> {
     public SudokuBoard read() throws DaoException {
         try (
                 FileInputStream f = new FileInputStream(fileName);
-                ObjectInputStream o = new ObjectInputStream(f);
+                ObjectInputStream o = new ObjectInputStream(f)
         ) {
             SudokuBoard board = (SudokuBoard) o.readObject();
             return board;
