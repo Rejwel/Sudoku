@@ -1,128 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="486.0" prefWidth="689.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controller">
+<AnchorPane prefHeight="486.0" prefWidth="689.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.Controller">
    <children>
       <VBox fx:id="gameBoard" layoutX="101.0" layoutY="83.0" prefHeight="300.0" prefWidth="400.0">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <TextField id="1"/>
-                  <TextField id="2"/>
-                  <TextField id="3"/>
-                  <TextField id="4"/>
-                  <TextField id="5"/>
-                  <TextField id="6"/>
-                  <TextField id="7"/>
-                  <TextField id="8"/>
-                  <TextField id="9"/>
+                  <TextField id="1" />
+                  <TextField id="2" />
+                  <TextField id="3" />
+                  <TextField id="4" />
+                  <TextField id="5" />
+                  <TextField id="6" />
+                  <TextField id="7" />
+                  <TextField id="8" />
+                  <TextField id="9" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <TextField id="10"/>
-                  <TextField id="11"/>
-                  <TextField id="12"/>
-                  <TextField id="13"/>
-                  <TextField id="14"/>
-                  <TextField id="15"/>
-                  <TextField id="16"/>
-                  <TextField id="17"/>
-                  <TextField id="18"/>
+                  <TextField id="10" />
+                  <TextField id="11" />
+                  <TextField id="12" />
+                  <TextField id="13" />
+                  <TextField id="14" />
+                  <TextField id="15" />
+                  <TextField id="16" />
+                  <TextField id="17" />
+                  <TextField id="18" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <TextField id="19"/>
-                  <TextField id="20"/>
-                  <TextField id="21"/>
-                  <TextField id="22"/>
-                  <TextField id="23"/>
-                  <TextField id="24"/>
-                  <TextField id="25"/>
-                  <TextField id="26"/>
-                  <TextField id="27"/>
+                  <TextField id="19" />
+                  <TextField id="20" />
+                  <TextField id="21" />
+                  <TextField id="22" />
+                  <TextField id="23" />
+                  <TextField id="24" />
+                  <TextField id="25" />
+                  <TextField id="26" />
+                  <TextField id="27" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <TextField id="28"/>
-                  <TextField id="29"/>
-                  <TextField id="30"/>
-                  <TextField id="31"/>
-                  <TextField id="32"/>
-                  <TextField id="33"/>
-                  <TextField id="34"/>
-                  <TextField id="35"/>
-                  <TextField id="36"/>
+                  <TextField id="28" />
+                  <TextField id="29" />
+                  <TextField id="30" />
+                  <TextField id="31" />
+                  <TextField id="32" />
+                  <TextField id="33" />
+                  <TextField id="34" />
+                  <TextField id="35" />
+                  <TextField id="36" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <TextField id="37"/>
-                  <TextField id="38"/>
-                  <TextField id="39"/>
-                  <TextField id="40"/>
-                  <TextField id="41"/>
-                  <TextField id="42"/>
-                  <TextField id="43"/>
-                  <TextField id="44"/>
-                  <TextField id="45"/>
+                  <TextField id="37" />
+                  <TextField id="38" />
+                  <TextField id="39" />
+                  <TextField id="40" />
+                  <TextField id="41" />
+                  <TextField id="42" />
+                  <TextField id="43" />
+                  <TextField id="44" />
+                  <TextField id="45" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <TextField id="46"/>
-                  <TextField id="47"/>
-                  <TextField id="48"/>
-                  <TextField id="49"/>
-                  <TextField id="50"/>
-                  <TextField id="51"/>
-                  <TextField id="52"/>
-                  <TextField id="53"/>
-                  <TextField id="54"/>
+                  <TextField id="46" />
+                  <TextField id="47" />
+                  <TextField id="48" />
+                  <TextField id="49" />
+                  <TextField id="50" />
+                  <TextField id="51" />
+                  <TextField id="52" />
+                  <TextField id="53" />
+                  <TextField id="54" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <TextField id="55"/>
-                  <TextField id="56"/>
-                  <TextField id="57"/>
-                  <TextField id="58"/>
-                  <TextField id="59"/>
-                  <TextField id="60"/>
-                  <TextField id="61"/>
-                  <TextField id="62"/>
-                  <TextField id="63"/>
+                  <TextField id="55" />
+                  <TextField id="56" />
+                  <TextField id="57" />
+                  <TextField id="58" />
+                  <TextField id="59" />
+                  <TextField id="60" />
+                  <TextField id="61" />
+                  <TextField id="62" />
+                  <TextField id="63" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <TextField id="64"/>
-                  <TextField id="65"/>
-                  <TextField id="66"/>
-                  <TextField id="67"/>
-                  <TextField id="68"/>
-                  <TextField id="69"/>
-                  <TextField id="70"/>
-                  <TextField id="71"/>
-                  <TextField id="72"/>
+                  <TextField id="64" />
+                  <TextField id="65" />
+                  <TextField id="66" />
+                  <TextField id="67" />
+                  <TextField id="68" />
+                  <TextField id="69" />
+                  <TextField id="70" />
+                  <TextField id="71" />
+                  <TextField id="72" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <TextField id="73"/>
-                  <TextField id="74"/>
-                  <TextField id="75"/>
-                  <TextField id="76"/>
-                  <TextField id="77"/>
-                  <TextField id="78"/>
-                  <TextField id="79"/>
-                  <TextField id="80"/>
-                  <TextField id="81"/>
+                  <TextField id="73" />
+                  <TextField id="74" />
+                  <TextField id="75" />
+                  <TextField id="76" />
+                  <TextField id="77" />
+                  <TextField id="78" />
+                  <TextField id="79" />
+                  <TextField id="80" />
+                  <TextField id="81" />
                </children>
             </HBox>
          </children>
@@ -137,5 +141,6 @@
       <Button layoutX="428.0" layoutY="432.0" mnemonicParsing="false" onAction="#loadSudokuBoard" prefHeight="25.0" prefWidth="85.0" text="%opening" />
       <Button layoutX="80.0" layoutY="392.0" mnemonicParsing="false" onAction="#saveOriginal" prefHeight="25.0" prefWidth="101.0" text="%saveOriginal" />
       <Button layoutX="428.0" layoutY="392.0" mnemonicParsing="false" onAction="#checkBoard" prefHeight="25.0" prefWidth="85.0" text="%checkBoard" />
+      <Button layoutX="101.0" layoutY="34.0" mnemonicParsing="false" onAction="#loadBoards" text="Wczytaj" />
    </children>
 </AnchorPane>

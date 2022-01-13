@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.adapter.JavaBeanStringPropertyBuilder;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -19,10 +20,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.InputMethodEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -461,6 +459,7 @@ public class Controller {
             Scene scene = new Scene(borderPane);
             stage1.setScene(scene);
             gameBoard = (VBox) borderPane.lookup("#gameBoard");
+            chooseHBox = (HBox) borderPane.lookup("#chooseHBox");
             return stage1;
         } catch (Exception e) {
             log.error(new CreateGamePaneException(bundle.getString("CreateGamePaneException"), e));
@@ -477,6 +476,65 @@ public class Controller {
         } catch (Exception e) {
             log.error(new LoadMainSceneException(bundle.getString("LoadMainSceneException"), e));
         }
+    }
+
+    @FXML
+    private HBox chooseHBox;
+    private int choice = -1;
+
+    @FXML
+    private void loadBoards(ActionEvent event) {
+        try {
+            ((Node) event.getSource()).getScene().getWindow().hide();
+            Stage stage = creatingGamePane(bundle,"/chooseBoard.fxml");
+            ListView listView = new ListView();
+
+            listView.getItems().add("filip");
+            listView.getItems().add("mision");
+            listView.getItems().add("filip");
+            listView.getItems().add("mision");
+            listView.getItems().add("filip");
+            listView.getItems().add("mision");
+            listView.getItems().add("filip");
+            listView.getItems().add("mision");
+            Button button = new Button("Wybierz");
+            button.setMinWidth(90);
+
+            button.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    ObservableList selectedIndices = listView.getSelectionModel().getSelectedIndices();
+
+                    for (Object o : selectedIndices) {
+                        System.out.println("o = " + o + " (" + o.getClass() + ")");
+                        choice = (Integer)o;
+                        System.out.println("Choice: " + choice);
+                    }
+                }
+            });
+
+
+            chooseHBox.getChildren().add(listView);
+            chooseHBox.getChildren().add(button);
+            stage.show();
+
+
+        } catch (Exception e){
+            System.out.println(e);
+            log.error(new CreateGamePaneException(bundle.getString("CreateGamePaneException"), e));
+        }
+    }
+
+    @FXML
+    private void backToGame(ActionEvent event) {
+        try {
+            ((Node) event.getSource()).getScene().getWindow().hide();
+            board = boardToSaving;
+            startGame();
+        } catch (Exception e) {
+            log.error(new CreateGamePaneException(bundle.getString("CreateGamePaneException"), e));
+        }
+
     }
 
     public static class SudokuBidirectionalBinding {
