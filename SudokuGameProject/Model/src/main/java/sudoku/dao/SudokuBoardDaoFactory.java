@@ -30,7 +30,7 @@ public final class SudokuBoardDaoFactory {
         return null;
     }
 
-    public static Dao<SudokuBoard> JdbcSudokuBoardDao(String name) {
+    public static Dao<SudokuBoard> jdbcSudokuBoardDao(String name) {
         try (
                 Dao<SudokuBoard> dao = new JdbcSudokuBoardDao(name)
         ) {

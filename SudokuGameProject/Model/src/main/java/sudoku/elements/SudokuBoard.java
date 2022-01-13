@@ -162,13 +162,13 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-//        try {
-//            if (!checkBoard()) {
-//                log.debug("Ten element nie pasuje w tym miejscu");
-//            }
-//        } catch (CalculationsException e) {
-//            e.printStackTrace();
-//        }
+        //        try {
+        //            if (!checkBoard()) {
+        //                log.debug("Ten element nie pasuje w tym miejscu");
+        //            }
+        //        } catch (CalculationsException e) {
+        //            e.printStackTrace();
+        //        }
     }
 
     @Override
@@ -216,7 +216,8 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
                     clone.sudokuRows.get(i).setNumberInArray(j, clone.board[i][j].getField());
                     clone.sudokuColumns.get(j).setNumberInArray(i, clone.board[i][j].getField());
                     clone.sudokuBoxes.get(clone.board[i][j].getNumberOfBox())
-                            .setNumberInArray(clone.board[i][j].getPositionInBox(), clone.board[i][j].getField());
+                            .setNumberInArray(clone.board[i][j].getPositionInBox(),
+                                    clone.board[i][j].getField());
                 }
             }
             return clone;

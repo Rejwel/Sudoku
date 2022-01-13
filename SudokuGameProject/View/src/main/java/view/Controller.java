@@ -4,11 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.adapter.JavaBeanStringPropertyBuilder;
 import javafx.beans.value.ObservableValue;
@@ -20,8 +21,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.input.InputMethodEvent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -33,7 +37,12 @@ import sudoku.StaticFunctions;
 import sudoku.dao.SudokuBoardDaoFactory;
 import sudoku.difficulty.Level;
 import sudoku.elements.SudokuBoard;
-import sudoku.exceptions.*;
+import sudoku.exceptions.CalculationsException;
+import sudoku.exceptions.DaoException;
+import sudoku.exceptions.GetSetException;
+import sudoku.exceptions.SetLevelException;
+import sudoku.exceptions.SolverException;
+import sudoku.exceptions.SudokuElementConstructorException;
 import sudoku.solver.BacktrackingSudokuSolver;
 import view.exceptions.BindException;
 import view.exceptions.CreateGamePaneException;
@@ -54,6 +63,7 @@ public class Controller {
     private static int iteration = 0;
     private SudokuBoard board;
     private static SudokuBoard boardToSaving;
+    private static SudokuBoard boardOriginal;
     private static String isDisabled = "";
     private static Logger log = Logger.getLogger(Controller.class.getName());
 
@@ -104,6 +114,7 @@ public class Controller {
         try {
             board.solveGame();
             level.removeFieldsFromBoard(board);
+            boardOriginal = board.clone();
             startGame();
             isDisabled = isTextFieldDisabled(board.clone());
         } catch (SetLevelException e) {
@@ -139,7 +150,7 @@ public class Controller {
                     text.setAlignment(Pos.CENTER);
                     text.lengthProperty();
                     text.textProperty().addListener(this::fieldListener);
-                    if (board.get(i, j) != 0) {
+                    if (boardOriginal.get(i, j) != 0) {
                         text.setDisable(true);
                     }
                 }
@@ -202,7 +213,6 @@ public class Controller {
             log.error(new MainLogicException(bundle.getString("MainLogicException"), e));
         }
     }
-
 
     @FXML
     private void wyjdz() {
@@ -308,7 +318,7 @@ public class Controller {
 
         StaticFunctions.printBoard(boardToSaving);
 
-        if(boardToSaving.checkBoard()) {
+        if (boardToSaving.checkBoard()) {
             alert.setTitle(bundle.getString("dialogCheckBoardTitle"));
             alert.setHeaderText(null);
             alert.setContentText(bundle.getString("dialogCheckBoardContentGood"));
@@ -460,6 +470,7 @@ public class Controller {
             stage1.setScene(scene);
             gameBoard = (VBox) borderPane.lookup("#gameBoard");
             chooseHBox = (HBox) borderPane.lookup("#chooseHBox");
+            savingInput = (VBox) borderPane.lookup("#savingInput");
             return stage1;
         } catch (Exception e) {
             log.error(new CreateGamePaneException(bundle.getString("CreateGamePaneException"), e));
@@ -480,49 +491,120 @@ public class Controller {
 
     @FXML
     private HBox chooseHBox;
+
     private int choice = -1;
 
     @FXML
     private void loadBoards(ActionEvent event) {
         try {
             ((Node) event.getSource()).getScene().getWindow().hide();
-            Stage stage = creatingGamePane(bundle,"/chooseBoard.fxml");
+            final Stage stage = creatingGamePane(bundle,"/chooseBoard.fxml");
             ListView listView = new ListView();
 
-            listView.getItems().add("filip");
-            listView.getItems().add("mision");
-            listView.getItems().add("filip");
-            listView.getItems().add("mision");
-            listView.getItems().add("filip");
-            listView.getItems().add("mision");
-            listView.getItems().add("filip");
-            listView.getItems().add("mision");
+            List<String> boardsInDatabase = Objects.requireNonNull(SudokuBoardDaoFactory
+                    .getDatabaseDao()).getAll();
+            System.out.println(boardsInDatabase);
+
+            for (String nazwa: boardsInDatabase) {
+                listView.getItems().add(nazwa);
+            }
             Button button = new Button("Wybierz");
             button.setMinWidth(90);
 
             button.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    ObservableList selectedIndices = listView.getSelectionModel().getSelectedIndices();
+                    ObservableList selectedIndices = listView
+                            .getSelectionModel().getSelectedIndices();
 
                     for (Object o : selectedIndices) {
-                        System.out.println("o = " + o + " (" + o.getClass() + ")");
                         choice = (Integer)o;
                         System.out.println("Choice: " + choice);
+                        try {
+                            if (choice == -1) {
+                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                                alert.setTitle(bundle.getString("dialogCheckBoardTitle"));
+                                alert.setHeaderText(null);
+                                alert.setContentText(bundle
+                                        .getString("dialogCheckBoardContentGood"));
+                                alert.showAndWait();
+                            } else {
+                                board = SudokuBoardDaoFactory.getDatabaseDao()
+                                        .get(boardsInDatabase.get(choice));
+                                boardOriginal = SudokuBoardDaoFactory.getDatabaseDao()
+                                        .get(boardsInDatabase.get(choice) + "Original");
+                                ((Node) event.getSource()).getScene().getWindow().hide();
+                                startGame();
+                            }
+                        } catch (Exception e) {
+                            log.error(new LoadMainSceneException(bundle
+                                    .getString("LoadMainSceneException"), e));
+                        }
                     }
                 }
             });
-
-
             chooseHBox.getChildren().add(listView);
             chooseHBox.getChildren().add(button);
             stage.show();
 
 
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
-            log.error(new CreateGamePaneException(bundle.getString("CreateGamePaneException"), e));
+            log.error(new CreateGamePaneException(bundle
+                    .getString("CreateGamePaneException"), e));
         }
+    }
+
+    @FXML
+    private VBox savingInput;
+
+    @FXML
+    private void saveToDataBase(ActionEvent event) {
+        ((Node) event.getSource()).getScene().getWindow().hide();
+        Stage stage = creatingGamePane(bundle,"/saveToDataBase.fxml");
+        TextField text = (TextField) savingInput.getChildren().get(0);
+        text.textProperty()
+                .addListener((ObservableValue<? extends String>
+                                      observableValue, String s, String t1) -> {
+            try {
+                if (t1.length() == 0) {
+                    return;
+                }
+                if (t1.length() > 1) {
+                    t1 = t1.substring(0, 15);
+                }
+            } catch (Exception e) {
+                log.error(new MainLogicException(bundle.getString("MainLogicException"), e));
+            }
+        });
+        stage.show();
+    }
+
+    @FXML
+    private void confirmSavingToDataBase(ActionEvent event) {
+        try {
+            Pattern pattern = Pattern.compile("[A-Za-z]([\\w])+");
+            TextField text = (TextField) savingInput.getChildren().get(0);
+            if (pattern.matcher(text.getText()).matches()) {
+                SudokuBoardDaoFactory.jdbcSudokuBoardDao(text
+                        .getText()).write(boardToSaving.clone());
+                SudokuBoardDaoFactory.jdbcSudokuBoardDao(text
+                        .getText() + "Original").write(boardOriginal);
+                ((Node) event.getSource()).getScene().getWindow().hide();
+                board = boardToSaving;
+                startGame();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle(bundle.getString("dialogCheckBoardTitle"));
+                alert.setHeaderText(null);
+                alert.setContentText(bundle.getString("dialogCheckBoardContentGood"));
+                alert.showAndWait();
+            }
+        } catch (Exception e) {
+
+            log.error(new MainLogicException(bundle.getString("MainLogicException"), e));
+        }
+
     }
 
     @FXML
