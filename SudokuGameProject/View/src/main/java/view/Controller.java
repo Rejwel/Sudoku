@@ -10,12 +10,9 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
-
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.adapter.JavaBeanIntegerProperty;
 import javafx.beans.property.adapter.JavaBeanIntegerPropertyBuilder;
-import javafx.beans.property.adapter.JavaBeanStringPropertyBuilder;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -36,7 +33,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import javafx.util.converter.NumberStringConverter;
 import org.apache.log4j.Logger;
 import sudoku.Repository;
 import sudoku.StaticFunctions;
@@ -45,6 +41,8 @@ import sudoku.difficulty.Level;
 import sudoku.elements.SudokuBoard;
 import sudoku.exceptions.CalculationsException;
 import sudoku.exceptions.DaoException;
+import sudoku.exceptions.DatabaseConnectionError;
+import sudoku.exceptions.DatabaseGeneralError;
 import sudoku.exceptions.GetSetException;
 import sudoku.exceptions.SetLevelException;
 import sudoku.exceptions.SolverException;
@@ -60,8 +58,6 @@ import view.exceptions.MainLogicException;
 import view.exceptions.ReadFromFileException;
 import view.exceptions.SaveException;
 import view.exceptions.WriteToFileException;
-
-
 
 public class Controller {
 
@@ -341,20 +337,21 @@ public class Controller {
 
     @FXML
     private void checkBoard(ActionEvent event) throws CalculationsException, GetSetException {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
         StaticFunctions.printBoard(boardToSaving);
 
         if (boardToSaving.checkBoard()) {
-            alert.setTitle(bundle.getString("dialogCheckBoardTitle"));
-            alert.setHeaderText(null);
-            alert.setContentText(bundle.getString("dialogCheckBoardContentGood"));
+            showAlert("dialogCheckBoardTitle","dialogCheckBoardContentGood");
         } else {
-            alert.setTitle(bundle.getString("dialogCheckBoardTitle"));
-            alert.setHeaderText(null);
-            alert.setContentText(bundle.getString("dialogCheckBoardContentBad"));
+            showAlert("dialogCheckBoardTitle","dialogCheckBoardContentBad");
         }
+    }
 
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(bundle.getString(title));
+        alert.setHeaderText(null);
+        alert.setContentText(bundle.getString(content));
         alert.showAndWait();
     }
 
@@ -464,20 +461,6 @@ public class Controller {
         }
     }
 
-//    static void unBind(VBox vbox) {
-//        try {
-//            for (int i = 0; i < 9; i++) {
-//                for (int j = 0; j < 9; j++) {
-//                    TextField text = (TextField) ((HBox) vbox.getChildren().get(i))
-//                            .getChildren().get(j);
-//                    text.textProperty().unbind();
-//                }
-//            }
-//        } catch (Exception e) {
-//            log.error(new BindException(bundle.getString("BindException"), e));
-//        }
-//    }
-
     public Stage creatingGamePane(ResourceBundle bundle, String path) {
         try {
             FXMLLoader part = new FXMLLoader(Objects.requireNonNull(Controller.class
@@ -529,7 +512,7 @@ public class Controller {
             System.out.println(boardsInDatabase);
 
             for (String nazwa: boardsInDatabase) {
-                if(!nazwa.contains("Original")){
+                if (!nazwa.contains("Original")) {
                     listView.getItems().add(nazwa);
                 }
             }
@@ -549,24 +532,26 @@ public class Controller {
                         System.out.println("Choice: " + choice);
                         try {
                             if (choice == -1) {
-                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setTitle(bundle.getString("dialogCheckBoardTitle"));
-                                alert.setHeaderText(null);
-                                alert.setContentText(bundle
-                                        .getString("dialogCheckBoardContentGood"));
-                                alert.showAndWait();
+                                showAlert("Error", "noBoardChoose");
                             } else {
 
                                 board = SudokuBoardDaoFactory.getDatabaseDao()
                                         .get(listView.getItems().get(choice).toString());
                                 boardOriginal = SudokuBoardDaoFactory.getDatabaseDao()
-                                        .get(listView.getItems().get(choice).toString() + "Original");
+                                        .get(listView.getItems().get(choice).toString()
+                                                + "Original");
                                 ((Node) event.getSource()).getScene().getWindow().hide();
                                 startGame();
                             }
+                        } catch (DatabaseConnectionError e) {
+                            log.error(new DatabaseConnectionError(bundle
+                                    .getString("DBConnectionException"), e));
+                        } catch (DatabaseGeneralError e) {
+                            log.error(new DatabaseGeneralError(bundle
+                                    .getString("DBGeneralException"), e));
                         } catch (Exception e) {
-                            log.error(new LoadMainSceneException(bundle
-                                    .getString("LoadMainSceneException"), e));
+                            log.error(new MainLogicException(bundle
+                                    .getString("MainLogicException"), e));
                         }
                     }
                 }
@@ -583,21 +568,26 @@ public class Controller {
                         System.out.println("Choice: " + choice);
                         try {
                             if (choice == -1) {
-                                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setTitle(bundle.getString("dialogCheckBoardTitle"));
-                                alert.setHeaderText(null);
-                                alert.setContentText(bundle
-                                        .getString("dialogCheckBoardContentGood"));
-                                alert.showAndWait();
+                                showAlert("Error", "noBoardChoose");
                             } else {
-                                SudokuBoardDaoFactory.getDatabaseDao().deleteRecord(boardsInDatabase.get(choice));
-                                SudokuBoardDaoFactory.getDatabaseDao().deleteRecord(boardsInDatabase.get(choice) + "Original");
-                                ((Node) event.getSource()).getScene().getWindow().hide();
+                                SudokuBoardDaoFactory.getDatabaseDao()
+                                        .deleteRecord(boardsInDatabase.get(choice));
+                                SudokuBoardDaoFactory.getDatabaseDao()
+                                        .deleteRecord(boardsInDatabase.get(choice)
+                                                + "Original");
+                                ((Node) event.getSource()).getScene()
+                                        .getWindow().hide();
                                 loadBoards(event);
                             }
+                        } catch (DatabaseConnectionError e) {
+                            log.error(new DatabaseConnectionError(bundle
+                                    .getString("DBConnectionException"), e));
+                        } catch (DatabaseGeneralError e) {
+                            log.error(new DatabaseGeneralError(bundle
+                                    .getString("DBGeneralException"), e));
                         } catch (Exception e) {
-                            log.error(new LoadMainSceneException(bundle
-                                    .getString("LoadMainSceneException"), e));
+                            log.error(new MainLogicException(bundle
+                                    .getString("MainLogicException"), e));
                         }
                     }
                 }
@@ -607,8 +597,13 @@ public class Controller {
             chooseHBox.getChildren().add(removeButton);
             stage.show();
 
+        } catch (DatabaseConnectionError e) {
+            log.error(new DatabaseConnectionError(bundle
+                    .getString("DBConnectionException"), e));
+        } catch (DatabaseGeneralError e) {
+            log.error(new DatabaseGeneralError(bundle
+                    .getString("DBGeneralException"), e));
         } catch (Exception e) {
-            System.out.println(e);
             log.error(new CreateGamePaneException(bundle
                     .getString("CreateGamePaneException"), e));
         }
@@ -649,12 +644,14 @@ public class Controller {
         saveBoard(boardOriginal,boardOriginal,event);
     }
 
-    private void saveBoard(SudokuBoard saveBoard, SudokuBoard originalBoard,ActionEvent event) {
+    private void saveBoard(SudokuBoard saveBoard, SudokuBoard originalBoard,
+            ActionEvent event) {
         try {
             Pattern pattern = Pattern.compile("[A-Za-z]([\\w])+");
             Pattern notOriginal = Pattern.compile("[oO][Rr][iI][Gg][iI][nN][Aa][Ll]");
             TextField text = (TextField) savingInput.getChildren().get(0);
-            if (pattern.matcher(text.getText()).matches() && !notOriginal.matcher(text.getText()).find()) {
+            if (pattern.matcher(text.getText()).matches() && !notOriginal
+                    .matcher(text.getText()).find()) {
                 SudokuBoardDaoFactory.jdbcSudokuBoardDao(text
                         .getText()).write(saveBoard.clone());
                 SudokuBoardDaoFactory.jdbcSudokuBoardDao(text
@@ -670,12 +667,17 @@ public class Controller {
                 alert.setContentText(bundle.getString("badSavingName"));
                 alert.showAndWait();
             }
+        } catch (DatabaseConnectionError e) {
+            log.error(new DatabaseConnectionError(bundle
+                    .getString("DBConnectionException"), e));
+        } catch (DatabaseGeneralError e) {
+            log.error(new DatabaseGeneralError(bundle
+                    .getString("DBGeneralException"), e));
         } catch (Exception e) {
-            log.error(new MainLogicException(bundle.getString("MainLogicException"), e));
+            log.error(new MainLogicException(bundle
+                    .getString("MainLogicException"), e));
         }
     }
-
-
 
     @FXML
     private void backToGame(ActionEvent event) {

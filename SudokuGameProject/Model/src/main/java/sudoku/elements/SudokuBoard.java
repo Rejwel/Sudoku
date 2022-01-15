@@ -9,7 +9,6 @@ import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.log4j.Logger;
 import sudoku.exceptions.CalculationsException;
 import sudoku.exceptions.CloneException;
 import sudoku.exceptions.GetSetException;
@@ -24,7 +23,6 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
     private List<SudokuElement> sudokuColumns;
     private List<SudokuElement> sudokuRows;
     private List<SudokuElement> sudokuBoxes;
-    private static Logger log = Logger.getLogger(SudokuBoard.class.getName());
 
     public SudokuBoard(SudokuSolver solver) throws SudokuElementConstructorException {
         try {
