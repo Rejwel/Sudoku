@@ -11,6 +11,8 @@ import sudoku.exceptions.DaoException;
 import sudoku.exceptions.SolverException;
 import sudoku.solver.BacktrackingSudokuSolver;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JdbcSudokuBoardDaoTest {
 
@@ -58,10 +60,17 @@ public class JdbcSudokuBoardDaoTest {
     public void getAllBoardNames() throws SolverException, SQLException, DaoException {
         board.solveGame();
 
-        db.deleteRecord("testBoard");
-        db.insertInto(board, "testBoard");
+//        db.insertInto(board, "testBoardds");
 
-        Assertions.assertTrue(db.getAll().size() > 0);
+//        Assertions.assertTrue(db.getAll().size() > 0);
+        List<String> boards = new ArrayList<>();
+        boards = db.getAll();
+
+        for (String x :
+                boards) {
+            log.info(x);
+        }
+
     }
 
 }

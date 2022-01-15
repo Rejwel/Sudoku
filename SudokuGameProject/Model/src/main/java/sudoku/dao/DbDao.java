@@ -21,4 +21,5 @@ public interface DbDao<T> extends AutoCloseable {
     Boolean checkIfExsist(String name) throws SQLException, DaoException;
 
     void deleteRecord(String name) throws DaoException, SQLException;
+
 }

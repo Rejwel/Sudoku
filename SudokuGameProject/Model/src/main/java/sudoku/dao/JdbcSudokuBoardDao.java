@@ -1,11 +1,23 @@
 package sudoku.dao;
 
-import java.sql.*;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import org.apache.log4j.Logger;
 import sudoku.StaticFunctions;
 import sudoku.elements.SudokuBoard;
-import sudoku.exceptions.*;
+import sudoku.exceptions.AlreadyInDatabaseException;
+import sudoku.exceptions.DaoException;
+import sudoku.exceptions.DatabaseConnectionError;
+import sudoku.exceptions.DatabaseGeneralError;
+import sudoku.exceptions.GetSetException;
+import sudoku.exceptions.ObjectNotInDatabase;
+import sudoku.exceptions.SudokuElementConstructorException;
 import sudoku.solver.BacktrackingSudokuSolver;
 
 public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>, AutoCloseable {
@@ -49,12 +61,13 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
         try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(
                     "CREATE TABLE boards ("
-                            + "board_id INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), " +
-                            "board_name varchar(30)," +
-                            "PRIMARY KEY (board_id))");
+                            + "board_id INT NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, "
+                            + "INCREMENT BY 1), "
+                            + "board_name varchar(30),"
+                            + "PRIMARY KEY (board_id))");
             conn.commit();
         } catch (SQLException e) {
-            if(e.getSQLState().equals("X0Y32")) {
+            if (e.getSQLState().equals("X0Y32")) {
                 conn.rollback();
                 return;
             }
@@ -65,16 +78,16 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
 
     private void createGameBoardsTable() throws DaoException, SQLException {
         connect();
-        try (Statement stmt = conn.createStatement()){
+        try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(
-                    "CREATE TABLE game_boards (" +
-                            "game_board_id INT REFERENCES boards(board_id), " +
-                            "board_x SMALLINT NOT NULL," +
-                            "board_y SMALLINT NOT NULL," +
-                            "field_value SMALLINT NOT NULL)");
+                    "CREATE TABLE game_boards ("
+                            + "game_board_id INT REFERENCES boards(board_id), "
+                            + "board_x SMALLINT NOT NULL,"
+                            + "board_y SMALLINT NOT NULL,"
+                            + "field_value SMALLINT NOT NULL)");
             conn.commit();
         } catch (SQLException e) {
-            if(e.getSQLState().equals("X0Y32")) {
+            if (e.getSQLState().equals("X0Y32")) {
                 conn.rollback();
                 return;
             }
@@ -91,7 +104,7 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
 
         try {
 
-        if(!boardAlreadyInDatabase(name)) {
+        if (!boardAlreadyInDatabase(name)) {
             connect();
             query = "INSERT INTO boards (board_name) VALUES (?)";
             try (PreparedStatement preparedStmt = conn.prepareStatement(query)) {
@@ -100,13 +113,14 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
                 conn.commit();
             }
 
-            int boardDBId = getIdFromName(name);
+            int boardDbId = getIdFromName(name);
 
             for (int i = 0; i < 9; i++) {
                 for (int j = 0; j < 9; j++) {
-                    query = "INSERT INTO game_boards (game_board_id, board_x, board_y, field_value) VALUES (?, ?, ?, ?)";
+                    query = "INSERT INTO game_boards (game_board_id, board_x, board_y, field_value)"
+                            + " VALUES (?, ?, ?, ?)";
                     try (PreparedStatement preparedStmt = conn.prepareStatement(query)) {
-                        preparedStmt.setInt(1, boardDBId);
+                        preparedStmt.setInt(1, boardDbId);
                         preparedStmt.setInt(2, i);
                         preparedStmt.setInt(3, j);
                         preparedStmt.setInt(4, obj.get(i, j));
@@ -115,11 +129,11 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
                     }
                 }
             }
-            return boardDBId;
+            return boardDbId;
         }
             conn.rollback();
             throw new AlreadyInDatabaseException("AlreadyInDatabaseException");
-        } catch(AlreadyInDatabaseException | GetSetException e){
+        } catch (AlreadyInDatabaseException | GetSetException e) {
             log.error(e);
             conn.rollback();
             throw new AlreadyInDatabaseException("AlreadyInDatabaseException", e);
@@ -130,8 +144,8 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
     public SudokuBoard get(String name) throws DaoException, SQLException {
         connect();
         try {
-            int boardDBId = getIdFromName(name);
-            return getSudokuBoardFromDatabaseId(boardDBId);
+            int boardDbId = getIdFromName(name);
+            return getSudokuBoardFromDatabaseId(boardDbId);
         } catch (Exception e) {
             log.error(e);
             conn.rollback();
@@ -140,14 +154,15 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
     }
 
     @Override
-    public ArrayList<String> getAll() throws DatabaseConnectionError, DatabaseGeneralError, SQLException {
+    public ArrayList<String> getAll() throws DatabaseConnectionError, DatabaseGeneralError,
+            SQLException {
         connect();
 
         ArrayList<String> boardNames = new ArrayList<>();
         String query = "SELECT board_name FROM boards";
 
-        try(PreparedStatement boardId = conn.prepareStatement(query)) {
-            try(ResultSet rs = boardId.executeQuery()) {
+        try (PreparedStatement boardId = conn.prepareStatement(query)) {
+            try (ResultSet rs = boardId.executeQuery()) {
                 conn.commit();
                 while (rs.next()) {
                     boardNames.add(rs.getString(1));
@@ -170,16 +185,16 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
     public void deleteRecord(String name) throws DaoException, SQLException {
         connect();
 
-        int boardDBId = getIdFromName(name);
+        int boardDbId = getIdFromName(name);
 
         String query1 = "DELETE FROM boards WHERE board_id = ?";
         String query2 = "DELETE FROM game_boards WHERE game_board_id = ?";
-        try(
+        try (
             PreparedStatement preparedStmt1 = conn.prepareStatement(query1);
             PreparedStatement preparedStmt2 = conn.prepareStatement(query2)
         ) {
-            preparedStmt1.setInt(1, boardDBId);
-            preparedStmt2.setInt(1, boardDBId);
+            preparedStmt1.setInt(1, boardDbId);
+            preparedStmt2.setInt(1, boardDbId);
             preparedStmt2.executeUpdate();
             preparedStmt1.executeUpdate();
             conn.commit();
@@ -193,22 +208,22 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
     private int getIdFromName(String name) throws DaoException, SQLException {
         connect();
 
-        int boardDBId = -1;
+        int boardDbId = -1;
         String query = "SELECT board_id FROM boards WHERE board_name LIKE ?";
 
-        try(PreparedStatement boardId = conn.prepareStatement(query)) {
+        try (PreparedStatement boardId = conn.prepareStatement(query)) {
             boardId.setString(1, name);
-            try(ResultSet rs = boardId.executeQuery()) {
+            try (ResultSet rs = boardId.executeQuery()) {
                 conn.commit();
                 while (rs.next()) {
-                    boardDBId = rs.getInt(1);
+                    boardDbId = rs.getInt(1);
                 }
 
-                if (boardDBId == -1) {
+                if (boardDbId == -1) {
                     throw new ObjectNotInDatabase("ObjectNotInDatabase");
                 }
 
-                return boardDBId;
+                return boardDbId;
             }
         } catch (Exception e) {
             log.error(e);
@@ -220,18 +235,19 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
     private Boolean boardAlreadyInDatabase(String name) throws DaoException, SQLException {
         connect();
 
-        int boardDBId = -1;
+        int boardDbId = -1;
+
         String query = "SELECT board_id FROM boards WHERE board_name LIKE ?";
 
-        try(PreparedStatement boardId = conn.prepareStatement(query)) {
+        try (PreparedStatement boardId = conn.prepareStatement(query)) {
             boardId.setString(1, name);
-            try(ResultSet rs = boardId.executeQuery()) {
+            try (ResultSet rs = boardId.executeQuery()) {
                 conn.commit();
                 while (rs.next()) {
-                    boardDBId = rs.getInt(1);
+                    boardDbId = rs.getInt(1);
                 }
 
-                if (boardDBId == -1) {
+                if (boardDbId == -1) {
                     conn.rollback();
                     return false;
                 }
@@ -245,14 +261,15 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
         }
     }
 
-    private SudokuBoard getSudokuBoardFromDatabaseId(int boardId) throws DaoException, SQLException, SudokuElementConstructorException {
+    private SudokuBoard getSudokuBoardFromDatabaseId(int boardId) throws DaoException,
+            SQLException, SudokuElementConstructorException {
         connect();
 
         String query = "SELECT * FROM game_boards WHERE game_board_id = ?";
-        try(PreparedStatement boards = conn.prepareStatement(query)) {
+        try (PreparedStatement boards = conn.prepareStatement(query)) {
             boards.setInt(1, boardId);
             SudokuBoard sudokuBoard = new SudokuBoard(new BacktrackingSudokuSolver());
-            try(ResultSet rs = boards.executeQuery()) {
+            try (ResultSet rs = boards.executeQuery()) {
                 conn.commit();
                 rs.next();
                 for (int i = 0; i < 9; i++) {

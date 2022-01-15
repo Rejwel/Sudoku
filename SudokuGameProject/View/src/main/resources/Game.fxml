@@ -141,6 +141,7 @@
       <Button layoutX="428.0" layoutY="432.0" mnemonicParsing="false" onAction="#loadSudokuBoard" prefHeight="25.0" prefWidth="85.0" text="%opening" />
       <Button layoutX="80.0" layoutY="392.0" mnemonicParsing="false" onAction="#saveOriginal" prefHeight="25.0" prefWidth="101.0" text="%saveOriginal" />
       <Button layoutX="428.0" layoutY="392.0" mnemonicParsing="false" onAction="#checkBoard" prefHeight="25.0" prefWidth="85.0" text="%checkBoard" />
-      <Button layoutX="101.0" layoutY="34.0" mnemonicParsing="false" onAction="#loadBoards" text="Wczytaj" />
+      <Button layoutX="101.0" layoutY="34.0" mnemonicParsing="false" onAction="#loadBoards" text="%loadFromDB" />
+      <Button layoutX="449.0" layoutY="34.0" mnemonicParsing="false" onAction="#saveToDataBase" text="%saveToDB" />
    </children>
 </AnchorPane>

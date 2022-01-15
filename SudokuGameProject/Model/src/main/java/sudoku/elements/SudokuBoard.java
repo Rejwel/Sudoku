@@ -9,7 +9,6 @@ import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.log4j.Logger;
 import sudoku.exceptions.CalculationsException;
 import sudoku.exceptions.CloneException;
 import sudoku.exceptions.GetSetException;
@@ -24,7 +23,6 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
     private List<SudokuElement> sudokuColumns;
     private List<SudokuElement> sudokuRows;
     private List<SudokuElement> sudokuBoxes;
-    private static Logger log = Logger.getLogger(SudokuBoard.class.getName());
 
     public SudokuBoard(SudokuSolver solver) throws SudokuElementConstructorException {
         try {
@@ -162,13 +160,13 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-//        try {
-//            if (!checkBoard()) {
-//                log.debug("Ten element nie pasuje w tym miejscu");
-//            }
-//        } catch (CalculationsException e) {
-//            e.printStackTrace();
-//        }
+        //        try {
+        //            if (!checkBoard()) {
+        //                log.debug("Ten element nie pasuje w tym miejscu");
+        //            }
+        //        } catch (CalculationsException e) {
+        //            e.printStackTrace();
+        //        }
     }
 
     @Override
@@ -216,7 +214,8 @@ public class SudokuBoard implements PropertyChangeListener, Serializable, Clonea
                     clone.sudokuRows.get(i).setNumberInArray(j, clone.board[i][j].getField());
                     clone.sudokuColumns.get(j).setNumberInArray(i, clone.board[i][j].getField());
                     clone.sudokuBoxes.get(clone.board[i][j].getNumberOfBox())
-                            .setNumberInArray(clone.board[i][j].getPositionInBox(), clone.board[i][j].getField());
+                            .setNumberInArray(clone.board[i][j].getPositionInBox(),
+                                    clone.board[i][j].getField());
                 }
             }
             return clone;
