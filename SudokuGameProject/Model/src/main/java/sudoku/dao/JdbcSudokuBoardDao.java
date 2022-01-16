@@ -149,7 +149,7 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
         } catch (Exception e) {
             log.error(e);
             conn.rollback();
-            throw new DatabaseGeneralError("DatabaseGeneralError", e);
+            throw new ObjectNotInDatabase("ObjectNotInDatabase", e);
         }
     }
 
@@ -177,7 +177,7 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
     }
 
     @Override
-    public Boolean checkIfExsist(String name) throws SQLException, DaoException {
+    public Boolean exist(String name) throws SQLException, DaoException {
         return boardAlreadyInDatabase(name);
     }
 
@@ -198,10 +198,10 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
             preparedStmt2.executeUpdate();
             preparedStmt1.executeUpdate();
             conn.commit();
-        } catch (Exception e) {
+        }  catch (Exception e) {
             log.error(e);
             conn.rollback();
-            throw new DatabaseGeneralError("DatabaseGeneralError", e);
+            throw new ObjectNotInDatabase("ObjectNotInDatabase", e);
         }
     }
 
@@ -225,6 +225,10 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
 
                 return boardDbId;
             }
+        } catch (ObjectNotInDatabase e) {
+            log.error(e);
+            conn.rollback();
+            throw new ObjectNotInDatabase("ObjectNotInDatabase", e);
         } catch (Exception e) {
             log.error(e);
             conn.rollback();
