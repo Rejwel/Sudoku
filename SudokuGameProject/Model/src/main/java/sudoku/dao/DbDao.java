@@ -18,7 +18,7 @@ public interface DbDao<T> extends AutoCloseable {
 
     ArrayList<String> getAll() throws DatabaseConnectionError, DatabaseGeneralError, SQLException;
 
-    Boolean checkIfExsist(String name) throws SQLException, DaoException;
+    Boolean exist(String name) throws SQLException, DaoException;
 
     void deleteRecord(String name) throws DaoException, SQLException;
 
