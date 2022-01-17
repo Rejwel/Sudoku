@@ -509,7 +509,6 @@ public class Controller {
 
             List<String> boardsInDatabase = Objects.requireNonNull(SudokuBoardDaoFactory
                     .getDatabaseDao()).getAll();
-            System.out.println(boardsInDatabase);
 
             for (String nazwa: boardsInDatabase) {
                 if (!nazwa.contains("Original")) {
@@ -529,7 +528,6 @@ public class Controller {
 
                     for (Object o : selectedIndices) {
                         choice = (Integer)o;
-                        System.out.println("Choice: " + choice);
                         try {
                             if (choice == -1) {
                                 showAlert("Error", "noBoardChoose");
@@ -565,15 +563,14 @@ public class Controller {
 
                     for (Object o : selectedIndices) {
                         choice = (Integer)o;
-                        System.out.println("Choice: " + choice);
                         try {
                             if (choice == -1) {
                                 showAlert("Error", "noBoardChoose");
                             } else {
                                 SudokuBoardDaoFactory.getDatabaseDao()
-                                        .deleteRecord(boardsInDatabase.get(choice));
+                                        .deleteRecord(listView.getItems().get(choice).toString());
                                 SudokuBoardDaoFactory.getDatabaseDao()
-                                        .deleteRecord(boardsInDatabase.get(choice)
+                                        .deleteRecord(listView.getItems().get(choice).toString()
                                                 + "Original");
                                 ((Node) event.getSource()).getScene()
                                         .getWindow().hide();
