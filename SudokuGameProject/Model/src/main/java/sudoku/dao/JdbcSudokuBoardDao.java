@@ -125,10 +125,10 @@ public class JdbcSudokuBoardDao implements DbDao<SudokuBoard>, Dao<SudokuBoard>,
                         preparedStmt.setInt(3, j);
                         preparedStmt.setInt(4, obj.get(i, j));
                         preparedStmt.executeUpdate();
-                        conn.commit();
                     }
                 }
             }
+            conn.commit();
             return boardDbId;
         }
             conn.rollback();
